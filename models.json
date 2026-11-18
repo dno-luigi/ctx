@@ -1,0 +1,29 @@
+{
+  "note": "Prices are USD per 1M tokens and are UNVERIFIED. Check the provider's current price before authorising a paid run, and override with --price-in/--price-out. A paid run refuses to start without --budget-usd.",
+  "provider": "openrouter",
+  "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+  "key_env": "OPENROUTER_API_KEY",
+  "models": [
+    {
+      "slug": "openai/gpt-4o-mini",
+      "class": "small-baseline",
+      "multimodal": true,
+      "price_in": 0.15,
+      "price_out": 0.6
+    },
+    {
+      "slug": "google/gemini-2.0-flash-001",
+      "class": "large-context",
+      "multimodal": true,
+      "price_in": 0.1,
+      "price_out": 0.4
+    },
+    {
+      "slug": "anthropic/claude-3.5-sonnet",
+      "class": "large-context",
+      "multimodal": true,
+      "price_in": 3.0,
+      "price_out": 15.0
+    }
+  ]
+}
