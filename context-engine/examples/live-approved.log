@@ -1,0 +1,54 @@
+
+1. ACQUIRE + SCAN  (live: ~z-ai/glm-flash-latest)
+  files=11 bytes=3238 partitions=1 findings=21 verified=21 failed=0
+  strategy=single_pass budget≈400000 tokens (model_context, context 1048576)
+  budget notes: output reserve of 4000 tokens subtracted from 1048576 context tokens; operator ceiling 400000 is below the model's usable 782432; ceiling applies
+  ok   strategy matches the budget decision
+  ok   budget never exceeds the model context
+  ok   every source is accounted for (read or skipped)
+  ok   source facts are model-free
+  ok   verified conclusions all carry resolved evidence
+  ok   failed citations are quarantined, not repaired
+
+2. STRUCTURED REPRESENTATION
+  conclusions=15 inferences=6 questions=3 contradictions=1
+  ok   observations and conclusions are separate sections
+  ok   inferences are not mixed into verified conclusions
+  ok   snapshot digest is content-addressed
+
+3. COMPACTION
+  small  ~ 1197 tokens  items 12/29  omitted 17  reconstructible=true
+  medium ~ 2831 tokens  items 29/29  omitted 0  reconstructible=true
+  large  ~ 2831 tokens  items 29/29  omitted 0  reconstructible=true
+  ok   pack stays within its declared budget
+  ok   pack lists every omission with its sources
+  ok   pack does not claim completeness
+  ok   profiles trade size for content, not truth
+
+4. ANSWER FROM THE PACK ONLY
+  mode=model retention=0.8333333333333334 attribution=0.6666666666666666 reconstruction=0.6666666666666666 factual_errors=0
+  ok   no answer cites a source absent from the pack index
+  ok   factual errors are counted, not hidden
+  planted facts found 8/8; model-only facts 2/2 (reported separately)
+
+5. MODIFY SOURCE + DIFFERENTIAL SCAN
+  sources +1 ~3 -1 =7; findings preserved=14 stale=6 invalidated=1 added=14 updated=0
+  rescanned 4 file(s): src/backfill.js, config/defaults.json, src/ingest.js, src/retention.js
+  ok   unchanged findings are byte-identical after the update
+  ok   unchanged sources are not rescanned
+  ok   every prior finding citing a removed source is invalidated
+  ok   stale findings cite a changed source
+  ok   changed sources produce a stale or updated outcome when cited
+  ok   new source is scanned
+  ok   snapshot advances lineage
+  ok   every baseline invariant survives into the post-delta pack
+
+6. INSTRUMENTATION
+  scan: calls=1 tokens=2466/3360 cost=0.000721812 source=provider latency=3102ms
+  delta: calls=1 tokens=1420/2221 cost=0.000468304 source=provider latency=3026ms
+  ok   cost is provider-reported, catalogue-marked or absent — never estimated
+  ok   instrumentation separates scan and delta calls
+
+artifacts written to context-engine/examples/live-approved/
+checks: 25/25
+measured spend this run: $0.00136493 of $0.05 budget

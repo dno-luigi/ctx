@@ -1,0 +1,342 @@
+{
+  "schema": "context-engine/poc-report/v1",
+  "generated_at": "2026-11-20T05:21:22.729Z",
+  "mode": "stub",
+  "model": "stub-rule-scanner",
+  "qa_mode": "retrieval-from-pack",
+  "subject": {
+    "root": "/workspace/chats/646e47d2d90193a2aba4554e/context-engine/fixtures/poc-repo",
+    "files": 11,
+    "bytes": 3238,
+    "partitions": 1
+  },
+  "scan": {
+    "strategy": "single_pass",
+    "partition_budget_tokens": 60000,
+    "partition_budget_source": "fallback",
+    "partition_reason": "estimated 813 tokens fits the 60000-token budget",
+    "findings": 30,
+    "verified_citations": 30,
+    "failed_citations": 0,
+    "conclusions": 29,
+    "inferences": 1,
+    "contradictions": 0,
+    "questions": 1,
+    "cross_partition_relationships": 0,
+    "usage": {
+      "calls": 1,
+      "measured_calls": 1,
+      "unmeasured_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "cost_usd": 0,
+      "cost_source": "not_applicable",
+      "latency_ms": 1,
+      "partitions": 1,
+      "validation": {
+        "quotes_checked": 30,
+        "quotes_failed": 0
+      },
+      "note": null
+    }
+  },
+  "facts": {
+    "line_rule_expected": {
+      "label": "line_rule_expected",
+      "total": 8,
+      "found": 8,
+      "results": [
+        {
+          "id": "retention-never-delete",
+          "found": true,
+          "phrases": [
+            "never delete",
+            "retention window"
+          ],
+          "sources": [
+            "README.md"
+          ]
+        },
+        {
+          "id": "idempotent-retries",
+          "found": true,
+          "phrases": [
+            "exactly once",
+            "idempotent"
+          ],
+          "sources": [
+            "README.md"
+          ]
+        },
+        {
+          "id": "store-unexpired",
+          "found": true,
+          "phrases": [
+            "unexpired"
+          ],
+          "sources": [
+            "src/store.js"
+          ]
+        },
+        {
+          "id": "dependency-chain",
+          "found": true,
+          "phrases": [
+            "depends on"
+          ],
+          "sources": [
+            "docs/ARCHITECTURE.md"
+          ]
+        },
+        {
+          "id": "fixed-retention-decision",
+          "found": true,
+          "phrases": [
+            "fixed 30-day",
+            "sliding"
+          ],
+          "sources": [
+            "docs/DECISIONS.md"
+          ]
+        },
+        {
+          "id": "batch-size-decision",
+          "found": true,
+          "phrases": [
+            "batch size of 100"
+          ],
+          "sources": [
+            "docs/DECISIONS.md"
+          ]
+        },
+        {
+          "id": "backfill-outstanding",
+          "found": true,
+          "phrases": [
+            "backfill"
+          ],
+          "sources": [
+            "src/ingest.js"
+          ]
+        },
+        {
+          "id": "scheduler-lock-risk",
+          "found": true,
+          "phrases": [
+            "drops a batch",
+            "store lock"
+          ],
+          "sources": [
+            "docs/RUNBOOK.md"
+          ]
+        }
+      ]
+    },
+    "model_only": {
+      "label": "model_only",
+      "total": 2,
+      "found": 0,
+      "results": [
+        {
+          "id": "timeout-config",
+          "found": false,
+          "phrases": [
+            "timeout_seconds",
+            "5"
+          ],
+          "sources": [
+            "config/defaults.json"
+          ]
+        },
+        {
+          "id": "timeout-contradiction",
+          "found": false,
+          "phrases": [
+            "30 seconds",
+            "5"
+          ],
+          "sources": [
+            "docs/ARCHITECTURE.md",
+            "config/defaults.json"
+          ]
+        }
+      ]
+    }
+  },
+  "packs": {
+    "small": {
+      "used_tokens_estimate": 1195,
+      "budget_tokens_estimate": 1500,
+      "items_included": 15,
+      "items_total": 40,
+      "items_omitted": 25,
+      "reconstructible": true
+    },
+    "medium": {
+      "used_tokens_estimate": 3242,
+      "budget_tokens_estimate": 4000,
+      "items_included": 40,
+      "items_total": 40,
+      "items_omitted": 0,
+      "reconstructible": true
+    },
+    "large": {
+      "used_tokens_estimate": 3242,
+      "budget_tokens_estimate": 10000,
+      "items_included": 40,
+      "items_total": 40,
+      "items_omitted": 0,
+      "reconstructible": true
+    }
+  },
+  "qa": {
+    "questions": 6,
+    "retention": 0.5,
+    "attribution": 0.8333333333333334,
+    "reconstruction": 0.5,
+    "factual_errors": 0,
+    "factual_error_details": [],
+    "cited_sources_total": 8,
+    "per_question": [
+      {
+        "question_id": "q1",
+        "retained": false,
+        "attributed": true,
+        "reconstructed": false,
+        "phrases_found": [
+          "30"
+        ],
+        "phrases_expected": [
+          "30",
+          "audit"
+        ],
+        "missing_sources": []
+      },
+      {
+        "question_id": "q2",
+        "retained": true,
+        "attributed": true,
+        "reconstructed": true,
+        "phrases_found": [
+          "store",
+          "retention"
+        ],
+        "phrases_expected": [
+          "store",
+          "retention"
+        ],
+        "missing_sources": []
+      },
+      {
+        "question_id": "q3",
+        "retained": true,
+        "attributed": true,
+        "reconstructed": true,
+        "phrases_found": [
+          "backfill"
+        ],
+        "phrases_expected": [
+          "backfill"
+        ],
+        "missing_sources": []
+      },
+      {
+        "question_id": "q4",
+        "retained": false,
+        "attributed": true,
+        "reconstructed": false,
+        "phrases_found": [
+          "sliding"
+        ],
+        "phrases_expected": [
+          "sliding",
+          "audit"
+        ],
+        "missing_sources": []
+      },
+      {
+        "question_id": "q5",
+        "retained": true,
+        "attributed": true,
+        "reconstructed": true,
+        "phrases_found": [
+          "drops",
+          "batch"
+        ],
+        "phrases_expected": [
+          "drops",
+          "batch"
+        ],
+        "missing_sources": []
+      },
+      {
+        "question_id": "q6",
+        "retained": false,
+        "attributed": false,
+        "reconstructed": false,
+        "phrases_found": [],
+        "phrases_expected": [
+          "5",
+          "30"
+        ],
+        "missing_sources": [
+          "config/defaults.json"
+        ]
+      }
+    ],
+    "mode": "retrieval-from-pack"
+  },
+  "delta": {
+    "counts": {
+      "sources_added": 1,
+      "sources_changed": 3,
+      "sources_removed": 1,
+      "sources_unchanged": 7,
+      "findings_preserved": 26,
+      "findings_stale": 1,
+      "findings_invalidated": 2,
+      "findings_added": 1,
+      "findings_updated": 1,
+      "calls": 1,
+      "rescan_files": 4
+    },
+    "verification": {
+      "preserved_identical": true,
+      "stale_retained": true,
+      "invalidated_retained": true,
+      "unchanged_sources_rescanned": 0,
+      "notes": [
+        "preserved means the finding text is unchanged and all of its cited sources are byte-identical",
+        "stale and invalidated findings remain visible in the snapshot observations but cannot be verified conclusions",
+        "a rescan never writes to the source tree"
+      ]
+    },
+    "rescanned": [
+      "src/backfill.js",
+      "config/defaults.json",
+      "src/ingest.js",
+      "src/retention.js"
+    ],
+    "usage": {
+      "calls": 1,
+      "measured_calls": 1,
+      "unmeasured_calls": 0,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "cost_usd": 0,
+      "cost_source": "not_applicable",
+      "latency_ms": 0,
+      "partitions": 1,
+      "validation": {
+        "quotes_checked": 2,
+        "quotes_failed": 0
+      },
+      "note": null
+    }
+  },
+  "checks": {
+    "total": 25,
+    "failed": 0
+  },
+  "limitation": "Stub mode measures pipeline coherence, not model capability. Token and cost results are not applicable."
+}

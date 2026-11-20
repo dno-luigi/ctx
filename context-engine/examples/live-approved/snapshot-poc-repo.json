@@ -1,0 +1,1878 @@
+{
+  "schema": "context-engine/snapshot/v1",
+  "engine": "context-engine/0.1.0",
+  "subject": {
+    "root": "poc-repo",
+    "acquired_at": "2026-11-20T04:49:22.813Z",
+    "source_digest": "sha256:fcdf85a62401ba8460bb128f974301ab8eb5a8aa3d150f36f765726efa03ec60",
+    "files": 11,
+    "bytes": 3238,
+    "skipped": [],
+    "source_facts": [
+      {
+        "source_id": "config/defaults.json",
+        "kind": "config",
+        "bytes": 72,
+        "lines": 6,
+        "sha256": "sha256:c8672fefac76cd1d07dc8f991b0d1a796e433bc096709ee015d5d3b8ae60b503",
+        "mtime": "2026-11-20T04:06:16.184Z",
+        "authoritative": true
+      },
+      {
+        "source_id": "docs/ARCHITECTURE.md",
+        "kind": "doc",
+        "bytes": 549,
+        "lines": 21,
+        "sha256": "sha256:b63d1d7131559917493ebfe17ed40d23653596bd0c09b17162df56aca1d8c817",
+        "mtime": "2026-11-20T04:06:11.195Z",
+        "authoritative": true
+      },
+      {
+        "source_id": "docs/DECISIONS.md",
+        "kind": "doc",
+        "bytes": 320,
+        "lines": 11,
+        "sha256": "sha256:5463801af7594ae5a5fef4d443962261f5ad9c4e6f69e59a51b097998c9cadfa",
+        "mtime": "2026-11-20T04:06:12.824Z",
+        "authoritative": true
+      },
+      {
+        "source_id": "docs/RUNBOOK.md",
+        "kind": "doc",
+        "bytes": 287,
+        "lines": 11,
+        "sha256": "sha256:439aa6de9401cc724783c55cbdcc1f1569865eea0e6d9af228583e6c5517e532",
+        "mtime": "2026-11-20T04:06:14.523Z",
+        "authoritative": true
+      },
+      {
+        "source_id": "notes/LEGACY-RETENTION.md",
+        "kind": "doc",
+        "bytes": 108,
+        "lines": 5,
+        "sha256": "sha256:1d8e7b87acee2d947b2f3378a4be491e0b4bdcccfe31fceae5d3dafb28ec0210",
+        "mtime": "2026-11-20T04:06:26.334Z",
+        "authoritative": true
+      },
+      {
+        "source_id": "README.md",
+        "kind": "doc",
+        "bytes": 445,
+        "lines": 15,
+        "sha256": "sha256:480999aafefec272670ceeecd4af9075d42adec7b031bd19744b960055d19a64",
+        "mtime": "2026-11-20T04:06:09.634Z",
+        "authoritative": true
+      },
+      {
+        "source_id": "src/ingest.js",
+        "kind": "code",
+        "bytes": 340,
+        "lines": 12,
+        "sha256": "sha256:463fbf9ec496dc563d453d9e14ecc35d53fa9d4df69ef51465eac5abec7b00ef",
+        "mtime": "2026-11-20T04:06:17.789Z",
+        "authoritative": true
+      },
+      {
+        "source_id": "src/retention.js",
+        "kind": "code",
+        "bytes": 245,
+        "lines": 8,
+        "sha256": "sha256:2acb9f969a7ada840643c862df28ce7e57eb890bfee182aa2e8965bcf0858afb",
+        "mtime": "2026-11-20T04:06:21.244Z",
+        "authoritative": true
+      },
+      {
+        "source_id": "src/scheduler.js",
+        "kind": "code",
+        "bytes": 174,
+        "lines": 7,
+        "sha256": "sha256:739ab17cb22ac70b8408926b80a032422d0d0815e17544c66a87b81bb39f0537",
+        "mtime": "2026-11-20T04:06:22.910Z",
+        "authoritative": true
+      },
+      {
+        "source_id": "src/store.js",
+        "kind": "code",
+        "bytes": 385,
+        "lines": 12,
+        "sha256": "sha256:ffd6908abeae52a691892b506e619d5b7ab9fe6912012d6e0765ec87cfaf144f",
+        "mtime": "2026-11-20T04:06:19.696Z",
+        "authoritative": true
+      },
+      {
+        "source_id": "tests/retention.test.js",
+        "kind": "code",
+        "bytes": 313,
+        "lines": 9,
+        "sha256": "sha256:0e06e67e21bc33a95194e855543eca8bf29df40f7751d884cc84ec4d147b68cb",
+        "mtime": "2026-11-20T04:06:24.624Z",
+        "authoritative": true
+      }
+    ]
+  },
+  "scan": {
+    "provider": "openai-compatible",
+    "model": "~z-ai/glm-flash-latest",
+    "upstream": [
+      "Wafer"
+    ],
+    "generation_ids": [
+      "gen-1795150149-lOi3fBSLWRolqqh54EVN"
+    ],
+    "partitions": 1,
+    "strategy": "single_pass",
+    "partition_budget_tokens": 400000,
+    "partition_budget_source": "model_context",
+    "partition_budget_notes": [
+      "output reserve of 4000 tokens subtracted from 1048576 context tokens",
+      "operator ceiling 400000 is below the model's usable 782432; ceiling applies"
+    ],
+    "partition_reason": "estimated 813 tokens fits the 400000-token budget",
+    "max_output_tokens": 8000,
+    "calls": 1,
+    "usage": {
+      "input_tokens": 2466,
+      "output_tokens": 3360,
+      "cost_usd": 0.000721812,
+      "cost_source": "provider"
+    },
+    "latency_ms": 3102,
+    "problems": []
+  },
+  "sections": {
+    "source_facts": [
+      {
+        "source_id": "config/defaults.json",
+        "kind": "config",
+        "bytes": 72,
+        "lines": 6,
+        "sha256": "sha256:c8672fefac76cd1d07dc8f991b0d1a796e433bc096709ee015d5d3b8ae60b503",
+        "mtime": "2026-11-20T04:06:16.184Z",
+        "authoritative": true
+      },
+      {
+        "source_id": "docs/ARCHITECTURE.md",
+        "kind": "doc",
+        "bytes": 549,
+        "lines": 21,
+        "sha256": "sha256:b63d1d7131559917493ebfe17ed40d23653596bd0c09b17162df56aca1d8c817",
+        "mtime": "2026-11-20T04:06:11.195Z",
+        "authoritative": true
+      },
+      {
+        "source_id": "docs/DECISIONS.md",
+        "kind": "doc",
+        "bytes": 320,
+        "lines": 11,
+        "sha256": "sha256:5463801af7594ae5a5fef4d443962261f5ad9c4e6f69e59a51b097998c9cadfa",
+        "mtime": "2026-11-20T04:06:12.824Z",
+        "authoritative": true
+      },
+      {
+        "source_id": "docs/RUNBOOK.md",
+        "kind": "doc",
+        "bytes": 287,
+        "lines": 11,
+        "sha256": "sha256:439aa6de9401cc724783c55cbdcc1f1569865eea0e6d9af228583e6c5517e532",
+        "mtime": "2026-11-20T04:06:14.523Z",
+        "authoritative": true
+      },
+      {
+        "source_id": "notes/LEGACY-RETENTION.md",
+        "kind": "doc",
+        "bytes": 108,
+        "lines": 5,
+        "sha256": "sha256:1d8e7b87acee2d947b2f3378a4be491e0b4bdcccfe31fceae5d3dafb28ec0210",
+        "mtime": "2026-11-20T04:06:26.334Z",
+        "authoritative": true
+      },
+      {
+        "source_id": "README.md",
+        "kind": "doc",
+        "bytes": 445,
+        "lines": 15,
+        "sha256": "sha256:480999aafefec272670ceeecd4af9075d42adec7b031bd19744b960055d19a64",
+        "mtime": "2026-11-20T04:06:09.634Z",
+        "authoritative": true
+      },
+      {
+        "source_id": "src/ingest.js",
+        "kind": "code",
+        "bytes": 340,
+        "lines": 12,
+        "sha256": "sha256:463fbf9ec496dc563d453d9e14ecc35d53fa9d4df69ef51465eac5abec7b00ef",
+        "mtime": "2026-11-20T04:06:17.789Z",
+        "authoritative": true
+      },
+      {
+        "source_id": "src/retention.js",
+        "kind": "code",
+        "bytes": 245,
+        "lines": 8,
+        "sha256": "sha256:2acb9f969a7ada840643c862df28ce7e57eb890bfee182aa2e8965bcf0858afb",
+        "mtime": "2026-11-20T04:06:21.244Z",
+        "authoritative": true
+      },
+      {
+        "source_id": "src/scheduler.js",
+        "kind": "code",
+        "bytes": 174,
+        "lines": 7,
+        "sha256": "sha256:739ab17cb22ac70b8408926b80a032422d0d0815e17544c66a87b81bb39f0537",
+        "mtime": "2026-11-20T04:06:22.910Z",
+        "authoritative": true
+      },
+      {
+        "source_id": "src/store.js",
+        "kind": "code",
+        "bytes": 385,
+        "lines": 12,
+        "sha256": "sha256:ffd6908abeae52a691892b506e619d5b7ab9fe6912012d6e0765ec87cfaf144f",
+        "mtime": "2026-11-20T04:06:19.696Z",
+        "authoritative": true
+      },
+      {
+        "source_id": "tests/retention.test.js",
+        "kind": "code",
+        "bytes": 313,
+        "lines": 9,
+        "sha256": "sha256:0e06e67e21bc33a95194e855543eca8bf29df40f7751d884cc84ec4d147b68cb",
+        "mtime": "2026-11-20T04:06:24.624Z",
+        "authoritative": true
+      }
+    ],
+    "observations": [
+      {
+        "kind": "invariant",
+        "text": "The service must never delete an object before its retention window expires.",
+        "certainty": "stated",
+        "entities": [
+          "retention"
+        ],
+        "partition": "p001",
+        "verification": "citation_verified",
+        "evidence": [
+          {
+            "source_id": "README.md",
+            "sha256": "sha256:480999aafefec272670ceeecd4af9075d42adec7b031bd19744b960055d19a64",
+            "quote": "The service MUST never delete an object before its retention window expires.",
+            "start": 103,
+            "end": 179,
+            "line": 7,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "flags": [],
+        "merged_from": [
+          "p001"
+        ],
+        "partitions": [
+          "p001"
+        ]
+      },
+      {
+        "kind": "invariant",
+        "text": "Every accepted batch is written exactly once and retries must be idempotent.",
+        "certainty": "stated",
+        "entities": [
+          "ingest",
+          "store"
+        ],
+        "partition": "p001",
+        "verification": "citation_verified",
+        "evidence": [
+          {
+            "source_id": "README.md",
+            "sha256": "sha256:480999aafefec272670ceeecd4af9075d42adec7b031bd19744b960055d19a64",
+            "quote": "Every accepted batch is written exactly once; retries MUST be idempotent.",
+            "start": 182,
+            "end": 255,
+            "line": 8,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "flags": [],
+        "merged_from": [
+          "p001"
+        ],
+        "partitions": [
+          "p001"
+        ]
+      },
+      {
+        "kind": "invariant",
+        "text": "The store must never delete an unexpired object even under lock contention.",
+        "certainty": "stated",
+        "entities": [
+          "store"
+        ],
+        "partition": "p001",
+        "verification": "citation_verified",
+        "evidence": [
+          {
+            "source_id": "src/store.js",
+            "sha256": "sha256:ffd6908abeae52a691892b506e619d5b7ab9fe6912012d6e0765ec87cfaf144f",
+            "quote": "The store MUST never delete an unexpired object, even under lock contention.",
+            "start": 89,
+            "end": 165,
+            "line": 4,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "flags": [],
+        "merged_from": [
+          "p001"
+        ],
+        "partitions": [
+          "p001"
+        ]
+      },
+      {
+        "kind": "decision",
+        "text": "ADR-001 chose a fixed 30-day retention window over a sliding TTL because the audit trail requires a fixed boundary.",
+        "certainty": "stated",
+        "entities": [
+          "retention",
+          "ADR-001"
+        ],
+        "partition": "p001",
+        "verification": "citation_verified",
+        "evidence": [
+          {
+            "source_id": "docs/DECISIONS.md",
+            "sha256": "sha256:5463801af7594ae5a5fef4d443962261f5ad9c4e6f69e59a51b097998c9cadfa",
+            "quote": "We decided to keep a fixed 30-day retention window rather than a sliding TTL.",
+            "start": 50,
+            "end": 127,
+            "line": 5,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          },
+          {
+            "source_id": "docs/DECISIONS.md",
+            "sha256": "sha256:5463801af7594ae5a5fef4d443962261f5ad9c4e6f69e59a51b097998c9cadfa",
+            "quote": "We rejected sliding-window TTL because the audit trail requires a fixed boundary.",
+            "start": 128,
+            "end": 209,
+            "line": 6,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "flags": [],
+        "merged_from": [
+          "p001"
+        ],
+        "partitions": [
+          "p001"
+        ]
+      },
+      {
+        "kind": "decision",
+        "text": "ADR-002 chose a batch size of 100 because larger batches increased lock contention.",
+        "certainty": "stated",
+        "entities": [
+          "ingest",
+          "ADR-002"
+        ],
+        "partition": "p001",
+        "verification": "citation_verified",
+        "evidence": [
+          {
+            "source_id": "docs/DECISIONS.md",
+            "sha256": "sha256:5463801af7594ae5a5fef4d443962261f5ad9c4e6f69e59a51b097998c9cadfa",
+            "quote": "We chose a batch size of 100 records. Larger batches increased lock contention.",
+            "start": 236,
+            "end": 315,
+            "line": 10,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "flags": [],
+        "merged_from": [
+          "p001"
+        ],
+        "partitions": [
+          "p001"
+        ]
+      },
+      {
+        "kind": "responsibility",
+        "text": "ingest accepts batches and validates payloads; store handles durable writes and reads; retention owns only the expiry decision; scheduler drives periodic drain work.",
+        "certainty": "stated",
+        "entities": [
+          "ingest",
+          "store",
+          "retention",
+          "scheduler"
+        ],
+        "partition": "p001",
+        "verification": "citation_verified",
+        "evidence": [
+          {
+            "source_id": "docs/ARCHITECTURE.md",
+            "sha256": "sha256:b63d1d7131559917493ebfe17ed40d23653596bd0c09b17162df56aca1d8c817",
+            "quote": "`ingest` is responsible for accepting batches and validating payloads.",
+            "start": 33,
+            "end": 103,
+            "line": 5,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          },
+          {
+            "source_id": "docs/ARCHITECTURE.md",
+            "sha256": "sha256:b63d1d7131559917493ebfe17ed40d23653596bd0c09b17162df56aca1d8c817",
+            "quote": "`store` is responsible for durable writes and reads.",
+            "start": 106,
+            "end": 158,
+            "line": 6,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          },
+          {
+            "source_id": "docs/ARCHITECTURE.md",
+            "sha256": "sha256:b63d1d7131559917493ebfe17ed40d23653596bd0c09b17162df56aca1d8c817",
+            "quote": "`retention` owns the expiry decision and nothing else.",
+            "start": 161,
+            "end": 215,
+            "line": 7,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          },
+          {
+            "source_id": "docs/ARCHITECTURE.md",
+            "sha256": "sha256:b63d1d7131559917493ebfe17ed40d23653596bd0c09b17162df56aca1d8c817",
+            "quote": "`scheduler` drives periodic drain work.",
+            "start": 218,
+            "end": 257,
+            "line": 8,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "flags": [],
+        "merged_from": [
+          "p001"
+        ],
+        "partitions": [
+          "p001"
+        ]
+      },
+      {
+        "kind": "dependency",
+        "text": "The dependency chain is ingest -> store -> retention, and scheduler -> ingest.",
+        "certainty": "stated",
+        "entities": [],
+        "partition": "p001",
+        "verification": "citation_verified",
+        "evidence": [
+          {
+            "source_id": "docs/ARCHITECTURE.md",
+            "sha256": "sha256:b63d1d7131559917493ebfe17ed40d23653596bd0c09b17162df56aca1d8c817",
+            "quote": "ingest depends on store. store depends on retention. scheduler depends on ingest.",
+            "start": 276,
+            "end": 357,
+            "line": 12,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "flags": [],
+        "merged_from": [
+          "p001"
+        ],
+        "partitions": [
+          "p001"
+        ]
+      },
+      {
+        "kind": "state",
+        "text": "ingest enforces a maximum batch size of 100 by throwing on larger batches.",
+        "certainty": "stated",
+        "entities": [
+          "ingest"
+        ],
+        "partition": "p001",
+        "verification": "citation_verified",
+        "evidence": [
+          {
+            "source_id": "src/ingest.js",
+            "sha256": "sha256:463fbf9ec496dc563d453d9e14ecc35d53fa9d4df69ef51465eac5abec7b00ef",
+            "quote": "if (batch.length > MAX_BATCH) throw new Error(`batch too large: ${batch.length}`);",
+            "start": 145,
+            "end": 227,
+            "line": 7,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "flags": [],
+        "merged_from": [
+          "p001"
+        ],
+        "partitions": [
+          "p001"
+        ]
+      },
+      {
+        "kind": "state",
+        "text": "Retention expiry uses an inclusive boundary: an object exactly 30 days old is expired.",
+        "certainty": "stated",
+        "entities": [
+          "retention"
+        ],
+        "partition": "p001",
+        "verification": "citation_verified",
+        "evidence": [
+          {
+            "source_id": "src/retention.js",
+            "sha256": "sha256:2acb9f969a7ada840643c862df28ce7e57eb890bfee182aa2e8965bcf0858afb",
+            "quote": "return now - object.created_at >= RETENTION_DAYS * DAY_MS;",
+            "start": 184,
+            "end": 242,
+            "line": 6,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          },
+          {
+            "source_id": "tests/retention.test.js",
+            "sha256": "sha256:0e06e67e21bc33a95194e855543eca8bf29df40f7751d884cc84ec4d147b68cb",
+            "quote": "The boundary MUST be inclusive: an object exactly 30 days old is expired.",
+            "start": 113,
+            "end": 186,
+            "line": 4,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "flags": [],
+        "merged_from": [
+          "p001"
+        ],
+        "partitions": [
+          "p001"
+        ]
+      },
+      {
+        "kind": "state",
+        "text": "The scheduler drains the queue every 30 seconds in batches of 100.",
+        "certainty": "stated",
+        "entities": [
+          "scheduler",
+          "ingest"
+        ],
+        "partition": "p001",
+        "verification": "citation_verified",
+        "evidence": [
+          {
+            "source_id": "src/scheduler.js",
+            "sha256": "sha256:739ab17cb22ac70b8408926b80a032422d0d0815e17544c66a87b81bb39f0537",
+            "quote": "return setInterval(() => ingest(queue.take(100)), 30000);",
+            "start": 114,
+            "end": 171,
+            "line": 5,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "flags": [],
+        "merged_from": [
+          "p001"
+        ],
+        "partitions": [
+          "p001"
+        ]
+      },
+      {
+        "kind": "risk",
+        "text": "The scheduler drops a batch instead of retrying when the store lock is held.",
+        "certainty": "stated",
+        "entities": [
+          "scheduler",
+          "store"
+        ],
+        "partition": "p001",
+        "verification": "citation_verified",
+        "evidence": [
+          {
+            "source_id": "docs/RUNBOOK.md",
+            "sha256": "sha256:439aa6de9401cc724783c55cbdcc1f1569865eea0e6d9af228583e6c5517e532",
+            "quote": "The scheduler drops a batch instead of retrying when the store lock is held.",
+            "start": 82,
+            "end": 158,
+            "line": 5,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "flags": [],
+        "merged_from": [
+          "p001"
+        ],
+        "partitions": [
+          "p001"
+        ]
+      },
+      {
+        "kind": "task",
+        "text": "An alert fires if the drop counter exceeds 1 per hour.",
+        "certainty": "stated",
+        "entities": [
+          "scheduler"
+        ],
+        "partition": "p001",
+        "verification": "citation_verified",
+        "evidence": [
+          {
+            "source_id": "docs/RUNBOOK.md",
+            "sha256": "sha256:439aa6de9401cc724783c55cbdcc1f1569865eea0e6d9af228583e6c5517e532",
+            "quote": "Alert if the drop counter exceeds 1 per hour.",
+            "start": 159,
+            "end": 204,
+            "line": 6,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "flags": [],
+        "merged_from": [
+          "p001"
+        ],
+        "partitions": [
+          "p001"
+        ]
+      },
+      {
+        "kind": "outstanding",
+        "text": "The backfill path is not yet implemented and must be documented before the next release.",
+        "certainty": "stated",
+        "entities": [],
+        "partition": "p001",
+        "verification": "citation_verified",
+        "evidence": [
+          {
+            "source_id": "README.md",
+            "sha256": "sha256:480999aafefec272670ceeecd4af9075d42adec7b031bd19744b960055d19a64",
+            "quote": "The backfill path is not yet implemented. TODO: document backfill before the next release.",
+            "start": 268,
+            "end": 358,
+            "line": 12,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "flags": [],
+        "merged_from": [
+          "p001"
+        ],
+        "partitions": [
+          "p001"
+        ]
+      },
+      {
+        "kind": "task",
+        "text": "Backfill is blocked because the store does not expose a bounded writer.",
+        "certainty": "stated",
+        "entities": [
+          "backfill",
+          "store"
+        ],
+        "partition": "p001",
+        "verification": "citation_verified",
+        "evidence": [
+          {
+            "source_id": "src/ingest.js",
+            "sha256": "sha256:463fbf9ec496dc563d453d9e14ecc35d53fa9d4df69ef51465eac5abec7b00ef",
+            "quote": "TODO(backfill): backfill cannot run until the store exposes a bounded writer.",
+            "start": 262,
+            "end": 339,
+            "line": 11,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "flags": [],
+        "merged_from": [
+          "p001"
+        ],
+        "partitions": [
+          "p001"
+        ]
+      },
+      {
+        "kind": "outstanding",
+        "text": "An open question remains whether backfill may write directly to the store or only through ingest.",
+        "certainty": "stated",
+        "entities": [
+          "backfill",
+          "store",
+          "ingest"
+        ],
+        "partition": "p001",
+        "verification": "citation_verified",
+        "evidence": [
+          {
+            "source_id": "docs/ARCHITECTURE.md",
+            "sha256": "sha256:b63d1d7131559917493ebfe17ed40d23653596bd0c09b17162df56aca1d8c817",
+            "quote": "Is backfill allowed to write directly to the store, or only through ingest?",
+            "start": 473,
+            "end": 548,
+            "line": 20,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "flags": [],
+        "merged_from": [
+          "p001"
+        ],
+        "partitions": [
+          "p001"
+        ]
+      },
+      {
+        "kind": "task",
+        "text": "The retention window must be verified as 30 days before every release.",
+        "certainty": "stated",
+        "entities": [
+          "retention"
+        ],
+        "partition": "p001",
+        "verification": "citation_verified",
+        "evidence": [
+          {
+            "source_id": "docs/RUNBOOK.md",
+            "sha256": "sha256:439aa6de9401cc724783c55cbdcc1f1569865eea0e6d9af228583e6c5517e532",
+            "quote": "Verify the retention window is 30 days before every release.",
+            "start": 226,
+            "end": 286,
+            "line": 10,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "flags": [],
+        "merged_from": [
+          "p001"
+        ],
+        "partitions": [
+          "p001"
+        ]
+      },
+      {
+        "kind": "state",
+        "text": "Retention was 14 days before the audit change and the legacy note is superseded by ADR-001.",
+        "certainty": "stated",
+        "entities": [
+          "retention",
+          "ADR-001"
+        ],
+        "partition": "p001",
+        "verification": "citation_verified",
+        "evidence": [
+          {
+            "source_id": "notes/LEGACY-RETENTION.md",
+            "sha256": "sha256:1d8e7b87acee2d947b2f3378a4be491e0b4bdcccfe31fceae5d3dafb28ec0210",
+            "quote": "Retention was 14 days before the audit change.",
+            "start": 25,
+            "end": 71,
+            "line": 3,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          },
+          {
+            "source_id": "notes/LEGACY-RETENTION.md",
+            "sha256": "sha256:1d8e7b87acee2d947b2f3378a4be491e0b4bdcccfe31fceae5d3dafb28ec0210",
+            "quote": "This note is superseded by ADR-001.",
+            "start": 72,
+            "end": 107,
+            "line": 4,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "flags": [],
+        "merged_from": [
+          "p001"
+        ],
+        "partitions": [
+          "p001"
+        ]
+      },
+      {
+        "kind": "state",
+        "text": "store's sweep filters objects to those whose retention has expired, delegating expiry to isExpired.",
+        "certainty": "derived",
+        "entities": [
+          "store",
+          "retention"
+        ],
+        "partition": "p001",
+        "verification": "citation_verified",
+        "evidence": [
+          {
+            "source_id": "src/store.js",
+            "sha256": "sha256:ffd6908abeae52a691892b506e619d5b7ab9fe6912012d6e0765ec87cfaf144f",
+            "quote": "return objects.filter((object) => isExpired(object, now));",
+            "start": 324,
+            "end": 382,
+            "line": 10,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          },
+          {
+            "source_id": "src/retention.js",
+            "sha256": "sha256:2acb9f969a7ada840643c862df28ce7e57eb890bfee182aa2e8965bcf0858afb",
+            "quote": "export function isExpired(object, now) {",
+            "start": 141,
+            "end": 181,
+            "line": 5,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "flags": [],
+        "merged_from": [
+          "p001"
+        ],
+        "partitions": [
+          "p001"
+        ]
+      },
+      {
+        "kind": "state",
+        "text": "writeBatch stamps each record with a written_at timestamp but the acquired snippet shows no durable write.",
+        "certainty": "derived",
+        "entities": [
+          "store"
+        ],
+        "partition": "p001",
+        "verification": "citation_verified",
+        "evidence": [
+          {
+            "source_id": "src/store.js",
+            "sha256": "sha256:ffd6908abeae52a691892b506e619d5b7ab9fe6912012d6e0765ec87cfaf144f",
+            "quote": "return batch.map((record) => ({ ...record, written_at: Date.now() }));",
+            "start": 210,
+            "end": 280,
+            "line": 6,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          },
+          {
+            "source_id": "src/store.js",
+            "sha256": "sha256:ffd6908abeae52a691892b506e619d5b7ab9fe6912012d6e0765ec87cfaf144f",
+            "quote": "// Durable storage for accepted batches.",
+            "start": 0,
+            "end": 40,
+            "line": 1,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "flags": [],
+        "merged_from": [
+          "p001"
+        ],
+        "partitions": [
+          "p001"
+        ]
+      },
+      {
+        "kind": "state",
+        "text": "Configuration defaults set retention_days 30, timeout_seconds 5, and batch_size 100.",
+        "certainty": "stated",
+        "entities": [
+          "config"
+        ],
+        "partition": "p001",
+        "verification": "citation_verified",
+        "evidence": [
+          {
+            "source_id": "config/defaults.json",
+            "sha256": "sha256:c8672fefac76cd1d07dc8f991b0d1a796e433bc096709ee015d5d3b8ae60b503",
+            "quote": "\"retention_days\": 30,",
+            "start": 4,
+            "end": 25,
+            "line": 2,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "flags": [],
+        "merged_from": [
+          "p001"
+        ],
+        "partitions": [
+          "p001"
+        ]
+      },
+      {
+        "kind": "reference",
+        "text": "tests/retention.test.js asserts the boundary using RETENTION_DAYS and the same DAY_MS constant value of 86400000.",
+        "certainty": "derived",
+        "entities": [
+          "retention",
+          "tests"
+        ],
+        "partition": "p001",
+        "verification": "citation_verified",
+        "evidence": [
+          {
+            "source_id": "tests/retention.test.js",
+            "sha256": "sha256:0e06e67e21bc33a95194e855543eca8bf29df40f7751d884cc84ec4d147b68cb",
+            "quote": "return isExpired(object, RETENTION_DAYS * 86400000);",
+            "start": 258,
+            "end": 310,
+            "line": 7,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          },
+          {
+            "source_id": "src/retention.js",
+            "sha256": "sha256:2acb9f969a7ada840643c862df28ce7e57eb890bfee182aa2e8965bcf0858afb",
+            "quote": "const DAY_MS = 86400000;",
+            "start": 115,
+            "end": 139,
+            "line": 3,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "flags": [],
+        "merged_from": [
+          "p001"
+        ],
+        "partitions": [
+          "p001"
+        ]
+      }
+    ],
+    "verified_conclusions": [
+      {
+        "kind": "invariant",
+        "text": "The service must never delete an object before its retention window expires.",
+        "evidence": [
+          {
+            "source_id": "README.md",
+            "sha256": "sha256:480999aafefec272670ceeecd4af9075d42adec7b031bd19744b960055d19a64",
+            "quote": "The service MUST never delete an object before its retention window expires.",
+            "start": 103,
+            "end": 179,
+            "line": 7,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "entities": [
+          "retention"
+        ]
+      },
+      {
+        "kind": "invariant",
+        "text": "Every accepted batch is written exactly once and retries must be idempotent.",
+        "evidence": [
+          {
+            "source_id": "README.md",
+            "sha256": "sha256:480999aafefec272670ceeecd4af9075d42adec7b031bd19744b960055d19a64",
+            "quote": "Every accepted batch is written exactly once; retries MUST be idempotent.",
+            "start": 182,
+            "end": 255,
+            "line": 8,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "entities": [
+          "ingest",
+          "store"
+        ]
+      },
+      {
+        "kind": "invariant",
+        "text": "The store must never delete an unexpired object even under lock contention.",
+        "evidence": [
+          {
+            "source_id": "src/store.js",
+            "sha256": "sha256:ffd6908abeae52a691892b506e619d5b7ab9fe6912012d6e0765ec87cfaf144f",
+            "quote": "The store MUST never delete an unexpired object, even under lock contention.",
+            "start": 89,
+            "end": 165,
+            "line": 4,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "entities": [
+          "store"
+        ]
+      },
+      {
+        "kind": "decision",
+        "text": "ADR-001 chose a fixed 30-day retention window over a sliding TTL because the audit trail requires a fixed boundary.",
+        "evidence": [
+          {
+            "source_id": "docs/DECISIONS.md",
+            "sha256": "sha256:5463801af7594ae5a5fef4d443962261f5ad9c4e6f69e59a51b097998c9cadfa",
+            "quote": "We decided to keep a fixed 30-day retention window rather than a sliding TTL.",
+            "start": 50,
+            "end": 127,
+            "line": 5,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          },
+          {
+            "source_id": "docs/DECISIONS.md",
+            "sha256": "sha256:5463801af7594ae5a5fef4d443962261f5ad9c4e6f69e59a51b097998c9cadfa",
+            "quote": "We rejected sliding-window TTL because the audit trail requires a fixed boundary.",
+            "start": 128,
+            "end": 209,
+            "line": 6,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "entities": [
+          "retention",
+          "ADR-001"
+        ]
+      },
+      {
+        "kind": "decision",
+        "text": "ADR-002 chose a batch size of 100 because larger batches increased lock contention.",
+        "evidence": [
+          {
+            "source_id": "docs/DECISIONS.md",
+            "sha256": "sha256:5463801af7594ae5a5fef4d443962261f5ad9c4e6f69e59a51b097998c9cadfa",
+            "quote": "We chose a batch size of 100 records. Larger batches increased lock contention.",
+            "start": 236,
+            "end": 315,
+            "line": 10,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "entities": [
+          "ingest",
+          "ADR-002"
+        ]
+      },
+      {
+        "kind": "responsibility",
+        "text": "ingest accepts batches and validates payloads; store handles durable writes and reads; retention owns only the expiry decision; scheduler drives periodic drain work.",
+        "evidence": [
+          {
+            "source_id": "docs/ARCHITECTURE.md",
+            "sha256": "sha256:b63d1d7131559917493ebfe17ed40d23653596bd0c09b17162df56aca1d8c817",
+            "quote": "`ingest` is responsible for accepting batches and validating payloads.",
+            "start": 33,
+            "end": 103,
+            "line": 5,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          },
+          {
+            "source_id": "docs/ARCHITECTURE.md",
+            "sha256": "sha256:b63d1d7131559917493ebfe17ed40d23653596bd0c09b17162df56aca1d8c817",
+            "quote": "`store` is responsible for durable writes and reads.",
+            "start": 106,
+            "end": 158,
+            "line": 6,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          },
+          {
+            "source_id": "docs/ARCHITECTURE.md",
+            "sha256": "sha256:b63d1d7131559917493ebfe17ed40d23653596bd0c09b17162df56aca1d8c817",
+            "quote": "`retention` owns the expiry decision and nothing else.",
+            "start": 161,
+            "end": 215,
+            "line": 7,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          },
+          {
+            "source_id": "docs/ARCHITECTURE.md",
+            "sha256": "sha256:b63d1d7131559917493ebfe17ed40d23653596bd0c09b17162df56aca1d8c817",
+            "quote": "`scheduler` drives periodic drain work.",
+            "start": 218,
+            "end": 257,
+            "line": 8,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "entities": [
+          "ingest",
+          "store",
+          "retention",
+          "scheduler"
+        ]
+      },
+      {
+        "kind": "dependency",
+        "text": "The dependency chain is ingest -> store -> retention, and scheduler -> ingest.",
+        "evidence": [
+          {
+            "source_id": "docs/ARCHITECTURE.md",
+            "sha256": "sha256:b63d1d7131559917493ebfe17ed40d23653596bd0c09b17162df56aca1d8c817",
+            "quote": "ingest depends on store. store depends on retention. scheduler depends on ingest.",
+            "start": 276,
+            "end": 357,
+            "line": 12,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "entities": []
+      },
+      {
+        "kind": "state",
+        "text": "ingest enforces a maximum batch size of 100 by throwing on larger batches.",
+        "evidence": [
+          {
+            "source_id": "src/ingest.js",
+            "sha256": "sha256:463fbf9ec496dc563d453d9e14ecc35d53fa9d4df69ef51465eac5abec7b00ef",
+            "quote": "if (batch.length > MAX_BATCH) throw new Error(`batch too large: ${batch.length}`);",
+            "start": 145,
+            "end": 227,
+            "line": 7,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "entities": [
+          "ingest"
+        ]
+      },
+      {
+        "kind": "state",
+        "text": "Retention expiry uses an inclusive boundary: an object exactly 30 days old is expired.",
+        "evidence": [
+          {
+            "source_id": "src/retention.js",
+            "sha256": "sha256:2acb9f969a7ada840643c862df28ce7e57eb890bfee182aa2e8965bcf0858afb",
+            "quote": "return now - object.created_at >= RETENTION_DAYS * DAY_MS;",
+            "start": 184,
+            "end": 242,
+            "line": 6,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          },
+          {
+            "source_id": "tests/retention.test.js",
+            "sha256": "sha256:0e06e67e21bc33a95194e855543eca8bf29df40f7751d884cc84ec4d147b68cb",
+            "quote": "The boundary MUST be inclusive: an object exactly 30 days old is expired.",
+            "start": 113,
+            "end": 186,
+            "line": 4,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "entities": [
+          "retention"
+        ]
+      },
+      {
+        "kind": "state",
+        "text": "The scheduler drains the queue every 30 seconds in batches of 100.",
+        "evidence": [
+          {
+            "source_id": "src/scheduler.js",
+            "sha256": "sha256:739ab17cb22ac70b8408926b80a032422d0d0815e17544c66a87b81bb39f0537",
+            "quote": "return setInterval(() => ingest(queue.take(100)), 30000);",
+            "start": 114,
+            "end": 171,
+            "line": 5,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "entities": [
+          "scheduler",
+          "ingest"
+        ]
+      },
+      {
+        "kind": "risk",
+        "text": "The scheduler drops a batch instead of retrying when the store lock is held.",
+        "evidence": [
+          {
+            "source_id": "docs/RUNBOOK.md",
+            "sha256": "sha256:439aa6de9401cc724783c55cbdcc1f1569865eea0e6d9af228583e6c5517e532",
+            "quote": "The scheduler drops a batch instead of retrying when the store lock is held.",
+            "start": 82,
+            "end": 158,
+            "line": 5,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "entities": [
+          "scheduler",
+          "store"
+        ]
+      },
+      {
+        "kind": "outstanding",
+        "text": "The backfill path is not yet implemented and must be documented before the next release.",
+        "evidence": [
+          {
+            "source_id": "README.md",
+            "sha256": "sha256:480999aafefec272670ceeecd4af9075d42adec7b031bd19744b960055d19a64",
+            "quote": "The backfill path is not yet implemented. TODO: document backfill before the next release.",
+            "start": 268,
+            "end": 358,
+            "line": 12,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "entities": []
+      },
+      {
+        "kind": "outstanding",
+        "text": "An open question remains whether backfill may write directly to the store or only through ingest.",
+        "evidence": [
+          {
+            "source_id": "docs/ARCHITECTURE.md",
+            "sha256": "sha256:b63d1d7131559917493ebfe17ed40d23653596bd0c09b17162df56aca1d8c817",
+            "quote": "Is backfill allowed to write directly to the store, or only through ingest?",
+            "start": 473,
+            "end": 548,
+            "line": 20,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "entities": [
+          "backfill",
+          "store",
+          "ingest"
+        ]
+      },
+      {
+        "kind": "state",
+        "text": "Retention was 14 days before the audit change and the legacy note is superseded by ADR-001.",
+        "evidence": [
+          {
+            "source_id": "notes/LEGACY-RETENTION.md",
+            "sha256": "sha256:1d8e7b87acee2d947b2f3378a4be491e0b4bdcccfe31fceae5d3dafb28ec0210",
+            "quote": "Retention was 14 days before the audit change.",
+            "start": 25,
+            "end": 71,
+            "line": 3,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          },
+          {
+            "source_id": "notes/LEGACY-RETENTION.md",
+            "sha256": "sha256:1d8e7b87acee2d947b2f3378a4be491e0b4bdcccfe31fceae5d3dafb28ec0210",
+            "quote": "This note is superseded by ADR-001.",
+            "start": 72,
+            "end": 107,
+            "line": 4,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "entities": [
+          "retention",
+          "ADR-001"
+        ]
+      },
+      {
+        "kind": "state",
+        "text": "Configuration defaults set retention_days 30, timeout_seconds 5, and batch_size 100.",
+        "evidence": [
+          {
+            "source_id": "config/defaults.json",
+            "sha256": "sha256:c8672fefac76cd1d07dc8f991b0d1a796e433bc096709ee015d5d3b8ae60b503",
+            "quote": "\"retention_days\": 30,",
+            "start": 4,
+            "end": 25,
+            "line": 2,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "entities": [
+          "config"
+        ]
+      }
+    ],
+    "inferences": [
+      {
+        "kind": "task",
+        "text": "An alert fires if the drop counter exceeds 1 per hour.",
+        "certainty": "stated",
+        "verification": "citation_verified",
+        "evidence": [
+          {
+            "source_id": "docs/RUNBOOK.md",
+            "sha256": "sha256:439aa6de9401cc724783c55cbdcc1f1569865eea0e6d9af228583e6c5517e532",
+            "quote": "Alert if the drop counter exceeds 1 per hour.",
+            "start": 159,
+            "end": 204,
+            "line": 6,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "flags": []
+      },
+      {
+        "kind": "task",
+        "text": "Backfill is blocked because the store does not expose a bounded writer.",
+        "certainty": "stated",
+        "verification": "citation_verified",
+        "evidence": [
+          {
+            "source_id": "src/ingest.js",
+            "sha256": "sha256:463fbf9ec496dc563d453d9e14ecc35d53fa9d4df69ef51465eac5abec7b00ef",
+            "quote": "TODO(backfill): backfill cannot run until the store exposes a bounded writer.",
+            "start": 262,
+            "end": 339,
+            "line": 11,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "flags": []
+      },
+      {
+        "kind": "task",
+        "text": "The retention window must be verified as 30 days before every release.",
+        "certainty": "stated",
+        "verification": "citation_verified",
+        "evidence": [
+          {
+            "source_id": "docs/RUNBOOK.md",
+            "sha256": "sha256:439aa6de9401cc724783c55cbdcc1f1569865eea0e6d9af228583e6c5517e532",
+            "quote": "Verify the retention window is 30 days before every release.",
+            "start": 226,
+            "end": 286,
+            "line": 10,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "flags": []
+      },
+      {
+        "kind": "state",
+        "text": "store's sweep filters objects to those whose retention has expired, delegating expiry to isExpired.",
+        "certainty": "derived",
+        "verification": "citation_verified",
+        "evidence": [
+          {
+            "source_id": "src/store.js",
+            "sha256": "sha256:ffd6908abeae52a691892b506e619d5b7ab9fe6912012d6e0765ec87cfaf144f",
+            "quote": "return objects.filter((object) => isExpired(object, now));",
+            "start": 324,
+            "end": 382,
+            "line": 10,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          },
+          {
+            "source_id": "src/retention.js",
+            "sha256": "sha256:2acb9f969a7ada840643c862df28ce7e57eb890bfee182aa2e8965bcf0858afb",
+            "quote": "export function isExpired(object, now) {",
+            "start": 141,
+            "end": 181,
+            "line": 5,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "flags": []
+      },
+      {
+        "kind": "state",
+        "text": "writeBatch stamps each record with a written_at timestamp but the acquired snippet shows no durable write.",
+        "certainty": "derived",
+        "verification": "citation_verified",
+        "evidence": [
+          {
+            "source_id": "src/store.js",
+            "sha256": "sha256:ffd6908abeae52a691892b506e619d5b7ab9fe6912012d6e0765ec87cfaf144f",
+            "quote": "return batch.map((record) => ({ ...record, written_at: Date.now() }));",
+            "start": 210,
+            "end": 280,
+            "line": 6,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          },
+          {
+            "source_id": "src/store.js",
+            "sha256": "sha256:ffd6908abeae52a691892b506e619d5b7ab9fe6912012d6e0765ec87cfaf144f",
+            "quote": "// Durable storage for accepted batches.",
+            "start": 0,
+            "end": 40,
+            "line": 1,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "flags": []
+      },
+      {
+        "kind": "reference",
+        "text": "tests/retention.test.js asserts the boundary using RETENTION_DAYS and the same DAY_MS constant value of 86400000.",
+        "certainty": "derived",
+        "verification": "citation_verified",
+        "evidence": [
+          {
+            "source_id": "tests/retention.test.js",
+            "sha256": "sha256:0e06e67e21bc33a95194e855543eca8bf29df40f7751d884cc84ec4d147b68cb",
+            "quote": "return isExpired(object, RETENTION_DAYS * 86400000);",
+            "start": 258,
+            "end": 310,
+            "line": 7,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          },
+          {
+            "source_id": "src/retention.js",
+            "sha256": "sha256:2acb9f969a7ada840643c862df28ce7e57eb890bfee182aa2e8965bcf0858afb",
+            "quote": "const DAY_MS = 86400000;",
+            "start": 115,
+            "end": 139,
+            "line": 3,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "flags": []
+      }
+    ],
+    "questions": [
+      {
+        "text": "Is backfill allowed to write directly to the store, or only through ingest?",
+        "partition": "p001"
+      },
+      {
+        "text": "Does the scheduler dropping a batch when the store lock is held conflict with the exactly-once / idempotent-retry invariant, given dropped batches are not retried?",
+        "partition": "p001"
+      },
+      {
+        "text": "Why does config/defaults.json define timeout_seconds at all if the production timeout is set by the platform team?",
+        "partition": "p001"
+      }
+    ],
+    "historical_state": null,
+    "current_state": {
+      "state": [
+        "ingest enforces a maximum batch size of 100 by throwing on larger batches.",
+        "Retention expiry uses an inclusive boundary: an object exactly 30 days old is expired.",
+        "The scheduler drains the queue every 30 seconds in batches of 100.",
+        "Retention was 14 days before the audit change and the legacy note is superseded by ADR-001.",
+        "store's sweep filters objects to those whose retention has expired, delegating expiry to isExpired.",
+        "writeBatch stamps each record with a written_at timestamp but the acquired snippet shows no durable write.",
+        "Configuration defaults set retention_days 30, timeout_seconds 5, and batch_size 100."
+      ],
+      "outstanding": [
+        "The backfill path is not yet implemented and must be documented before the next release.",
+        "An open question remains whether backfill may write directly to the store or only through ingest."
+      ],
+      "risks": [
+        "The scheduler drops a batch instead of retrying when the store lock is held."
+      ]
+    }
+  },
+  "architecture": {
+    "components": [
+      {
+        "text": "ingest accepts batches and validates payloads; store handles durable writes and reads; retention owns only the expiry decision; scheduler drives periodic drain work.",
+        "kind": "responsibility",
+        "evidence": [
+          {
+            "source_id": "docs/ARCHITECTURE.md",
+            "sha256": "sha256:b63d1d7131559917493ebfe17ed40d23653596bd0c09b17162df56aca1d8c817",
+            "quote": "`ingest` is responsible for accepting batches and validating payloads.",
+            "start": 33,
+            "end": 103,
+            "line": 5,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          },
+          {
+            "source_id": "docs/ARCHITECTURE.md",
+            "sha256": "sha256:b63d1d7131559917493ebfe17ed40d23653596bd0c09b17162df56aca1d8c817",
+            "quote": "`store` is responsible for durable writes and reads.",
+            "start": 106,
+            "end": 158,
+            "line": 6,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          },
+          {
+            "source_id": "docs/ARCHITECTURE.md",
+            "sha256": "sha256:b63d1d7131559917493ebfe17ed40d23653596bd0c09b17162df56aca1d8c817",
+            "quote": "`retention` owns the expiry decision and nothing else.",
+            "start": 161,
+            "end": 215,
+            "line": 7,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          },
+          {
+            "source_id": "docs/ARCHITECTURE.md",
+            "sha256": "sha256:b63d1d7131559917493ebfe17ed40d23653596bd0c09b17162df56aca1d8c817",
+            "quote": "`scheduler` drives periodic drain work.",
+            "start": 218,
+            "end": 257,
+            "line": 8,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ]
+      }
+    ],
+    "dependencies": [
+      {
+        "text": "The dependency chain is ingest -> store -> retention, and scheduler -> ingest.",
+        "evidence": [
+          {
+            "source_id": "docs/ARCHITECTURE.md",
+            "sha256": "sha256:b63d1d7131559917493ebfe17ed40d23653596bd0c09b17162df56aca1d8c817",
+            "quote": "ingest depends on store. store depends on retention. scheduler depends on ingest.",
+            "start": 276,
+            "end": 357,
+            "line": 12,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "from": "src/ingest.js",
+        "to": "src/store.js",
+        "type": "imports",
+        "partition": "p001",
+        "verification": "citation_verified",
+        "evidence": [
+          {
+            "source_id": "src/ingest.js",
+            "sha256": "sha256:463fbf9ec496dc563d453d9e14ecc35d53fa9d4df69ef51465eac5abec7b00ef",
+            "quote": "import { writeBatch } from './store.js';",
+            "start": 32,
+            "end": 72,
+            "line": 2,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "flags": [],
+        "partitions": [
+          "p001"
+        ],
+        "cross_partition": false
+      },
+      {
+        "from": "src/store.js",
+        "to": "src/retention.js",
+        "type": "imports",
+        "partition": "p001",
+        "verification": "citation_verified",
+        "evidence": [
+          {
+            "source_id": "src/store.js",
+            "sha256": "sha256:ffd6908abeae52a691892b506e619d5b7ab9fe6912012d6e0765ec87cfaf144f",
+            "quote": "import { isExpired } from './retention.js';",
+            "start": 41,
+            "end": 84,
+            "line": 2,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "flags": [],
+        "partitions": [
+          "p001"
+        ],
+        "cross_partition": false
+      },
+      {
+        "from": "src/scheduler.js",
+        "to": "src/ingest.js",
+        "type": "imports",
+        "partition": "p001",
+        "verification": "citation_verified",
+        "evidence": [
+          {
+            "source_id": "src/scheduler.js",
+            "sha256": "sha256:739ab17cb22ac70b8408926b80a032422d0d0815e17544c66a87b81bb39f0537",
+            "quote": "import { ingest } from './ingest.js';",
+            "start": 42,
+            "end": 79,
+            "line": 2,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "flags": [],
+        "partitions": [
+          "p001"
+        ],
+        "cross_partition": false
+      },
+      {
+        "from": "tests/retention.test.js",
+        "to": "src/retention.js",
+        "type": "imports",
+        "partition": "p001",
+        "verification": "citation_verified",
+        "evidence": [
+          {
+            "source_id": "tests/retention.test.js",
+            "sha256": "sha256:0e06e67e21bc33a95194e855543eca8bf29df40f7751d884cc84ec4d147b68cb",
+            "quote": "import { RETENTION_DAYS, isExpired } from '../src/retention.js';",
+            "start": 44,
+            "end": 108,
+            "line": 2,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "flags": [],
+        "partitions": [
+          "p001"
+        ],
+        "cross_partition": false
+      },
+      {
+        "from": "README.md",
+        "to": "docs/ARCHITECTURE.md",
+        "type": "references",
+        "partition": "p001",
+        "verification": "citation_verified",
+        "evidence": [
+          {
+            "source_id": "README.md",
+            "sha256": "sha256:480999aafefec272670ceeecd4af9075d42adec7b031bd19744b960055d19a64",
+            "quote": "See [the architecture](docs/ARCHITECTURE.md) and [the decisions](docs/DECISIONS.md).",
+            "start": 360,
+            "end": 444,
+            "line": 14,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "flags": [],
+        "partitions": [
+          "p001"
+        ],
+        "cross_partition": false
+      },
+      {
+        "from": "README.md",
+        "to": "docs/DECISIONS.md",
+        "type": "references",
+        "partition": "p001",
+        "verification": "citation_verified",
+        "evidence": [
+          {
+            "source_id": "README.md",
+            "sha256": "sha256:480999aafefec272670ceeecd4af9075d42adec7b031bd19744b960055d19a64",
+            "quote": "See [the architecture](docs/ARCHITECTURE.md) and [the decisions](docs/DECISIONS.md).",
+            "start": 360,
+            "end": 444,
+            "line": 14,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "flags": [],
+        "partitions": [
+          "p001"
+        ],
+        "cross_partition": false
+      },
+      {
+        "from": "notes/LEGACY-RETENTION.md",
+        "to": "docs/DECISIONS.md",
+        "type": "references",
+        "partition": "p001",
+        "verification": "citation_verified",
+        "evidence": [
+          {
+            "source_id": "notes/LEGACY-RETENTION.md",
+            "sha256": "sha256:1d8e7b87acee2d947b2f3378a4be491e0b4bdcccfe31fceae5d3dafb28ec0210",
+            "quote": "This note is superseded by ADR-001.",
+            "start": 72,
+            "end": 107,
+            "line": 4,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "flags": [],
+        "partitions": [
+          "p001"
+        ],
+        "cross_partition": false
+      },
+      {
+        "from": "docs/DECISIONS.md",
+        "to": "src/retention.js",
+        "type": "defines",
+        "partition": "p001",
+        "verification": "citation_verified",
+        "evidence": [
+          {
+            "source_id": "src/retention.js",
+            "sha256": "sha256:2acb9f969a7ada840643c862df28ce7e57eb890bfee182aa2e8965bcf0858afb",
+            "quote": "// Fixed retention policy. ADR-001 chose a fixed boundary over a sliding window.",
+            "start": 0,
+            "end": 80,
+            "line": 1,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "flags": [],
+        "partitions": [
+          "p001"
+        ],
+        "cross_partition": false
+      },
+      {
+        "from": "docs/ARCHITECTURE.md",
+        "to": "scheduler",
+        "type": "documents",
+        "partition": "p001",
+        "verification": "citation_verified",
+        "evidence": [
+          {
+            "source_id": "docs/ARCHITECTURE.md",
+            "sha256": "sha256:b63d1d7131559917493ebfe17ed40d23653596bd0c09b17162df56aca1d8c817",
+            "quote": "`scheduler` drives periodic drain work.",
+            "start": 218,
+            "end": 257,
+            "line": 8,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "flags": [],
+        "partitions": [
+          "p001"
+        ],
+        "cross_partition": 0
+      },
+      {
+        "from": "config/defaults.json",
+        "to": "docs/DECISIONS.md",
+        "type": "references",
+        "partition": "p001",
+        "verification": "citation_verified",
+        "evidence": [
+          {
+            "source_id": "config/defaults.json",
+            "sha256": "sha256:c8672fefac76cd1d07dc8f991b0d1a796e433bc096709ee015d5d3b8ae60b503",
+            "quote": "\"batch_size\": 100",
+            "start": 52,
+            "end": 69,
+            "line": 4,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "flags": [],
+        "partitions": [
+          "p001"
+        ],
+        "cross_partition": false
+      },
+      {
+        "from": "src/scheduler.js",
+        "to": "docs/DECISIONS.md",
+        "type": "references",
+        "partition": "p001",
+        "verification": "citation_verified",
+        "evidence": [
+          {
+            "source_id": "src/scheduler.js",
+            "sha256": "sha256:739ab17cb22ac70b8408926b80a032422d0d0815e17544c66a87b81bb39f0537",
+            "quote": "return setInterval(() => ingest(queue.take(100)), 30000);",
+            "start": 114,
+            "end": 171,
+            "line": 5,
+            "occurrences": 1,
+            "ambiguous_locator": false
+          }
+        ],
+        "flags": [],
+        "partitions": [
+          "p001"
+        ],
+        "cross_partition": false
+      }
+    ]
+  },
+  "contradictions": [
+    {
+      "text": "The ingest timeout is 30 seconds in production per the architecture doc, but config/defaults.json sets timeout_seconds to 5.",
+      "between": [
+        "docs/ARCHITECTURE.md",
+        "config/defaults.json"
+      ],
+      "partition": "p001",
+      "verification": "citation_verified",
+      "evidence": [
+        {
+          "source_id": "docs/ARCHITECTURE.md",
+          "sha256": "sha256:b63d1d7131559917493ebfe17ed40d23653596bd0c09b17162df56aca1d8c817",
+          "quote": "The ingest timeout is 30 seconds in production, set by the platform team.",
+          "start": 377,
+          "end": 450,
+          "line": 16,
+          "occurrences": 1,
+          "ambiguous_locator": false
+        },
+        {
+          "source_id": "config/defaults.json",
+          "sha256": "sha256:c8672fefac76cd1d07dc8f991b0d1a796e433bc096709ee015d5d3b8ae60b503",
+          "quote": "\"timeout_seconds\": 5,",
+          "start": 28,
+          "end": 49,
+          "line": 3,
+          "occurrences": 1,
+          "ambiguous_locator": false
+        }
+      ],
+      "flags": []
+    }
+  ],
+  "coverage": {
+    "sources_total": 11,
+    "sources_cited": 11,
+    "sources_unexamined": [],
+    "citation_coverage": 1,
+    "findings": 21,
+    "verified_citations": 21,
+    "failed_citations": 0,
+    "cross_partition_relationships": 0,
+    "duplicate_findings_merged": 0
+  },
+  "manifest": {
+    "model_derived": true,
+    "authoritative_source": "subject.source_facts",
+    "notes": [
+      "verified_conclusions are citation-verified, not truth-adjudicated",
+      "inferences includes every finding that was not citation-verified or was labelled derived/inferred",
+      "sources_unexamined is a coverage gap, not evidence that a file is irrelevant"
+    ]
+  },
+  "snapshot_id": "snap-7758e901b5362ef3",
+  "digest": "sha256:7758e901b5362ef3a7e1399bda7fd7dc64965c3a152a59d29e008c1ec6aa9837"
+}

@@ -1,0 +1,107 @@
+{
+  "schema": "context-engine/qa-rescore/v1",
+  "at": "2026-11-20T04:32:45.615Z",
+  "source_answers": "examples/live/qa-answers.json",
+  "source_answers_digest": "sha256:2fad3b2a18b4ddac4c9adf89fd8984a68b558b9af5ca7d2bb9409c611cb6a427",
+  "reason": "QA citations were returned as path:line; the scorer now normalises formatting before checking membership. Answers are unchanged; no model call was made.",
+  "score": {
+    "questions": 6,
+    "retention": 0.8333333333333334,
+    "attribution": 0.8333333333333334,
+    "reconstruction": 0.8333333333333334,
+    "factual_errors": 0,
+    "factual_error_details": [],
+    "cited_sources_total": 8,
+    "per_question": [
+      {
+        "question_id": "q1",
+        "retained": true,
+        "attributed": true,
+        "reconstructed": true,
+        "phrases_found": [
+          "30",
+          "audit"
+        ],
+        "phrases_expected": [
+          "30",
+          "audit"
+        ],
+        "missing_sources": []
+      },
+      {
+        "question_id": "q2",
+        "retained": true,
+        "attributed": true,
+        "reconstructed": true,
+        "phrases_found": [
+          "store",
+          "retention"
+        ],
+        "phrases_expected": [
+          "store",
+          "retention"
+        ],
+        "missing_sources": []
+      },
+      {
+        "question_id": "q3",
+        "retained": true,
+        "attributed": true,
+        "reconstructed": true,
+        "phrases_found": [
+          "backfill"
+        ],
+        "phrases_expected": [
+          "backfill"
+        ],
+        "missing_sources": []
+      },
+      {
+        "question_id": "q4",
+        "retained": true,
+        "attributed": true,
+        "reconstructed": true,
+        "phrases_found": [
+          "sliding",
+          "audit"
+        ],
+        "phrases_expected": [
+          "sliding",
+          "audit"
+        ],
+        "missing_sources": []
+      },
+      {
+        "question_id": "q5",
+        "retained": true,
+        "attributed": true,
+        "reconstructed": true,
+        "phrases_found": [
+          "drops",
+          "batch"
+        ],
+        "phrases_expected": [
+          "drops",
+          "batch"
+        ],
+        "missing_sources": []
+      },
+      {
+        "question_id": "q6",
+        "retained": false,
+        "attributed": false,
+        "reconstructed": false,
+        "phrases_found": [],
+        "phrases_expected": [
+          "5",
+          "30"
+        ],
+        "missing_sources": [
+          "config/defaults.json",
+          "docs/ARCHITECTURE.md"
+        ]
+      }
+    ]
+  },
+  "unknown_citations": []
+}

@@ -1,0 +1,348 @@
+{
+  "schema": "context-engine/poc-report/v1",
+  "generated_at": "2026-11-20T04:49:36.358Z",
+  "mode": "live",
+  "model": "~z-ai/glm-flash-latest",
+  "qa_mode": "model",
+  "subject": {
+    "root": "/workspace/chats/646e47d2d90193a2aba4554e/context-engine/fixtures/poc-repo",
+    "files": 11,
+    "bytes": 3238,
+    "partitions": 1
+  },
+  "scan": {
+    "strategy": "single_pass",
+    "partition_budget_tokens": 400000,
+    "partition_budget_source": "model_context",
+    "partition_reason": "estimated 813 tokens fits the 400000-token budget",
+    "findings": 21,
+    "verified_citations": 21,
+    "failed_citations": 0,
+    "conclusions": 15,
+    "inferences": 6,
+    "contradictions": 1,
+    "questions": 3,
+    "cross_partition_relationships": 0,
+    "usage": {
+      "calls": 1,
+      "measured_calls": 1,
+      "unmeasured_calls": 0,
+      "input_tokens": 2466,
+      "output_tokens": 3360,
+      "cost_usd": 0.000721812,
+      "cost_source": "provider",
+      "latency_ms": 3102,
+      "partitions": 1,
+      "validation": {
+        "quotes_checked": 21,
+        "quotes_failed": 0
+      },
+      "note": null
+    }
+  },
+  "facts": {
+    "line_rule_expected": {
+      "label": "line_rule_expected",
+      "total": 8,
+      "found": 8,
+      "results": [
+        {
+          "id": "retention-never-delete",
+          "found": true,
+          "phrases": [
+            "never delete",
+            "retention window"
+          ],
+          "sources": [
+            "README.md"
+          ]
+        },
+        {
+          "id": "idempotent-retries",
+          "found": true,
+          "phrases": [
+            "exactly once",
+            "idempotent"
+          ],
+          "sources": [
+            "README.md"
+          ]
+        },
+        {
+          "id": "store-unexpired",
+          "found": true,
+          "phrases": [
+            "unexpired"
+          ],
+          "sources": [
+            "src/store.js"
+          ]
+        },
+        {
+          "id": "dependency-chain",
+          "found": true,
+          "phrases": [
+            "depends on"
+          ],
+          "sources": [
+            "docs/ARCHITECTURE.md"
+          ]
+        },
+        {
+          "id": "fixed-retention-decision",
+          "found": true,
+          "phrases": [
+            "fixed 30-day",
+            "sliding"
+          ],
+          "sources": [
+            "docs/DECISIONS.md"
+          ]
+        },
+        {
+          "id": "batch-size-decision",
+          "found": true,
+          "phrases": [
+            "batch size of 100"
+          ],
+          "sources": [
+            "docs/DECISIONS.md"
+          ]
+        },
+        {
+          "id": "backfill-outstanding",
+          "found": true,
+          "phrases": [
+            "backfill"
+          ],
+          "sources": [
+            "src/ingest.js"
+          ]
+        },
+        {
+          "id": "scheduler-lock-risk",
+          "found": true,
+          "phrases": [
+            "drops a batch",
+            "store lock"
+          ],
+          "sources": [
+            "docs/RUNBOOK.md"
+          ]
+        }
+      ]
+    },
+    "model_only": {
+      "label": "model_only",
+      "total": 2,
+      "found": 2,
+      "results": [
+        {
+          "id": "timeout-config",
+          "found": true,
+          "phrases": [
+            "timeout_seconds",
+            "5"
+          ],
+          "sources": [
+            "config/defaults.json"
+          ]
+        },
+        {
+          "id": "timeout-contradiction",
+          "found": true,
+          "phrases": [
+            "30 seconds",
+            "5"
+          ],
+          "sources": [
+            "docs/ARCHITECTURE.md",
+            "config/defaults.json"
+          ]
+        }
+      ]
+    }
+  },
+  "packs": {
+    "small": {
+      "used_tokens_estimate": 1197,
+      "budget_tokens_estimate": 1500,
+      "items_included": 12,
+      "items_total": 29,
+      "items_omitted": 17,
+      "reconstructible": true
+    },
+    "medium": {
+      "used_tokens_estimate": 2831,
+      "budget_tokens_estimate": 4000,
+      "items_included": 29,
+      "items_total": 29,
+      "items_omitted": 0,
+      "reconstructible": true
+    },
+    "large": {
+      "used_tokens_estimate": 2831,
+      "budget_tokens_estimate": 10000,
+      "items_included": 29,
+      "items_total": 29,
+      "items_omitted": 0,
+      "reconstructible": true
+    }
+  },
+  "qa": {
+    "questions": 6,
+    "retention": 0.8333333333333334,
+    "attribution": 0.6666666666666666,
+    "reconstruction": 0.6666666666666666,
+    "factual_errors": 0,
+    "factual_error_details": [],
+    "cited_sources_total": 8,
+    "per_question": [
+      {
+        "question_id": "q1",
+        "retained": true,
+        "attributed": true,
+        "reconstructed": true,
+        "phrases_found": [
+          "30",
+          "audit"
+        ],
+        "phrases_expected": [
+          "30",
+          "audit"
+        ],
+        "missing_sources": []
+      },
+      {
+        "question_id": "q2",
+        "retained": true,
+        "attributed": true,
+        "reconstructed": true,
+        "phrases_found": [
+          "store",
+          "retention"
+        ],
+        "phrases_expected": [
+          "store",
+          "retention"
+        ],
+        "missing_sources": []
+      },
+      {
+        "question_id": "q3",
+        "retained": true,
+        "attributed": false,
+        "reconstructed": false,
+        "phrases_found": [
+          "backfill"
+        ],
+        "phrases_expected": [
+          "backfill"
+        ],
+        "missing_sources": [
+          "src/ingest.js"
+        ]
+      },
+      {
+        "question_id": "q4",
+        "retained": true,
+        "attributed": true,
+        "reconstructed": true,
+        "phrases_found": [
+          "sliding",
+          "audit"
+        ],
+        "phrases_expected": [
+          "sliding",
+          "audit"
+        ],
+        "missing_sources": []
+      },
+      {
+        "question_id": "q5",
+        "retained": true,
+        "attributed": true,
+        "reconstructed": true,
+        "phrases_found": [
+          "drops",
+          "batch"
+        ],
+        "phrases_expected": [
+          "drops",
+          "batch"
+        ],
+        "missing_sources": []
+      },
+      {
+        "question_id": "q6",
+        "retained": false,
+        "attributed": false,
+        "reconstructed": false,
+        "phrases_found": [
+          "5"
+        ],
+        "phrases_expected": [
+          "5",
+          "30"
+        ],
+        "missing_sources": [
+          "docs/ARCHITECTURE.md"
+        ]
+      }
+    ],
+    "mode": "model"
+  },
+  "delta": {
+    "counts": {
+      "sources_added": 1,
+      "sources_changed": 3,
+      "sources_removed": 1,
+      "sources_unchanged": 7,
+      "findings_preserved": 14,
+      "findings_stale": 6,
+      "findings_invalidated": 1,
+      "findings_added": 14,
+      "findings_updated": 0,
+      "calls": 1,
+      "rescan_files": 4
+    },
+    "verification": {
+      "preserved_identical": true,
+      "stale_retained": true,
+      "invalidated_retained": true,
+      "unchanged_sources_rescanned": 0,
+      "notes": [
+        "preserved means the finding text is unchanged and all of its cited sources are byte-identical",
+        "stale and invalidated findings remain visible in the snapshot observations but cannot be verified conclusions",
+        "a rescan never writes to the source tree"
+      ]
+    },
+    "rescanned": [
+      "src/backfill.js",
+      "config/defaults.json",
+      "src/ingest.js",
+      "src/retention.js"
+    ],
+    "usage": {
+      "calls": 1,
+      "measured_calls": 1,
+      "unmeasured_calls": 0,
+      "input_tokens": 1420,
+      "output_tokens": 2221,
+      "cost_usd": 0.000468304,
+      "cost_source": "provider",
+      "latency_ms": 3026,
+      "partitions": 1,
+      "validation": {
+        "quotes_checked": 14,
+        "quotes_failed": 0
+      },
+      "note": null
+    }
+  },
+  "checks": {
+    "total": 25,
+    "failed": 0
+  },
+  "limitation": null
+}

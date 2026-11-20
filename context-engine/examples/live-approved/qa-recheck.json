@@ -1,0 +1,185 @@
+{
+  "schema": "context-engine/qa-recheck/v1",
+  "at": "2026-11-20T04:51:20.798Z",
+  "run": "examples/live-approved",
+  "snapshot_id": "snap-7758e901b5362ef3",
+  "mode": "model",
+  "pack": {
+    "file": "pack-medium-contradictions.json",
+    "digest": "sha256:95d6c8a1358ba04de348140c7bdf00f1b44a03d26043d6f7377baf13e1d24a78",
+    "items_included": 30,
+    "items_total": 30,
+    "omissions": 0,
+    "contradiction_items": 1,
+    "reconstructible": true
+  },
+  "provider": {
+    "requested": "~z-ai/glm-flash-latest",
+    "resolved_model": "z-ai/glm-5.3-flash",
+    "upstream": "Wafer",
+    "generation_id": "gen-1795150276-oYP8upUiFBPuWqd4u3NR",
+    "finish_reason": "stop"
+  },
+  "usage": {
+    "input_tokens": 1207,
+    "output_tokens": 705,
+    "cost_usd": 0.000180414,
+    "cost_source": "provider",
+    "catalogue_cost_usd": 0.0001034313,
+    "budget_usd": 0.01,
+    "spent": 0.000180414
+  },
+  "score": {
+    "questions": 6,
+    "retention": 1,
+    "attribution": 0.8333333333333334,
+    "reconstruction": 0.8333333333333334,
+    "factual_errors": 0,
+    "factual_error_details": [],
+    "cited_sources_total": 9,
+    "per_question": [
+      {
+        "question_id": "q1",
+        "retained": true,
+        "attributed": true,
+        "reconstructed": true,
+        "phrases_found": [
+          "30",
+          "audit"
+        ],
+        "phrases_expected": [
+          "30",
+          "audit"
+        ],
+        "missing_sources": []
+      },
+      {
+        "question_id": "q2",
+        "retained": true,
+        "attributed": true,
+        "reconstructed": true,
+        "phrases_found": [
+          "store",
+          "retention"
+        ],
+        "phrases_expected": [
+          "store",
+          "retention"
+        ],
+        "missing_sources": []
+      },
+      {
+        "question_id": "q3",
+        "retained": true,
+        "attributed": false,
+        "reconstructed": false,
+        "phrases_found": [
+          "backfill"
+        ],
+        "phrases_expected": [
+          "backfill"
+        ],
+        "missing_sources": [
+          "src/ingest.js"
+        ]
+      },
+      {
+        "question_id": "q4",
+        "retained": true,
+        "attributed": true,
+        "reconstructed": true,
+        "phrases_found": [
+          "sliding",
+          "audit"
+        ],
+        "phrases_expected": [
+          "sliding",
+          "audit"
+        ],
+        "missing_sources": []
+      },
+      {
+        "question_id": "q5",
+        "retained": true,
+        "attributed": true,
+        "reconstructed": true,
+        "phrases_found": [
+          "drops",
+          "batch"
+        ],
+        "phrases_expected": [
+          "drops",
+          "batch"
+        ],
+        "missing_sources": []
+      },
+      {
+        "question_id": "q6",
+        "retained": true,
+        "attributed": true,
+        "reconstructed": true,
+        "phrases_found": [
+          "5",
+          "30"
+        ],
+        "phrases_expected": [
+          "5",
+          "30"
+        ],
+        "missing_sources": []
+      }
+    ]
+  },
+  "answers": [
+    {
+      "question_id": "q1",
+      "answer": "The retention window is 30 days (config defaults set retention_days to 30, and expiry is inclusive — an object exactly 30 days old is expired). ADR-001 chose a fixed 30-day retention window over a sliding TTL because the audit trail requires a fixed boundary. This supersedes the legacy 14-day note.",
+      "sources": [
+        "config/defaults.json",
+        "src/retention.js",
+        "docs/DECISIONS.md",
+        "notes/LEGACY-RETENTION.md"
+      ]
+    },
+    {
+      "question_id": "q2",
+      "answer": "Directly, ingest imports src/store.js. Transitively, ingest depends on src/retention.js via the chain ingest -> store -> retention.",
+      "sources": [
+        "src/ingest.js",
+        "src/store.js",
+        "docs/ARCHITECTURE.md"
+      ]
+    },
+    {
+      "question_id": "q3",
+      "answer": "The backfill path is not yet implemented and must be documented before the next release. There is also an open question about whether backfill may write directly to the store or only through ingest, which must be resolved.",
+      "sources": [
+        "README.md",
+        "docs/ARCHITECTURE.md"
+      ]
+    },
+    {
+      "question_id": "q4",
+      "answer": "A sliding TTL was the rejected alternative; ADR-001 chose a fixed 30-day retention window over it because the audit trail requires a fixed boundary.",
+      "sources": [
+        "docs/DECISIONS.md"
+      ]
+    },
+    {
+      "question_id": "q5",
+      "answer": "When the store lock is held, the scheduler drops the batch instead of retrying it.",
+      "sources": [
+        "docs/RUNBOOK.md"
+      ]
+    },
+    {
+      "question_id": "q6",
+      "answer": "config/defaults.json sets timeout_seconds to 5, but the architecture doc records a 30-second ingest timeout in production. The two do not agree — this is a known contradiction.",
+      "sources": [
+        "config/defaults.json",
+        "docs/ARCHITECTURE.md"
+      ]
+    }
+  ],
+  "unknown_citations": []
+}

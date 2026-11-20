@@ -1,0 +1,66 @@
+{
+  "mode": "model",
+  "provider": {
+    "requested": "~z-ai/glm-flash-latest",
+    "resolved_model": "z-ai/glm-5.3-flash",
+    "upstream": "Wafer",
+    "generation_id": "gen-1795150162-B47IAhIf4gaIrZrcgFoC",
+    "finish_reason": "stop"
+  },
+  "usage": {
+    "input_tokens": 1157,
+    "output_tokens": 686,
+    "cost_usd": 0.000174818,
+    "cost_source": "provider",
+    "catalogue_cost_usd": 0.0000999467
+  },
+  "answers": [
+    {
+      "question_id": "q1",
+      "answer": "The retention window is a fixed 30 days. ADR-001 chose a fixed 30-day retention window over a sliding TTL because the audit trail requires a fixed boundary. This supersedes the legacy note that retention was previously 14 days.",
+      "sources": [
+        "docs/DECISIONS.md",
+        "config/defaults.json",
+        "notes/LEGACY-RETENTION.md"
+      ]
+    },
+    {
+      "question_id": "q2",
+      "answer": "ingest directly imports src/store.js. Transitively, store imports src/retention.js, so the chain is ingest -> store -> retention. (Note: scheduler -> ingest is a separate dependency chain, not a dependency of ingest.)",
+      "sources": [
+        "src/ingest.js",
+        "src/store.js",
+        "docs/ARCHITECTURE.md"
+      ]
+    },
+    {
+      "question_id": "q3",
+      "answer": "The backfill path is not yet implemented and must be documented before the next release. Additionally, an open question remains whether backfill may write directly to the store or only through ingest.",
+      "sources": [
+        "README.md",
+        "docs/ARCHITECTURE.md"
+      ]
+    },
+    {
+      "question_id": "q4",
+      "answer": "A sliding TTL was rejected. ADR-001 chose a fixed 30-day retention window over a sliding TTL because the audit trail requires a fixed boundary.",
+      "sources": [
+        "docs/DECISIONS.md"
+      ]
+    },
+    {
+      "question_id": "q5",
+      "answer": "When the store lock is held, the scheduler drops a batch instead of retrying it.",
+      "sources": [
+        "docs/RUNBOOK.md"
+      ]
+    },
+    {
+      "question_id": "q6",
+      "answer": "The configured ingest timeout is timeout_seconds: 5 in config/defaults.json. The pack contains no architecture note about the timeout, so no agreement or disagreement with an architecture note can be established from the pack.",
+      "sources": [
+        "config/defaults.json"
+      ]
+    }
+  ]
+}

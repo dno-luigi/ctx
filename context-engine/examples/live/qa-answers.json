@@ -1,0 +1,66 @@
+{
+  "mode": "model",
+  "provider": {
+    "requested": "~z-ai/glm-flash-latest",
+    "resolved_model": "z-ai/glm-5.3-flash",
+    "upstream": "Wafer",
+    "generation_id": "gen-1795149100-Bs1x8rBagu5LYetIxroP",
+    "finish_reason": "stop"
+  },
+  "usage": {
+    "input_tokens": 1185,
+    "output_tokens": 676,
+    "cost_usd": 0.000174154,
+    "cost_source": "provider",
+    "catalogue_cost_usd": 0.0001002799
+  },
+  "answers": [
+    {
+      "question_id": "q1",
+      "answer": "The retention window is 30 days (RETENTION_DAYS = 30 in code, matching config/defaults.json). ADR-001 chose a fixed 30-day window over a sliding TTL because the audit trail requires a fixed boundary.",
+      "sources": [
+        "src/retention.js:2",
+        "config/defaults.json:2",
+        "docs/DECISIONS.md:5"
+      ]
+    },
+    {
+      "question_id": "q2",
+      "answer": "Directly, src/ingest.js imports src/store.js (and is defined by docs/DECISIONS.md). Transitively, since store imports retention, ingest depends on store -> retention. The overall chain is ingest -> store -> retention, with scheduler -> ingest separately.",
+      "sources": [
+        "src/ingest.js:2",
+        "src/ingest.js:4",
+        "src/store.js:2",
+        "docs/ARCHITECTURE.md:12"
+      ]
+    },
+    {
+      "question_id": "q3",
+      "answer": "The backfill path is not yet implemented and documenting it is a TODO before the next release; backfill cannot run until the store exposes a bounded writer; and there is an unresolved architecture question about whether backfill may write directly to the store or only through ingest.",
+      "sources": [
+        "README.md:12",
+        "src/ingest.js:11",
+        "docs/ARCHITECTURE.md:20"
+      ]
+    },
+    {
+      "question_id": "q4",
+      "answer": "A sliding TTL was rejected in favor of a fixed 30-day window, because the audit trail requires a fixed boundary (per ADR-001).",
+      "sources": [
+        "docs/DECISIONS.md:5"
+      ]
+    },
+    {
+      "question_id": "q5",
+      "answer": "When the store lock is held, the scheduler drops the batch instead of retrying, and an alert fires if the drop counter exceeds 1 per hour.",
+      "sources": [
+        "docs/RUNBOOK.md:5"
+      ]
+    },
+    {
+      "question_id": "q6",
+      "answer": "not_in_pack",
+      "sources": []
+    }
+  ]
+}
