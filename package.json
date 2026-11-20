@@ -13,6 +13,23 @@
     "stub:drifty": "node tools/build-fixtures.js && node run.js --provider stub --quality drifty --all --repeats 3 --out runs/stub-drifty",
     "stub:sloppy": "node tools/build-fixtures.js && node run.js --provider stub --quality sloppy --all --repeats 2 --out runs/stub-sloppy",
     "stub:injective": "node tools/build-fixtures.js && node run.js --provider stub --quality injective --all --repeats 3 --out runs/stub-injective",
-    "selftest": "node tools/selftest.js"
+    "selftest": "node tools/selftest.js",
+    "selftest:decisions": "node tools/decisions-selftest.js",
+    "selftest:inventory": "node tools/inventory-selftest.js",
+    "inventory:run": "node tools/inventory-run.js",
+    "live": "node tools/live-decisions.js",
+    "live:report": "node tools/live-report.js",
+    "completeness": "node tools/completeness.js",
+    "rda": "node tools/rda-propagation.js",
+    "snapshot-state": "node tools/snapshot-state-test.js",
+    "reuse": "node tools/reuse-report.js",
+    "card-id": "node tools/card-id-experiment.js",
+    "identity-states": "node tools/identity-states.js",
+    "inventory-identity": "node tools/inventory-identity.js",
+    "plant-coverage": "node tools/plant-coverage.js",
+    "inventory-coverage": "node tools/inventory-coverage.js",
+    "card-gen": "node tools/card-generation.js",
+    "patch-check": "node tools/patch-check.js",
+    "score-transcript": "node tools/score-transcript.js"
   }
 }

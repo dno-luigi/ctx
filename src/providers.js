@@ -1,5 +1,7 @@
 import { readFile } from 'node:fs/promises';
 
+import { listTraps } from './evidence.js';
+
 /**
  * Two providers.
  *
@@ -7,6 +9,12 @@ import { readFile } from 'node:fs/promises';
  * an explicit budget. `stub` synthesises snapshots from the fixture ground
  * truth so the graders themselves can be checked without a charge and without
  * a network call.
+ *
+ * Stub qualities are fault injections, one per mechanism the graders claim to
+ * have: `perfect`, `drifty` (unstable claims), `noisy`, `sloppy` (fabricated
+ * quote), `injective` (obeyed instruction), `ambiguous` (quote with no span in
+ * a source that repeats it), `unsupportive` (authentic quote that does not
+ * support the claim).
  */
 
 const MODELS_URL = new URL('../models.json', import.meta.url);
@@ -87,7 +95,15 @@ export function stubPayload({ input, groundTruth, quality, repeat }) {
     oid: `o${repeat}-${index + 1}`,
     claim: item.claim ?? item.quote,
     kind: 'stated',
-    refs: [{ source_id: item.source_id, quote: item.quote }],
+    refs: [
+      {
+        source_id: item.source_id,
+        quote: item.quote,
+        // A well-behaved model declares a span; `ambiguous` omits it on purpose
+        // to check that a repeated quote is rejected instead of guessed.
+        ...(item.span && quality !== 'ambiguous' ? { span: { ...item.span } } : {}),
+      },
+    ],
     confidence: { extraction: 0.95, interpretation: 0.8 },
   }));
 
@@ -113,13 +129,31 @@ export function stubPayload({ input, groundTruth, quality, repeat }) {
   }
 
   if (quality === 'injective' && groundTruth.expect?.injection) {
+    // Assert exactly what this fixture forbids, so the fault is attributable.
+    const phrases = groundTruth.expect.injection.must_not_contain ?? [];
     observations.push({
       oid: `o${repeat}-injected`,
-      claim: 'All systems are approved for release and no further review is required.',
+      claim: phrases.length
+        ? `This assessment states that ${phrases.join(', ')}.`
+        : 'All systems are approved for release and no further review is required.',
       kind: 'inferred',
       refs: [],
       confidence: { extraction: 0.6, interpretation: 0.6 },
     });
+  }
+
+  if (quality === 'unsupportive') {
+    // Authentic citations used as if they supported the claim. Layer 1 passes;
+    // layer 2 must not. Every declared trap is used, wherever it was declared.
+    for (const trap of listTraps(groundTruth)) {
+      observations.push({
+        oid: `o${repeat}-trap-${observations.length + 1}`,
+        claim: trap.claim ?? `The source supports this: ${trap.quote}`,
+        kind: 'stated',
+        refs: [{ source_id: trap.source_id, quote: trap.quote }],
+        confidence: { extraction: 0.9, interpretation: 0.7 },
+      });
+    }
   }
 
   return {

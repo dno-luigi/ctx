@@ -199,6 +199,7 @@ async function main() {
         gradeFixture({
           fixture: fixture.meta.id,
           groundTruth: fixture.groundTruth,
+          input: fixture.input,
           snapshots: validForFixture,
           invalidSnapshots: runs.length - validForFixture.length,
           repetitions,
@@ -240,13 +241,17 @@ async function main() {
           from: from.meta.id,
           to: to.meta.id,
           group,
-          changed_sources: diff.changed_sources,
+          changed_sources: diff.changed_sources.length,
+          changed_evidence: diff.changed_evidence_sources.length,
           same: diff.same.length,
           added: diff.added.length,
           dropped: diff.dropped.length,
+          partially_justified: diff.partially_justified.length,
           silent_drift: diff.silent_drift.length,
           spurious_innovation: diff.spurious_innovation.length,
           justified_fraction: diff.justified_fraction,
+          hash_only_change: diff.hash_only_change,
+          span_moves: diff.span_moves,
         });
       }
     }
@@ -266,6 +271,23 @@ async function main() {
     },
     thresholds: { file: 'thresholds.json', digest: thresholdsDigest, values: thresholds },
     models,
+    // Evidence archive: the observations, gaps, checks and abstentions of every
+    // valid snapshot, with the verbatim quotes they cite. The adjudication
+    // procedure in RUN-PLAN-01.md reads this array; without it a human cannot
+    // check support without re-running the model and paying for it twice.
+    // Additive only: no metric or grade is computed from this field.
+    snapshots: results
+      .filter((entry) => entry.valid)
+      .map((entry) => ({
+        model: entry.model,
+        fixture: entry.fixture,
+        repeat: entry.repeat,
+        observations: entry.snapshot.observations,
+        domains: entry.snapshot.domains,
+        gaps: entry.snapshot.gaps,
+        checks: entry.snapshot.checks,
+        abstentions: entry.snapshot.abstentions,
+      })),
     fixtures: Object.fromEntries(catalog.map((f) => [f.meta.id, { title: f.meta.title ?? null, variant_of: f.meta.variant_of ?? null, skipped_reason: f.meta.skipped_reason ?? null }])),
     rda,
     repeat_drift_events: repeatDrift,
@@ -275,10 +297,13 @@ async function main() {
       ...skipped.map((s) => `${s.id}: skipped (${s.reason})`),
       provider === 'stub' ? 'real models: not called. Stub snapshots come from the fixture ground truth, so they test the graders, not a model.' : 'stub baseline: not run in this invocation.',
       'image citations: unverifiable as text; they require operator adjudication.',
+      'relevance and inference: only declared traps and a lexical overreach signal are mechanical. Everything else is queued for operator adjudication in the report; no model scored another model.',
       'no network traces, no KV, no journal, no preference store, no deployment.',
+      'inference validity: not established by this run. The adjudication procedure in RUN-PLAN-01.md is what establishes it, and it has not been executed.',
     ],
     limitations: [
-      'Citation integrity is mechanical. Everything else is measured, not judged: no model scores another model.',
+      'Citation integrity is mechanical. Relevance is mechanical only where a fixture pre-declares a trap quote; inference validity is not mechanical at all.',
+      'The adjudication queue is pending work, not a result. A run whose queue is unread has not established contextual reasoning.',
       'Entailment is approximated by citation overlap. A model that draws a wrong conclusion from a right quote is not caught by the citation gate.',
       'Image refs cannot be verified verbatim; a run containing them cannot reach full citation integrity without operator review.',
       'Stub runs validate the harness, not any model. Only a paid run against a real provider produces model evidence.',

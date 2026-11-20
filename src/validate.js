@@ -3,7 +3,7 @@ import { locate } from './spans.js';
 
 export const INPUT_SCHEMA = 'gca-input/v1';
 export const SNAPSHOT_SCHEMA = 'gca-snapshot/v1';
-export const HARNESS_VERSION = '0.1.0';
+export const HARNESS_VERSION = '0.1.3';
 
 const SOURCE_KINDS = new Set(['document', 'image', 'page', 'transcript', 'note']);
 const OBSERVATION_KINDS = new Set(['stated', 'derived', 'inferred']);
