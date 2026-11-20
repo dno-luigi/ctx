@@ -1,0 +1,204 @@
+{
+  "schema": "context-engine/classifier-proof/v1",
+  "frozen": "2026-11-20",
+  "note": "Proof fixture for the classification contract. One item per branch across A/B1/B2/C/B1'. Expected classifications are authored here and are never produced by the classifier. The baseline snapshot (examples/live-approved), the bank and the estimator are untouched.",
+  "units": [
+    { "base": "ms", "scale": 1, "aliases": ["ms", "millisecond", "milliseconds"] },
+    { "base": "ms", "scale": 1000, "aliases": ["s", "sec", "secs", "second", "seconds"] }
+  ],
+  "conditions": {
+    "A": { "kind": "source", "note": "Full source text." },
+    "B1": { "kind": "snapshot", "note": "Item text only; evidence quotes stripped. Removes provenance and identifier-only mentions: in the baseline, MAX_BATCH is key_absent here but evidence_lost in B2. Values restated in item text survive." },
+    "B2": { "kind": "snapshot", "note": "Item text plus evidence quotes." },
+    "C": { "kind": "pack", "note": "Condensed pack. The archive proposal is omitted." },
+    "B1p": { "kind": "value-redaction", "proposed": true, "note": "B1 with numeric literals redacted to [redacted]. Proposed condition; not a substitute for B1." }
+  },
+  "states": {
+    "A": [
+      "config/defaults.json",
+      "retention_days = 30",
+      "timeout_seconds = 30",
+      "batch_size = 100",
+      "docs/ADR-001.md",
+      "retention_policy = fixed",
+      "ADR-001 chose a fixed retention window over a sliding TTL.",
+      "retention_days = 30 is current.",
+      "notes/LEGACY-RETENTION.md",
+      "retention_days = 14 (legacy note). This note is superseded by ADR-001.",
+      "src/scheduler.js",
+      "The scheduler drains the queue every 30 seconds.",
+      "docs/OPS.md",
+      "ingest timeout_seconds = 5 is set by the platform team.",
+      "proposals/ARCHIVE-45.md",
+      "archive_retention_days = 45 is proposed and under review; no decision is recorded."
+    ],
+    "B2": [
+      "retention_policy = fixed",
+      "  quote: ADR-001 chose a fixed retention window over a sliding TTL.",
+      "retention_days = 30 is current.",
+      "  quote: retention_days = 30",
+      "retention_days = 14 (legacy note). This note is superseded by ADR-001.",
+      "  quote: This note is superseded by ADR-001.",
+      "timeout_seconds = 30 is the configured value.",
+      "  quote: timeout_seconds = 30",
+      "ingest timeout_seconds = 5 is set by the platform team.",
+      "  quote: timeout_seconds = 5",
+      "batch_size = 100 is the configured value.",
+      "  quote: batch_size = 100",
+      "The scheduler drains the queue every 30 seconds.",
+      "  quote: every 30 seconds",
+      "archive_retention_days = 45 is proposed and under review; no decision is recorded.",
+      "  quote: archive_retention_days = 45"
+    ],
+    "B1": [
+      "retention_policy = fixed",
+      "retention_days = 30 is current.",
+      "retention_days = 14 (legacy note). This note is superseded by ADR-001.",
+      "timeout_seconds = 30 is the configured value.",
+      "ingest timeout_seconds = 5 is set by the platform team.",
+      "batch_size = 100 is the configured value.",
+      "The scheduler drains the queue every 30 seconds.",
+      "archive_retention_days = 45 is proposed and under review; no decision is recorded."
+    ],
+    "C": [
+      "retention_policy = fixed — ADR-001 chose a fixed window over a sliding TTL.",
+      "retention_days = 30 is current (ADR-001).",
+      "retention_days = 14 — legacy note, superseded by ADR-001.",
+      "timeout_seconds = 30 (config); timeout_seconds = 5 (platform team).",
+      "batch_size = 100.",
+      "scheduler: drains the queue every 30 seconds."
+    ],
+    "B1p": [
+      "retention_policy = fixed",
+      "retention_days = [redacted] is current.",
+      "retention_days = [redacted] (legacy note). This note is superseded by ADR-001.",
+      "timeout_seconds = [redacted] is the configured value.",
+      "ingest timeout_seconds = [redacted] is set by the platform team.",
+      "batch_size = [redacted] is the configured value.",
+      "The scheduler drains the queue every [redacted] seconds.",
+      "archive_retention_days = [redacted] is proposed and under review; no decision is recorded."
+    ]
+  },
+  "negative_control": {
+    "item": "P6",
+    "rule": "The literal 30000 appears in no state. P6 must classify as asserts in A, B1, B2 and C only through unit restoration; a literal matcher returns insufficient_evidence/competition_unresolved (measured).",
+    "absent_literal": "30000",
+    "must_assert_in": ["A", "B1", "B2", "C"]
+  },
+  "items": [
+    {
+      "id": "P1",
+      "branch": "asserts",
+      "key": "retention_policy",
+      "value": "fixed",
+      "predicate": "asserts",
+      "question": "Does the state assert that the retention policy is fixed rather than sliding?",
+      "value_evidence": "retention_policy = fixed",
+      "expected": {
+        "A": ["answerable", "establishes_claim", 1],
+        "B1": ["answerable", "establishes_claim", 1],
+        "B2": ["answerable", "establishes_claim", 1],
+        "C": ["answerable", "establishes_claim", 1],
+        "B1p": ["answerable", "establishes_claim", 1]
+      }
+    },
+    {
+      "id": "P2",
+      "branch": "contradicts",
+      "key": "retention_days",
+      "value": 14,
+      "predicate": "is_current",
+      "question": "Does the state assert that the current retention window is 14 days?",
+      "value_evidence": "retention_days = 14",
+      "expected": {
+        "A": ["answerable", "defeats_predicate", 0],
+        "B1": ["answerable", "defeats_predicate", 0],
+        "B2": ["answerable", "defeats_predicate", 0],
+        "C": ["answerable", "defeats_predicate", 0],
+        "B1p": ["insufficient_evidence", "evidence_lost", 0]
+      }
+    },
+    {
+      "id": "P3",
+      "branch": "competition_unresolved",
+      "key": "timeout_seconds",
+      "value": 30,
+      "predicate": "is_current",
+      "question": "Does the state assert that the current ingest timeout is 30 seconds?",
+      "value_evidence": "timeout_seconds = 30",
+      "expected": {
+        "A": ["insufficient_evidence", "competition_unresolved", 0],
+        "B1": ["insufficient_evidence", "competition_unresolved", 0],
+        "B2": ["insufficient_evidence", "competition_unresolved", 0],
+        "C": ["insufficient_evidence", "competition_unresolved", 0],
+        "B1p": ["insufficient_evidence", "evidence_lost", 0]
+      }
+    },
+    {
+      "id": "P4",
+      "branch": "evidence_lost",
+      "key": "batch_size",
+      "value": 100,
+      "predicate": "asserts",
+      "question": "Does the state assert that the batch size is 100?",
+      "value_evidence": "batch_size = 100",
+      "expected": {
+        "A": ["answerable", "establishes_claim", 1],
+        "B1": ["answerable", "establishes_claim", 1],
+        "B2": ["answerable", "establishes_claim", 1],
+        "C": ["answerable", "establishes_claim", 1],
+        "B1p": ["insufficient_evidence", "evidence_lost", 0]
+      }
+    },
+    {
+      "id": "P5",
+      "branch": "not_in_state",
+      "key": "wal_retention",
+      "value": 7,
+      "predicate": "asserts",
+      "question": "Does the state assert that write-ahead-log retention is 7 days?",
+      "value_evidence": null,
+      "expected": {
+        "A": ["not_in_state", "key_absent", 0],
+        "B1": ["not_in_state", "key_absent", 0],
+        "B2": ["not_in_state", "key_absent", 0],
+        "C": ["not_in_state", "key_absent", 0],
+        "B1p": ["not_in_state", "key_absent", 0]
+      }
+    },
+    {
+      "id": "P6",
+      "branch": "asserts",
+      "control": "semantic_restoration",
+      "key": "scheduler",
+      "value": 30000,
+      "unit": "ms",
+      "predicate": "asserts",
+      "question": "Does the state assert that the scheduler interval is 30000 ms?",
+      "value_evidence": "every 30 seconds",
+      "expected": {
+        "A": ["answerable", "establishes_claim", 1],
+        "B1": ["answerable", "establishes_claim", 1],
+        "B2": ["answerable", "establishes_claim", 1],
+        "C": ["answerable", "establishes_claim", 1],
+        "B1p": ["insufficient_evidence", "evidence_lost", 0]
+      }
+    },
+    {
+      "id": "P7",
+      "branch": "predicate_undeterminable",
+      "key": "archive_retention_days",
+      "value": 45,
+      "predicate": "is_current",
+      "question": "Does the state assert that archive retention is currently 45 days?",
+      "value_evidence": "archive_retention_days = 45",
+      "expected": {
+        "A": ["insufficient_evidence", "predicate_undeterminable", 0],
+        "B1": ["insufficient_evidence", "predicate_undeterminable", 0],
+        "B2": ["insufficient_evidence", "predicate_undeterminable", 0],
+        "C": ["not_in_state", "key_absent", 0],
+        "B1p": ["insufficient_evidence", "evidence_lost", 0]
+      }
+    }
+  ]
+}
