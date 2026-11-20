@@ -8,9 +8,10 @@ As of 2026-11-20, at the commit that added this file.
 
 | Gate | State |
 | --- | --- |
-| Classifier proof (`poc/proof-classifier.js`, `poc/coverage-baseline.js`) | Complete and passing; ready for source review |
-| `src/classifier.js` | Production code under review; change deliberately and keep the proof passing |
-| Bank and estimator (`examples/live-approved/`, `runs/`) | Frozen, unchanged |
+| Classifier proof (`poc/proof-classifier.js`, `poc/coverage-baseline.js`) | Complete and passing; ready for source review. Frozen at `09b9339` |
+| `src/classifier.js` | Production code under review; change deliberately and keep the proof passing. Frozen at `09b9339` |
+| Benchmark banks (`banks/`) | Frozen at `2931058`; eleven files tracked |
+| Estimator (`tools/estimate-bench.js`, `adapters/`) | Frozen at `76dba95`. Its run artifacts live under `runs/`, which is gitignored and so not auditable from the repository |
 | Bank authoring | Gated — requires explicit operator authorization |
 | Estimator regeneration | Gated — requires explicit operator authorization |
 | Stage 0 probes and any paid provider call | Gated — requires explicit operator authorization |
@@ -19,7 +20,9 @@ As of 2026-11-20, at the commit that added this file.
 - Nothing here authorizes spend. No model call, provider request or benchmark run happens without separate, explicit approval.
 - A passing run establishes consistency with authored labels, not that the labels are correct.
 - `fixtures/` is generated and gitignored; frozen proof material lives in `poc/`.
-- The tree in section 3 is the target layout. The current tree also holds `poc/`, `tools/` and `examples/live-approved/`.
+- The engine and its tooling were committed in eight checkpoints, `d69ed0c..997706f`. `tools/ac6-refined.js` and `tools/contract-test.js` remain uncommitted because their place in the tree is unresolved.
+- No Stage 0 record exists in the repository. The Stage 0 row above is a policy statement, not evidence that Stage 0 has run either way.
+- The tree in section 3 is the target layout. The current tree also holds `poc/`, `tools/`, `adapters/`, `banks/`, `baseline/`, `cards/`, `inventory/`, `pilot/`, `recorded/`, `snapshot/` and `examples/live-approved/`.
 
 ---
 
