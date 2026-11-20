@@ -3,7 +3,7 @@
   "engine": "context-engine/0.1.0",
   "subject": {
     "root": "poc-repo",
-    "acquired_at": "2026-11-20T05:21:22.722Z",
+    "acquired_at": "2026-11-20T05:40:57.713Z",
     "source_digest": "sha256:8d47e530fed9ae07ac22b2933635326524b9fc002c5a0d9a4fd99e18dc4e0875",
     "files": 11,
     "bytes": 3322,
@@ -15,7 +15,7 @@
         "bytes": 73,
         "lines": 6,
         "sha256": "sha256:833b711b2512ac7389d17a18073f0c907a01ddaf7ff7787eb6a62fe89ff5ecea",
-        "mtime": "2026-11-20T05:21:22.714Z",
+        "mtime": "2026-11-20T05:40:57.703Z",
         "authoritative": true
       },
       {
@@ -24,7 +24,7 @@
         "bytes": 549,
         "lines": 21,
         "sha256": "sha256:b63d1d7131559917493ebfe17ed40d23653596bd0c09b17162df56aca1d8c817",
-        "mtime": "2026-11-20T05:21:22.710Z",
+        "mtime": "2026-11-20T05:40:57.699Z",
         "authoritative": true
       },
       {
@@ -33,7 +33,7 @@
         "bytes": 320,
         "lines": 11,
         "sha256": "sha256:5463801af7594ae5a5fef4d443962261f5ad9c4e6f69e59a51b097998c9cadfa",
-        "mtime": "2026-11-20T05:21:22.710Z",
+        "mtime": "2026-11-20T05:40:57.699Z",
         "authoritative": true
       },
       {
@@ -42,7 +42,7 @@
         "bytes": 287,
         "lines": 11,
         "sha256": "sha256:439aa6de9401cc724783c55cbdcc1f1569865eea0e6d9af228583e6c5517e532",
-        "mtime": "2026-11-20T05:21:22.710Z",
+        "mtime": "2026-11-20T05:40:57.699Z",
         "authoritative": true
       },
       {
@@ -51,7 +51,7 @@
         "bytes": 445,
         "lines": 15,
         "sha256": "sha256:480999aafefec272670ceeecd4af9075d42adec7b031bd19744b960055d19a64",
-        "mtime": "2026-11-20T05:21:22.710Z",
+        "mtime": "2026-11-20T05:40:57.699Z",
         "authoritative": true
       },
       {
@@ -60,7 +60,7 @@
         "bytes": 208,
         "lines": 7,
         "sha256": "sha256:87cd6e91a5cd556e9e94c4bafc650da4c87627b6b6cff1b524e6a64913022f3f",
-        "mtime": "2026-11-20T05:21:22.714Z",
+        "mtime": "2026-11-20T05:40:57.703Z",
         "authoritative": true
       },
       {
@@ -69,7 +69,7 @@
         "bytes": 323,
         "lines": 14,
         "sha256": "sha256:29bbfc77d5e701a188a3e219d51137c2d2f1acaf1cc8a1426a7ffe23e412dc87",
-        "mtime": "2026-11-20T05:21:22.714Z",
+        "mtime": "2026-11-20T05:40:57.703Z",
         "authoritative": true
       },
       {
@@ -78,7 +78,7 @@
         "bytes": 245,
         "lines": 8,
         "sha256": "sha256:fe58cde998cb236cbc13ee273be03ab267fc2f5e1808cf2527f9a6db65901018",
-        "mtime": "2026-11-20T05:21:22.714Z",
+        "mtime": "2026-11-20T05:40:57.703Z",
         "authoritative": true
       },
       {
@@ -87,7 +87,7 @@
         "bytes": 174,
         "lines": 7,
         "sha256": "sha256:739ab17cb22ac70b8408926b80a032422d0d0815e17544c66a87b81bb39f0537",
-        "mtime": "2026-11-20T05:21:22.714Z",
+        "mtime": "2026-11-20T05:40:57.699Z",
         "authoritative": true
       },
       {
@@ -96,7 +96,7 @@
         "bytes": 385,
         "lines": 12,
         "sha256": "sha256:ffd6908abeae52a691892b506e619d5b7ab9fe6912012d6e0765ec87cfaf144f",
-        "mtime": "2026-11-20T05:21:22.714Z",
+        "mtime": "2026-11-20T05:40:57.699Z",
         "authoritative": true
       },
       {
@@ -105,7 +105,7 @@
         "bytes": 313,
         "lines": 9,
         "sha256": "sha256:0e06e67e21bc33a95194e855543eca8bf29df40f7751d884cc84ec4d147b68cb",
-        "mtime": "2026-11-20T05:21:22.714Z",
+        "mtime": "2026-11-20T05:40:57.699Z",
         "authoritative": true
       }
     ]
@@ -142,7 +142,7 @@
         "bytes": 73,
         "lines": 6,
         "sha256": "sha256:833b711b2512ac7389d17a18073f0c907a01ddaf7ff7787eb6a62fe89ff5ecea",
-        "mtime": "2026-11-20T05:21:22.714Z",
+        "mtime": "2026-11-20T05:40:57.703Z",
         "authoritative": true
       },
       {
@@ -151,7 +151,7 @@
         "bytes": 549,
         "lines": 21,
         "sha256": "sha256:b63d1d7131559917493ebfe17ed40d23653596bd0c09b17162df56aca1d8c817",
-        "mtime": "2026-11-20T05:21:22.710Z",
+        "mtime": "2026-11-20T05:40:57.699Z",
         "authoritative": true
       },
       {
@@ -160,7 +160,7 @@
         "bytes": 320,
         "lines": 11,
         "sha256": "sha256:5463801af7594ae5a5fef4d443962261f5ad9c4e6f69e59a51b097998c9cadfa",
-        "mtime": "2026-11-20T05:21:22.710Z",
+        "mtime": "2026-11-20T05:40:57.699Z",
         "authoritative": true
       },
       {
@@ -169,7 +169,7 @@
         "bytes": 287,
         "lines": 11,
         "sha256": "sha256:439aa6de9401cc724783c55cbdcc1f1569865eea0e6d9af228583e6c5517e532",
-        "mtime": "2026-11-20T05:21:22.710Z",
+        "mtime": "2026-11-20T05:40:57.699Z",
         "authoritative": true
       },
       {
@@ -178,7 +178,7 @@
         "bytes": 445,
         "lines": 15,
         "sha256": "sha256:480999aafefec272670ceeecd4af9075d42adec7b031bd19744b960055d19a64",
-        "mtime": "2026-11-20T05:21:22.710Z",
+        "mtime": "2026-11-20T05:40:57.699Z",
         "authoritative": true
       },
       {
@@ -187,7 +187,7 @@
         "bytes": 208,
         "lines": 7,
         "sha256": "sha256:87cd6e91a5cd556e9e94c4bafc650da4c87627b6b6cff1b524e6a64913022f3f",
-        "mtime": "2026-11-20T05:21:22.714Z",
+        "mtime": "2026-11-20T05:40:57.703Z",
         "authoritative": true
       },
       {
@@ -196,7 +196,7 @@
         "bytes": 323,
         "lines": 14,
         "sha256": "sha256:29bbfc77d5e701a188a3e219d51137c2d2f1acaf1cc8a1426a7ffe23e412dc87",
-        "mtime": "2026-11-20T05:21:22.714Z",
+        "mtime": "2026-11-20T05:40:57.703Z",
         "authoritative": true
       },
       {
@@ -205,7 +205,7 @@
         "bytes": 245,
         "lines": 8,
         "sha256": "sha256:fe58cde998cb236cbc13ee273be03ab267fc2f5e1808cf2527f9a6db65901018",
-        "mtime": "2026-11-20T05:21:22.714Z",
+        "mtime": "2026-11-20T05:40:57.703Z",
         "authoritative": true
       },
       {
@@ -214,7 +214,7 @@
         "bytes": 174,
         "lines": 7,
         "sha256": "sha256:739ab17cb22ac70b8408926b80a032422d0d0815e17544c66a87b81bb39f0537",
-        "mtime": "2026-11-20T05:21:22.714Z",
+        "mtime": "2026-11-20T05:40:57.699Z",
         "authoritative": true
       },
       {
@@ -223,7 +223,7 @@
         "bytes": 385,
         "lines": 12,
         "sha256": "sha256:ffd6908abeae52a691892b506e619d5b7ab9fe6912012d6e0765ec87cfaf144f",
-        "mtime": "2026-11-20T05:21:22.714Z",
+        "mtime": "2026-11-20T05:40:57.699Z",
         "authoritative": true
       },
       {
@@ -232,7 +232,7 @@
         "bytes": 313,
         "lines": 9,
         "sha256": "sha256:0e06e67e21bc33a95194e855543eca8bf29df40f7751d884cc84ec4d147b68cb",
-        "mtime": "2026-11-20T05:21:22.714Z",
+        "mtime": "2026-11-20T05:40:57.699Z",
         "authoritative": true
       }
     ],
@@ -1252,7 +1252,7 @@
         "partitions": [
           "p001"
         ],
-        "updated_from": "snap-b8abd648e1897855"
+        "updated_from": "snap-876f213a8e1c2255"
       },
       {
         "kind": "invariant",
@@ -2089,7 +2089,7 @@
       }
     ],
     "historical_state": {
-      "from_snapshot": "snap-b8abd648e1897855",
+      "from_snapshot": "snap-876f213a8e1c2255",
       "source_digest": "sha256:fcdf85a62401ba8460bb128f974301ab8eb5a8aa3d150f36f765726efa03ec60",
       "verified_conclusions": [
         "Architecture",
@@ -2676,12 +2676,16 @@
   "manifest": {
     "model_derived": true,
     "authoritative_source": "subject.source_facts",
+    "digest_excludes": [
+      "subject.acquired_at",
+      "scan.latency_ms"
+    ],
     "notes": [
       "verified_conclusions are citation-verified, not truth-adjudicated",
       "inferences includes every finding that was not citation-verified or was labelled derived/inferred",
       "sources_unexamined is a coverage gap, not evidence that a file is irrelevant"
     ]
   },
-  "snapshot_id": "snap-fb4b03d8f045c37c",
-  "digest": "sha256:fb4b03d8f045c37cdb0f5d3d749a939a5df113a33166687cf47c6334a8b71684"
+  "snapshot_id": "snap-cee109ba4d34956f",
+  "digest": "sha256:cee109ba4d34956f51a60fa9cfa7153a53bc2f5934d8c1cd9fff57231263be3c"
 }

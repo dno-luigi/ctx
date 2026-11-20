@@ -18,6 +18,10 @@ points at which it must refuse rather than continue.
 5. **No estimated cost.** A missing usage field stays `null`. A charge is the provider's figure or the
    catalogue product explicitly marked as such.
 6. **Budget is a gate.** A paid call without an explicit budget is refused before the request.
+7. **Authorisation is code.** A paid provider cannot be constructed without a spend guard. The guard
+   permits one attempt per run id and records it in an append-only ledger; a second attempt is refused
+   before any request unless a retry authorisation distinct from the run id is supplied, and that
+   authorisation is written next to the spend it permitted.
 
 ---
 
@@ -81,6 +85,10 @@ aggregate. A relationship discovered by the index remains present even if no cal
 4. Record `start`, `end`, `line`, the source `sha256`, and the quote.
 5. A finding with any unresolved citation does not enter `verified_conclusions`. It remains in
    `observations` and `inferences` with its flags.
+
+6. Report `support` beside verification: numbers and identifiers in the finding must appear in its quote,
+   and negation must not be invented or dropped. This is a report, not a gate — a flagged finding stays
+   in `verified_conclusions` so that published results are not restated by a new check.
 
 **Prohibited:** fuzzy matching, normalising whitespace to force a match, or dropping a failed citation while
 keeping the finding as though it were cited.
@@ -148,7 +156,9 @@ where it came from.
 ## 10. Replay and determinism
 
 - The engine keeps no event log; determinism is tested by re-running against the same acquisition and
-  payloads and comparing snapshot digests.
+  payloads and comparing snapshot digests (`tests/determinism.test.js`).
+- A digest covers content only. `subject.acquired_at` and `scan.latency_ms` are recorded in the artifact
+  and excluded from the digest; `manifest.digest_excludes` names them so the id can be recomputed.
 - `scripted` provider replays exact payloads for tests, so pipeline behaviour can be checked without a model.
 - A live run is reproducible only to the extent the provider is: the recorded `generation_id`, resolved
   model, reported usage and charge are the audit trail.
@@ -165,6 +175,9 @@ where it came from.
 | Missing certainty | `certainty_missing_or_invalid` | Yes, treated as `inferred` |
 | Failed citation | finding flag | Yes, excluded from conclusions |
 | Missing usage | nulls + `usage_missing` | Yes, summary marks the cost incomplete |
+| Paid provider without a spend guard | construction refused (`guard_required`) | No |
+| Second attempt on an authorised run id | refused before the request (`retry_not_authorized`) | No |
+| Ledger cannot be written | refused (`ledger_unwritable`); no unchecked spend | No |
 
 ## 12. Artifact handling
 

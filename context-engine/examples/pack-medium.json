@@ -5,7 +5,7 @@
   "used_tokens_estimate": 3242,
   "subject": {
     "root": "poc-repo",
-    "snapshot_id": "snap-b8abd648e1897855",
+    "snapshot_id": "snap-876f213a8e1c2255",
     "source_digest": "sha256:fcdf85a62401ba8460bb128f974301ab8eb5a8aa3d150f36f765726efa03ec60",
     "authoritative_source": "the source tree, not this pack"
   },
@@ -725,6 +725,6 @@
   },
   "reconstructible": true,
   "disclaimer": "Selected context, not complete source truth. Omitted items remain listed with their source references.",
-  "pack_id": "pack-3562f859297b",
-  "digest": "sha256:3562f859297bb1b63c1b3cfef941f07976af4d779d1ece236f911987363bf814"
+  "pack_id": "pack-920b3a716dc1",
+  "digest": "sha256:920b3a716dc1d917c657987566059b61df0fd2b6e4f3b8791564602317ea0ef0"
 }

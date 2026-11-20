@@ -50,7 +50,8 @@ export function retrievalAnswers({ pack, questions }) {
   });
 }
 
-export async function modelAnswers({ provider, pack, questions, maxTokens = 1400 }) {
+/** The exact prompt a model sees. Exported so the token estimate can be calibrated against it. */
+export function buildQaPrompt({ pack, questions }) {
   const packBody = Object.entries(pack.sections ?? {})
     .map(([section, items]) => `## ${section}\n` + items.map((entry) => `- ${entry.text}\n  sources: ${(entry.sources ?? []).map((ref) => `${ref.path}${ref.line ? `:${ref.line}` : ''}`).join(', ') || 'none'}`).join('\n'))
     .join('\n\n');
@@ -62,6 +63,11 @@ export async function modelAnswers({ provider, pack, questions, maxTokens = 1400
     'Return JSON only: {"answers":[{"question_id":"…","answer":"…","sources":["path"]}]}',
   ].join('\n');
   const user = `CONTEXT PACK\n${packBody}\n\nQUESTIONS\n${JSON.stringify(questions.map(({ id, question }) => ({ question_id: id, question })), null, 2)}`;
+  return { system, user };
+}
+
+export async function modelAnswers({ provider, pack, questions, maxTokens = 1400 }) {
+  const { system, user } = buildQaPrompt({ pack, questions });
   const result = await provider.complete({ system, user, maxTokens, meta: {} });
   const answers = Array.isArray(result.payload?.answers) ? result.payload.answers : [];
   return {

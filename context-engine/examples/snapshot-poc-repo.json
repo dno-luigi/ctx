@@ -3,7 +3,7 @@
   "engine": "context-engine/0.1.0",
   "subject": {
     "root": "poc-repo",
-    "acquired_at": "2026-11-20T05:21:22.702Z",
+    "acquired_at": "2026-11-20T05:40:57.691Z",
     "source_digest": "sha256:fcdf85a62401ba8460bb128f974301ab8eb5a8aa3d150f36f765726efa03ec60",
     "files": 11,
     "bytes": 3238,
@@ -133,7 +133,7 @@
       "cost_usd": 0,
       "cost_source": "not_applicable"
     },
-    "latency_ms": 1,
+    "latency_ms": 2,
     "problems": []
   },
   "sections": {
@@ -2362,12 +2362,16 @@
   "manifest": {
     "model_derived": true,
     "authoritative_source": "subject.source_facts",
+    "digest_excludes": [
+      "subject.acquired_at",
+      "scan.latency_ms"
+    ],
     "notes": [
       "verified_conclusions are citation-verified, not truth-adjudicated",
       "inferences includes every finding that was not citation-verified or was labelled derived/inferred",
       "sources_unexamined is a coverage gap, not evidence that a file is irrelevant"
     ]
   },
-  "snapshot_id": "snap-b8abd648e1897855",
-  "digest": "sha256:b8abd648e1897855d45c5cd27bd439b43656231d5745fb700b23295051f6d877"
+  "snapshot_id": "snap-876f213a8e1c2255",
+  "digest": "sha256:876f213a8e1c22551b3b6374f40a74046004fa4dadfae1785666a1986a9adb2d"
 }

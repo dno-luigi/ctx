@@ -20,6 +20,7 @@ import { fileURLToPath } from 'node:url';
 import { scanProject, updateProject } from '../src/pipeline.js';
 import { compact, renderPack } from '../src/compact.js';
 import { createProvider, loadModels, resolveModel } from '../src/providers.js';
+import { openSpendGuard } from '../src/guard.js';
 import { applyDelta, copySubject } from './apply-delta.js';
 import { retrievalAnswers, modelAnswers, scoreAnswers, scoreFacts } from './qa.js';
 
@@ -55,12 +56,29 @@ const check = (name, condition, detail = '') => {
   console.log(`  ${condition ? 'ok  ' : 'FAIL'} ${name}${condition || !detail ? '' : ` — ${detail}`}`);
 };
 
-async function makeProvider({ modelId, budget }) {
+// Live execution needs a run id, because the guard's whole job is to make a second attempt on the
+// same authorisation impossible — not to warn about it.
+const runId = typeof args['run-id'] === 'string' ? args['run-id'] : null;
+const ledgerPath = path.join(outDir, 'spend-ledger.jsonl');
+let guard = null;
+const ensureGuard = () => {
+  if (!live) return null;
+  guard ??= openSpendGuard({
+    runId,
+    ledgerPath,
+    budgetUsd,
+    authorizeRetry: typeof args['authorize-retry'] === 'string' ? args['authorize-retry'] : null,
+    purpose: `poc:${path.basename(outDir)}`,
+  });
+  return guard;
+};
+
+async function makeProvider({ modelId, budget, purpose = 'scan' }) {
   if (!live) return createProvider({ kind: 'stub' });
   if (!(budgetUsd > 0)) throw new Error('live mode requires --budget-usd greater than zero');
   const registry = await loadModels();
   const model = resolveModel(registry, modelId);
-  return createProvider({ kind: 'openai-compatible', registry, model, budget });
+  return createProvider({ kind: 'openai-compatible', registry, model, budget, guard: ensureGuard(), purpose });
 }
 
 const groundTruth = JSON.parse(await readFile(path.join(engineRoot, 'fixtures/poc-repo.ground-truth.json'), 'utf8'));
@@ -70,7 +88,8 @@ await mkdir(outDir, { recursive: true });
 const budget = { usd: budgetUsd, spent: 0 };
 const registry = live ? await loadModels() : null;
 const partitionPolicy = registry?.partition ?? {};
-const provider = await makeProvider({ modelId: args.model, budget });
+const provider = await makeProvider({ modelId: args.model, budget, purpose: 'scan' });
+if (guard) console.log(`  spend guard: run ${guard.runId} attempt ${guard.attempt} · ledger ${path.relative(process.cwd(), guard.ledgerPath)}`);
 const modelContextTokens = provider.model?.context_tokens ?? null;
 const partitionTokens = args['partition-tokens'] ? Number(args['partition-tokens']) : null;
 const maxCallTokens = Number(args['max-output-tokens'] ?? 8000);
@@ -117,7 +136,7 @@ check('profiles trade size for content, not truth', packs.small.coverage.items_i
 console.log('\n4. ANSWER FROM THE PACK ONLY');
 let qa;
 if (args.qa === 'model' && live) {
-  const qaProvider = await makeProvider({ modelId: args['qa-model'] ?? args.model, budget });
+  const qaProvider = await makeProvider({ modelId: args['qa-model'] ?? args.model, budget, purpose: 'qa' });
   const result = await modelAnswers({ provider: qaProvider, pack, questions: groundTruth.questions });
   qa = { mode: 'model', ...result };
   await mkdir(outDir, { recursive: true });
@@ -233,5 +252,9 @@ await writeFile(path.join(outDir, 'poc-report.json'), JSON.stringify(report, nul
 
 console.log(`\nartifacts written to ${path.relative(process.cwd(), outDir)}/`);
 console.log(`checks: ${checks - failures}/${checks}${failures ? ' — FAILURES PRESENT' : ''}`);
+if (guard) {
+  guard.close({ outcome: failures ? 'checks_failed' : 'completed' });
+  console.log(`measured spend this attempt: $${guard.spent.toFixed(8)} of $${guard.authorizedUsd.toFixed(2)} authorised (attempt ${guard.attempt}, ${guard.calls} call(s))`);
+}
 if (live) console.log(`measured spend this run: $${budget.spent.toFixed(8)} of $${budgetUsd.toFixed(2)} budget`);
 process.exit(failures ? 1 : 0);

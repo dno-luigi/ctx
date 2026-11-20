@@ -1,6 +1,6 @@
 {
   "schema": "context-engine/poc-report/v1",
-  "generated_at": "2026-11-20T05:21:22.729Z",
+  "generated_at": "2026-11-20T05:40:57.721Z",
   "mode": "stub",
   "model": "stub-rule-scanner",
   "qa_mode": "retrieval-from-pack",
@@ -31,7 +31,7 @@
       "output_tokens": 0,
       "cost_usd": 0,
       "cost_source": "not_applicable",
-      "latency_ms": 1,
+      "latency_ms": 2,
       "partitions": 1,
       "validation": {
         "quotes_checked": 30,

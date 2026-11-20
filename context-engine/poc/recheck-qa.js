@@ -19,6 +19,7 @@ import { fileURLToPath } from 'node:url';
 
 import { compact, renderPack } from '../src/compact.js';
 import { createProvider, loadModels, resolveModel } from '../src/providers.js';
+import { openSpendGuard } from '../src/guard.js';
 import { retrievalAnswers, modelAnswers, scoreAnswers } from './qa.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -52,10 +53,18 @@ if (mode === 'model') {
   if (!(budget.usd > 0)) throw new Error('model QA requires --budget-usd greater than zero');
   const registry = await loadModels();
   const model = resolveModel(registry, args.model);
-  const provider = createProvider({ kind: 'openai-compatible', registry, model, budget });
+  const guard = openSpendGuard({
+    runId: typeof args['run-id'] === 'string' ? args['run-id'] : null,
+    ledgerPath: path.join(runDir, 'spend-ledger.jsonl'),
+    budgetUsd: budget.usd,
+    authorizeRetry: typeof args['authorize-retry'] === 'string' ? args['authorize-retry'] : null,
+    purpose: 'qa-recheck',
+  });
+  const provider = createProvider({ kind: 'openai-compatible', registry, model, budget, guard, purpose: 'qa-recheck' });
   const result = await modelAnswers({ provider, pack, questions: groundTruth.questions });
+  guard.close({ outcome: 'completed' });
   answers = result.answers;
-  usage = { ...result.usage, budget_usd: budget.usd, spent: budget.spent };
+  usage = { ...result.usage, budget_usd: budget.usd, spent: budget.spent, run_id: guard.runId, attempt: guard.attempt };
   providerInfo = result.provider;
 } else {
   answers = retrievalAnswers({ pack, questions: groundTruth.questions });

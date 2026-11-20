@@ -196,6 +196,9 @@ Invariants:
    kind, **and** `status ∉ {stale, invalidated}`.
 4. Every `verified_conclusions` entry has at least one evidence item with a `sha256`.
 5. `coverage.sources_unexamined` is a list, not a count, so the gap is inspectable.
+6. The digest covers content only. `subject.acquired_at` and `scan.latency_ms` are recorded in the
+   artifact but excluded from the digest, and `manifest.digest_excludes` lists them so a consumer can
+   recompute the id from the artifact and get the same value.
 
 ## 6. Delta — `context-engine/delta/v1`
 
@@ -311,3 +314,35 @@ summary. `null` means not reported; it never means zero.
 Lives with the fixture, not with results. `facts` are checkable in the source; `model_only` facts are those
 a line-rule scanner is not expected to find and are reported separately; `questions` require more than one
 file; `traps` are statements the source does not support, used to detect fabricated answers.
+
+## 10. Spend ledger — `context-engine/spend-ledger/v1` (JSONL)
+
+Append-only, written by `src/guard.js`, one row per event. It is the enforcement record, not a report: a
+fresh process reads it to decide whether it may spend.
+
+```json
+{"schema":"context-engine/spend-ledger/v1","event":"attempt_opened","run_id":"run-2026-11-21-a","attempt":1,"purpose":"poc:live","authorized_usd":0.05,"authorize_retry":null,"prior_spend_usd":0,"at":"…"}
+{"schema":"context-engine/spend-ledger/v1","event":"call","run_id":"run-2026-11-21-a","attempt":1,"model":"~z-ai/glm-flash-latest","input_tokens":2466,"output_tokens":3360,"cost_usd":0.000721812,"generation_id":"gen-…","at":"…"}
+{"schema":"context-engine/spend-ledger/v1","event":"attempt_closed","run_id":"run-2026-11-21-a","attempt":1,"outcome":"completed","calls":3,"spent_usd":0.00136493,"at":"…"}
+```
+
+Events: `attempt_opened`, `call`, `call_refused`, `attempt_closed`. A `call` row is written before the
+payload is interpreted, because a truncated response is still paid for. `attempt_opened` for a run id that
+already has one is refused and produces no row.
+
+## 11. Support check — `context-engine/support-check/v1`
+
+```json
+{
+  "schema": "context-engine/support-check/v1",
+  "snapshot_id": "snap-…",
+  "observations": { "total": 21, "supported": 18, "unsupported": 3, "no_evidence": 0, "flag_counts": { "number_not_in_quote": 2, "negation_not_in_quote": 1 } },
+  "contradictions": { "total": 1, "supported": 1 },
+  "verified_conclusions": { "total": 15, "supported": 13 },
+  "note": "Mechanical checks only. A flagged finding may still be correct."
+}
+```
+
+Flags: `number_not_in_quote`, `identifier_not_in_quote` (path citations are satisfied by `source_id`),
+`negation_not_in_quote`, `negation_only_in_quote`, `no_evidence`. A support result never rewrites
+`verification`; it is reported next to it.

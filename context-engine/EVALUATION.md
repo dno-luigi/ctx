@@ -71,6 +71,8 @@ temporary copy; the fixture is never modified.
 | **Differential correctness** | `preserved_identical`, `unchanged_sources_rescanned == 0`, stale ≥ 1, invalidated ≥ 1 | delta verification |
 | **Compaction quality** | tokens, items included/omitted, `reconstructible`, and whether any required fact is absent without being listed | pack artifact |
 | **Cost and latency** | tokens, provider charge, catalogue comparison, wall time, per call | instrumentation |
+| **Support rate** | citation-verified findings whose numbers and identifiers appear in their quote and whose negation matches | deterministic check (`src/support.js`) |
+| **Determinism** | identical acquisition + identical payloads ⇒ identical snapshot and pack digests | scripted replay (`tests/determinism.test.js`) |
 
 "Phrases appear" is a deliberately mechanical test. It can be satisfied by a finding that quotes the right
 line for the wrong reason; it is a lower bound on retention, not a comprehension score.
@@ -140,6 +142,31 @@ Two findings that belong in the record:
   offline. A model reading the whole pack is not subject to it, which is one reason H4 must be measured
   live rather than inferred from the stub.
 
+### 7.1 Integrity checks (added 2026-11-20, $0)
+
+```
+spend guard (one attempt per run id)            21/21
+determinism (scripted replay, digest equality)  15/15
+support checks                                  15/15
+budget                                          16/16
+compaction                                      11/11
+PoC structural                                  25/25
+```
+
+Three findings from adding these, all recorded rather than smoothed:
+
+- **The digest included wall-clock fields.** `subject.acquired_at` and `scan.latency_ms` were inside the
+  hashed body, so two identical scans produced different snapshot ids. The digest now covers content and
+  `manifest.digest_excludes` names the two fields. Published snapshot ids are unchanged.
+- **The token estimate understates code-heavy prompts.** Measured against provider-reported usage, the
+  scan prompt billed at 3.47 chars/token and the QA prompt at 3.82 (mean 3.64), so `ceil(chars/4)` was
+  optimistic by 13.2% and 4.5%. The spend pre-flight now uses 3.5; artifact estimates keep 4 so that
+  published pack sizes are not restated. `poc/calibrate.js` reproduces this from stored artifacts.
+- **Some citation-verified findings are under-cited rather than wrong.** On the run-2 snapshot, 18 of 21
+  observation findings pass the support checks (2 quote a figure that sits in a different line, 1 has a
+  negation the quote does not carry); 13 of 15 verified conclusions pass; the single contradiction passes.
+  Reported as a metric, not a gate.
+
 ## 8. Cost accounting
 
 - Model: `models.json`, verified against the OpenRouter catalogue on 2026-11-20. Default is the moving alias
@@ -171,5 +198,6 @@ Two findings that belong in the record:
 A live result must report, at minimum: mode, requested and resolved model, upstream, generation ids,
 partitions and budget source, input/output tokens, provider charge with source, latency, H1–H8 with the
 observed value, the six question outcomes, the contradiction outcome, delta verification, and every
-limitation observed. Results go to `examples/poc-report.json` and a companion note; they are not folded into
+limitation observed. Every paid run also reports its run id, attempt number and spend-ledger path, so the
+charge can be reconciled against an append-only record written by the guard rather than by the report. Results go to `examples/poc-report.json` and a companion note; they are not folded into
 the frozen GCA/RDA baseline.

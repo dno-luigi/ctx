@@ -30,6 +30,8 @@ Only `acquire` touches the filesystem for reading. Nothing in `src/` writes to t
 | `compact.js` | Select whole items by priority under a budget, list omissions with sources | Rewrite or paraphrase |
 | `instrument.js` | Record one row per call: model, resolved model, upstream, tokens, cost source, latency | Sum nulls as zero |
 | `pipeline.js` | Compose the above into `scanProject`, `updateProject`, `pack` | Add policy of its own |
+| `guard.js` | Authorise one paid attempt per run id; refuse a retry without a distinct authorisation; write the ledger | Decide how much may be spent |
+| `support.js` | Check that numbers, identifiers and negation in a finding come from its quote | Adjudicate whether the claim is true |
 
 One dependency crosses the module boundary: `digest`/`stableStringify` from the repository's
 `src/canonical.js`. It is reused rather than duplicated so snapshot ids are comparable with the rest of the
@@ -152,6 +154,9 @@ If a contradiction cannot fit, it is listed in `omissions[]` with those same two
 | Budget exceeded | Call refused before request; error names spent/ceiling |
 | Usage absent | Tokens and cost `null`, `cost_source: 'absent'`; summary says the total is incomplete |
 | Provider returns no charge | Catalogue product recorded with `cost_source: 'catalogue'` |
+| Paid provider built without a guard | Refused at construction; no request is made |
+| Retry on an already-open run id | Refused before the request; refusal row written to the ledger |
+| Ledger unwritable | Refused; spending stops rather than proceeding unrecorded |
 
 ## 10. Extension points
 

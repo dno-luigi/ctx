@@ -128,6 +128,8 @@ export function buildSnapshot({ acquisition, partitionInfo, aggregated, calls, p
     manifest: {
       model_derived: true,
       authoritative_source: 'subject.source_facts',
+      // Declared so a consumer can recompute the digest from the artifact and get the same id.
+      digest_excludes: ['subject.acquired_at', 'scan.latency_ms'],
       notes: [
         'verified_conclusions are citation-verified, not truth-adjudicated',
         'inferences includes every finding that was not citation-verified or was labelled derived/inferred',
@@ -136,7 +138,16 @@ export function buildSnapshot({ acquisition, partitionInfo, aggregated, calls, p
     },
   };
 
-  const snapshotDigest = digest(body);
+  // PROTOCOL §10's invariant is about content: the same acquisition and the same payloads must give
+  // the same id. Wall-clock time and latency are neither, and including them made two identical runs
+  // produce two different snapshots — so they stay in the artifact and out of the digest.
+  const digestBody = (() => {
+    const { subject, scan, ...rest } = body;
+    const { acquired_at, ...stableSubject } = subject;
+    const { latency_ms, ...stableScan } = scan;
+    return { ...rest, subject: stableSubject, scan: stableScan };
+  })();
+  const snapshotDigest = digest(digestBody);
   return {
     ...body,
     snapshot_id: `snap-${snapshotDigest.replace('sha256:', '').slice(0, 16)}`,

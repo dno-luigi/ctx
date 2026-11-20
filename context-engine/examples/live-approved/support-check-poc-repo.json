@@ -1,0 +1,400 @@
+{
+  "schema": "context-engine/support-check/v1",
+  "at": "2026-11-20T05:38:06.003Z",
+  "run": "examples/live-approved",
+  "snapshot_file": "snapshot-poc-repo.json",
+  "snapshot_id": "snap-7758e901b5362ef3",
+  "snapshot_digest": "sha256:7758e901b5362ef3a7e1399bda7fd7dc64965c3a152a59d29e008c1ec6aa9837",
+  "note": "Mechanical checks only. A flagged finding may still be correct (it may combine several quotes or rephrase a figure); a supported finding may still be wrong.",
+  "observations": {
+    "label": "observations",
+    "total": 21,
+    "supported": 18,
+    "unsupported": 3,
+    "no_evidence": 0,
+    "supported_rate": 0.8571,
+    "flag_counts": {
+      "number_not_in_quote": 2,
+      "negation_not_in_quote": 1
+    },
+    "examples": {
+      "number_not_in_quote": [
+        {
+          "text": "ingest enforces a maximum batch size of 100 by throwing on larger batches.",
+          "kind": "state",
+          "verification": "citation_verified",
+          "status": "unsupported",
+          "flags": [
+            {
+              "code": "number_not_in_quote",
+              "token": "100"
+            }
+          ]
+        },
+        {
+          "text": "Configuration defaults set retention_days 30, timeout_seconds 5, and batch_size 100.",
+          "kind": "state",
+          "verification": "citation_verified",
+          "status": "unsupported",
+          "flags": [
+            {
+              "code": "number_not_in_quote",
+              "token": "5"
+            }
+          ]
+        }
+      ],
+      "negation_not_in_quote": [
+        {
+          "text": "writeBatch stamps each record with a written_at timestamp but the acquired snippet shows no durable write.",
+          "kind": "state",
+          "verification": "citation_verified",
+          "status": "unsupported",
+          "flags": [
+            {
+              "code": "negation_not_in_quote"
+            }
+          ]
+        }
+      ]
+    },
+    "findings": [
+      {
+        "text": "The service must never delete an object before its retention window expires.",
+        "kind": "invariant",
+        "verification": "citation_verified",
+        "status": "supported",
+        "flags": []
+      },
+      {
+        "text": "Every accepted batch is written exactly once and retries must be idempotent.",
+        "kind": "invariant",
+        "verification": "citation_verified",
+        "status": "supported",
+        "flags": []
+      },
+      {
+        "text": "The store must never delete an unexpired object even under lock contention.",
+        "kind": "invariant",
+        "verification": "citation_verified",
+        "status": "supported",
+        "flags": []
+      },
+      {
+        "text": "ADR-001 chose a fixed 30-day retention window over a sliding TTL because the audit trail requires a fixed boundary.",
+        "kind": "decision",
+        "verification": "citation_verified",
+        "status": "supported",
+        "flags": []
+      },
+      {
+        "text": "ADR-002 chose a batch size of 100 because larger batches increased lock contention.",
+        "kind": "decision",
+        "verification": "citation_verified",
+        "status": "supported",
+        "flags": []
+      },
+      {
+        "text": "ingest accepts batches and validates payloads; store handles durable writes and reads; retention owns only the expiry decision; scheduler drives periodic drain work.",
+        "kind": "responsibility",
+        "verification": "citation_verified",
+        "status": "supported",
+        "flags": []
+      },
+      {
+        "text": "The dependency chain is ingest -> store -> retention, and scheduler -> ingest.",
+        "kind": "dependency",
+        "verification": "citation_verified",
+        "status": "supported",
+        "flags": []
+      },
+      {
+        "text": "ingest enforces a maximum batch size of 100 by throwing on larger batches.",
+        "kind": "state",
+        "verification": "citation_verified",
+        "status": "unsupported",
+        "flags": [
+          {
+            "code": "number_not_in_quote",
+            "token": "100"
+          }
+        ]
+      },
+      {
+        "text": "Retention expiry uses an inclusive boundary: an object exactly 30 days old is expired.",
+        "kind": "state",
+        "verification": "citation_verified",
+        "status": "supported",
+        "flags": []
+      },
+      {
+        "text": "The scheduler drains the queue every 30 seconds in batches of 100.",
+        "kind": "state",
+        "verification": "citation_verified",
+        "status": "supported",
+        "flags": []
+      },
+      {
+        "text": "The scheduler drops a batch instead of retrying when the store lock is held.",
+        "kind": "risk",
+        "verification": "citation_verified",
+        "status": "supported",
+        "flags": []
+      },
+      {
+        "text": "An alert fires if the drop counter exceeds 1 per hour.",
+        "kind": "task",
+        "verification": "citation_verified",
+        "status": "supported",
+        "flags": []
+      },
+      {
+        "text": "The backfill path is not yet implemented and must be documented before the next release.",
+        "kind": "outstanding",
+        "verification": "citation_verified",
+        "status": "supported",
+        "flags": []
+      },
+      {
+        "text": "Backfill is blocked because the store does not expose a bounded writer.",
+        "kind": "task",
+        "verification": "citation_verified",
+        "status": "supported",
+        "flags": []
+      },
+      {
+        "text": "An open question remains whether backfill may write directly to the store or only through ingest.",
+        "kind": "outstanding",
+        "verification": "citation_verified",
+        "status": "supported",
+        "flags": []
+      },
+      {
+        "text": "The retention window must be verified as 30 days before every release.",
+        "kind": "task",
+        "verification": "citation_verified",
+        "status": "supported",
+        "flags": []
+      },
+      {
+        "text": "Retention was 14 days before the audit change and the legacy note is superseded by ADR-001.",
+        "kind": "state",
+        "verification": "citation_verified",
+        "status": "supported",
+        "flags": []
+      },
+      {
+        "text": "store's sweep filters objects to those whose retention has expired, delegating expiry to isExpired.",
+        "kind": "state",
+        "verification": "citation_verified",
+        "status": "supported",
+        "flags": []
+      },
+      {
+        "text": "writeBatch stamps each record with a written_at timestamp but the acquired snippet shows no durable write.",
+        "kind": "state",
+        "verification": "citation_verified",
+        "status": "unsupported",
+        "flags": [
+          {
+            "code": "negation_not_in_quote"
+          }
+        ]
+      },
+      {
+        "text": "Configuration defaults set retention_days 30, timeout_seconds 5, and batch_size 100.",
+        "kind": "state",
+        "verification": "citation_verified",
+        "status": "unsupported",
+        "flags": [
+          {
+            "code": "number_not_in_quote",
+            "token": "5"
+          }
+        ]
+      },
+      {
+        "text": "tests/retention.test.js asserts the boundary using RETENTION_DAYS and the same DAY_MS constant value of 86400000.",
+        "kind": "reference",
+        "verification": "citation_verified",
+        "status": "supported",
+        "flags": []
+      }
+    ]
+  },
+  "contradictions": {
+    "label": "contradictions",
+    "total": 1,
+    "supported": 1,
+    "unsupported": 0,
+    "no_evidence": 0,
+    "supported_rate": 1,
+    "flag_counts": {},
+    "examples": {},
+    "findings": [
+      {
+        "text": "The ingest timeout is 30 seconds in production per the architecture doc, but config/defaults.json sets timeout_seconds to 5.",
+        "kind": null,
+        "verification": "citation_verified",
+        "status": "supported",
+        "flags": []
+      }
+    ]
+  },
+  "verified_conclusions": {
+    "label": "verified_conclusions",
+    "total": 15,
+    "supported": 13,
+    "unsupported": 2,
+    "no_evidence": 0,
+    "supported_rate": 0.8667,
+    "flag_counts": {
+      "number_not_in_quote": 2
+    },
+    "examples": {
+      "number_not_in_quote": [
+        {
+          "text": "ingest enforces a maximum batch size of 100 by throwing on larger batches.",
+          "kind": "state",
+          "verification": null,
+          "status": "unsupported",
+          "flags": [
+            {
+              "code": "number_not_in_quote",
+              "token": "100"
+            }
+          ]
+        },
+        {
+          "text": "Configuration defaults set retention_days 30, timeout_seconds 5, and batch_size 100.",
+          "kind": "state",
+          "verification": null,
+          "status": "unsupported",
+          "flags": [
+            {
+              "code": "number_not_in_quote",
+              "token": "5"
+            }
+          ]
+        }
+      ]
+    },
+    "findings": [
+      {
+        "text": "The service must never delete an object before its retention window expires.",
+        "kind": "invariant",
+        "verification": null,
+        "status": "supported",
+        "flags": []
+      },
+      {
+        "text": "Every accepted batch is written exactly once and retries must be idempotent.",
+        "kind": "invariant",
+        "verification": null,
+        "status": "supported",
+        "flags": []
+      },
+      {
+        "text": "The store must never delete an unexpired object even under lock contention.",
+        "kind": "invariant",
+        "verification": null,
+        "status": "supported",
+        "flags": []
+      },
+      {
+        "text": "ADR-001 chose a fixed 30-day retention window over a sliding TTL because the audit trail requires a fixed boundary.",
+        "kind": "decision",
+        "verification": null,
+        "status": "supported",
+        "flags": []
+      },
+      {
+        "text": "ADR-002 chose a batch size of 100 because larger batches increased lock contention.",
+        "kind": "decision",
+        "verification": null,
+        "status": "supported",
+        "flags": []
+      },
+      {
+        "text": "ingest accepts batches and validates payloads; store handles durable writes and reads; retention owns only the expiry decision; scheduler drives periodic drain work.",
+        "kind": "responsibility",
+        "verification": null,
+        "status": "supported",
+        "flags": []
+      },
+      {
+        "text": "The dependency chain is ingest -> store -> retention, and scheduler -> ingest.",
+        "kind": "dependency",
+        "verification": null,
+        "status": "supported",
+        "flags": []
+      },
+      {
+        "text": "ingest enforces a maximum batch size of 100 by throwing on larger batches.",
+        "kind": "state",
+        "verification": null,
+        "status": "unsupported",
+        "flags": [
+          {
+            "code": "number_not_in_quote",
+            "token": "100"
+          }
+        ]
+      },
+      {
+        "text": "Retention expiry uses an inclusive boundary: an object exactly 30 days old is expired.",
+        "kind": "state",
+        "verification": null,
+        "status": "supported",
+        "flags": []
+      },
+      {
+        "text": "The scheduler drains the queue every 30 seconds in batches of 100.",
+        "kind": "state",
+        "verification": null,
+        "status": "supported",
+        "flags": []
+      },
+      {
+        "text": "The scheduler drops a batch instead of retrying when the store lock is held.",
+        "kind": "risk",
+        "verification": null,
+        "status": "supported",
+        "flags": []
+      },
+      {
+        "text": "The backfill path is not yet implemented and must be documented before the next release.",
+        "kind": "outstanding",
+        "verification": null,
+        "status": "supported",
+        "flags": []
+      },
+      {
+        "text": "An open question remains whether backfill may write directly to the store or only through ingest.",
+        "kind": "outstanding",
+        "verification": null,
+        "status": "supported",
+        "flags": []
+      },
+      {
+        "text": "Retention was 14 days before the audit change and the legacy note is superseded by ADR-001.",
+        "kind": "state",
+        "verification": null,
+        "status": "supported",
+        "flags": []
+      },
+      {
+        "text": "Configuration defaults set retention_days 30, timeout_seconds 5, and batch_size 100.",
+        "kind": "state",
+        "verification": null,
+        "status": "unsupported",
+        "flags": [
+          {
+            "code": "number_not_in_quote",
+            "token": "5"
+          }
+        ]
+      }
+    ]
+  }
+}

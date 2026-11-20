@@ -1,0 +1,51 @@
+{
+  "schema": "context-engine/token-calibration/v1",
+  "at": "2026-11-20T05:35:53.280Z",
+  "run": "examples/live-approved",
+  "snapshot_id": "snap-7758e901b5362ef3",
+  "subject_digest_matches": true,
+  "model": {
+    "requested": "~z-ai/glm-flash-latest",
+    "resolved_recorded": "z-ai/glm-5.3-flash"
+  },
+  "estimator": {
+    "method": "ceil(chars/4)",
+    "divisor": 4
+  },
+  "prompts": [
+    {
+      "prompt": "scan",
+      "call": "scan",
+      "chars": 8558,
+      "chars_in_system": 2180,
+      "chars_in_user": 6378,
+      "estimated_tokens": 2140,
+      "reported_input_tokens": 2466,
+      "chars_per_token": 3.47,
+      "estimate_over_reported": 0.868,
+      "estimate_error_pct": -13.2,
+      "direction": "optimistic"
+    },
+    {
+      "prompt": "qa",
+      "call": "qa",
+      "chars": 4609,
+      "chars_in_system": 350,
+      "chars_in_user": 4259,
+      "estimated_tokens": 1153,
+      "reported_input_tokens": 1207,
+      "chars_per_token": 3.819,
+      "estimate_over_reported": 0.955,
+      "estimate_error_pct": -4.5,
+      "direction": "calibrated"
+    }
+  ],
+  "summary": {
+    "prompts_measured": 2,
+    "mean_chars_per_token": 3.644,
+    "recommended_divisor": 3.644,
+    "worst_estimate_over_reported": 0.868,
+    "verdict": "optimistic: ceil(chars/4) understates tokens, so a pack can look smaller than it bills"
+  },
+  "limitation": "Prompts are rebuilt from the current prompt code and the stored artifacts, not read back from a recorded request. If that code changed after the run, the character count is not the sent one; the subject digest is re-derived and checked to catch a changed fixture, but not a changed prompt."
+}

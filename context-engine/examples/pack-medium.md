@@ -1,5 +1,5 @@
-# Context pack pack-3562f859297b (medium, ~3242 tokens)
-Snapshot snap-b8abd648e1897855 · source digest sha256:fcdf85a62401ba84…
+# Context pack pack-920b3a716dc1 (medium, ~3242 tokens)
+Snapshot snap-876f213a8e1c2255 · source digest sha256:fcdf85a62401ba84…
 Selected context, not complete source truth. Each item cites its source.
 
 ## invariants

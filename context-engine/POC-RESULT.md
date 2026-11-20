@@ -82,6 +82,11 @@ nor the ground truth was edited. See §5 P2.
 | QA from the pack alone, two modes | done | `qa-recheck.json`; retrieval mode run at $0 |
 | Per-call instrumentation: resolved model, generation id, cost source | done | `instrumentation.jsonl`; H8 |
 | Pre-registered gates, unchanged after results | done | `EVALUATION.md` §6 |
+| Run ids, attempts and charges fixed in an append-only ledger | done (new) | `src/guard.js`, `tests/guard.test.js` 21/21 |
+| Identical inputs produce identical snapshot and delta ids | done (new) | `tests/determinism.test.js` 15/15 |
+| Support beyond quote existence, measured | measured (new) | `examples/live-approved/support-check-poc-repo.json` |
+| Token estimate calibrated against provider usage | measured (new) | `examples/live-approved/token-calibration.json` |
+| Downstream utility benchmark | designed and pre-registered, **not run** | [BENCHMARK-01.md](BENCHMARK-01.md) |
 | Multi-partition live path | **not exercised** | see §4 |
 | Generalisation beyond one small fixture | **not shown** | see §4 |
 
@@ -167,4 +172,29 @@ examples/live-approved/                     run 2: same set, single attempt
 examples/live-approved/pack-medium-contradictions.json / .md   rebuilt pack carrying the contradiction
 examples/live-approved/qa-recheck.json      re-check: pack digest, one call, per-question scoring
 examples/live-approved/instrumentation.jsonl run 2 per-call rows
+examples/live-approved/token-calibration.json  rebuilt prompts vs provider-reported tokens
+examples/live-approved/support-check-poc-repo.json  support checks over the stored snapshot
 ```
+
+## 8. Integrity additions after this record (2026-11-20)
+
+Four things were added after the measurements above, all $0 and none of which changes a number in §2:
+
+1. **Spend guard.** A paid provider cannot be constructed without one, and one run id admits one attempt.
+   The ledger (`spend-ledger.jsonl`, written by the guard) makes a retry a refusal that a fresh process
+   cannot bypass, instead of a paragraph a harness can ignore. This is the execution-layer answer to the
+   unauthorised attempt recorded in §6.
+2. **Determinism.** The digest had been covering `subject.acquired_at` and `scan.latency_ms`, so two
+   identical scans produced different ids. Content-only digests are now tested by scripted replay. Existing
+   artifacts keep the ids they were published with; future snapshots get stable ones.
+3. **Token calibration.** The estimator was optimistic by 13.2% on the scan prompt and 4.5% on the QA
+   prompt. The spend pre-flight now uses 3.5 chars/token; artifact estimates deliberately stay at 4 so that
+   the pack sizes quoted here are not restated. `BENCHMARK-01.md` requires reporting both figures.
+4. **Support checks.** 18 of 21 observation findings, 13 of 15 verified conclusions and the single
+   contradiction pass a stronger mechanical test than "the quote exists". Two of the flagged findings are
+   true but under-cited: the figure they state sits in a different line than the one quoted. The check is a
+   metric, not a gate, and does not demote them.
+
+The verdict in §1 is unchanged by all four. What changed is whether a future measurement can be trusted:
+its spend is enforced, its ids are reproducible, its budget is calibrated, and its evidence has a second
+check that does not depend on the model that produced it.

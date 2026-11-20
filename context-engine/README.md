@@ -12,6 +12,13 @@ reconstruction 0.833, 0 traps). All eight gates have therefore been observed pas
 matrix, spend ledger, open gaps and the pre-registration for the next measurement are in
 [POC-RESULT.md](POC-RESULT.md).
 
+**Integrity layer added 2026-11-20.** Paid execution is refused without a spend guard: one attempt per run
+id, ledger-backed, so an unauthorised retry is a refusal rather than a document. The snapshot digest now
+covers content instead of wall-clock fields, so identical inputs produce identical ids. The token
+estimator is calibrated against provider-reported usage, and a mechanical support check reports how many
+citation-verified findings are actually backed by their quotes. The benchmark that decides whether any of
+this is worth using is designed and pre-registered, **not run**: [BENCHMARK-01.md](BENCHMARK-01.md).
+
 ---
 
 ## 1. Purpose
@@ -38,6 +45,20 @@ The governing principle:
 
 This is **not** a summarisation tool. A summary replaces the source; this keeps the source authoritative
 and makes the derived context cheap to discard and rebuild.
+
+### 1.1 What the engine maintains
+
+| Layer | Role |
+| --- | --- |
+| **Snapshot** | the preserved state: sources, findings, evidence, coverage, contradictions |
+| **Pack** | one materialised working set, selected from the snapshot under a budget |
+| **Retrieval** *(not built)* | selective delivery from the snapshot, on demand |
+| **Verification** | evidence integrity: quotes resolve, and support is checked separately |
+| **Invalidation** | temporal correctness: preserved / stale / invalidated |
+| **Agent execution** | the only layer that can show whether the rest is useful |
+
+The pack is a delivery mechanism, not the product. A pack has to guess what the agent will need; the
+snapshot does not.
 
 ## 2. What it is not
 
@@ -67,6 +88,9 @@ Five guarantees that are enforced in code, not in prose:
 | Unchanged findings are carried forward only if their cited sources are byte-identical | `src/differential.js` |
 | A pack lists every omitted item with its source references | `src/compact.js` |
 | Cost is provider-reported or `null`; it is never estimated | `src/providers.js`, `src/instrument.js` |
+| A paid call refuses to exist without a spend authorisation | `src/guard.js`, `tests/guard.test.js` |
+| Identical acquisition + identical payloads ⇒ identical ids | `src/snapshot.js`, `tests/determinism.test.js` |
+| Support is checked beyond the quote's existence | `src/support.js` |
 
 ## 4. Quick start
 
@@ -77,6 +101,16 @@ node context-engine/poc/run-poc.js
 node context-engine/tests/budget.test.js
 ```
 
+Integrity checks, also $0:
+
+```bash
+node context-engine/tests/guard.test.js          # one attempt per run id
+node context-engine/tests/determinism.test.js    # identical inputs ⇒ identical ids
+node context-engine/tests/support.test.js        # quote support, not just quote presence
+node context-engine/poc/calibrate.js --run examples/live-approved
+node context-engine/poc/check-support.js --run examples/live-approved
+```
+
 The PoC acquires `fixtures/poc-repo`, scans it, builds three pack sizes, answers six cross-file questions
 from the pack only, applies a declared change set to a temporary copy, runs a differential scan, and
 writes the artifacts to `context-engine/examples/`.
@@ -85,11 +119,13 @@ Live (paid, explicit budget, GLM Flash Latest by default):
 
 ```bash
 node context-engine/poc/run-poc.js \
-  --provider live --model glm-flash-latest --budget-usd 0.05 --qa model
+  --provider live --model glm-flash-latest --budget-usd 0.05 --run-id scan-2026-11-21-a --qa model
 ```
 
-Nothing spends money without `--budget-usd`; the provider adapter refuses before the first call if the
-budget is absent or already exhausted.
+`--run-id` is not optional in live mode. The provider refuses to exist without a spend guard, and the
+guard allows one attempt per run id, recorded in `<out>/spend-ledger.jsonl`. Running the same id again is
+refused before any request; a deliberate retry needs `--authorize-retry <token>` with a token distinct
+from the id, and that authorisation is written next to the spend it permitted.
 
 ## 5. Model selection and economics
 
@@ -126,13 +162,16 @@ context-engine/
   PROTOCOL.md          normative scan / reconcile / compact rules
   EVALUATION.md        metrics, fixtures, pre-registered live-scan thresholds
   POC-RESULT.md        consolidated gate matrix, spend ledger, open gaps, next-run pre-registration
+  BENCHMARK-01.md      pre-registered downstream utility benchmark (design, not run)
   models.json          configurable model registry + partition policy
   src/                 source, partition, budget, providers, scan, validate,
-                       aggregate, snapshot, differential, compact, instrument, pipeline
-  poc/                 run-poc, apply-delta, pack-only QA and scoring
+                       aggregate, snapshot, differential, compact, instrument,
+                       pipeline, guard, support
+  poc/                 run-poc, apply-delta, pack-only QA and scoring,
+                       recheck-qa, rescore, calibrate, check-support
   fixtures/            poc-repo, its ground truth, and the delta change set
   examples/            generated snapshot, packs, delta, instrumentation, report
-  tests/               budget unit tests
+  tests/               budget, compaction, guard, determinism, support
 ```
 
 ## 7. Current evidence, stated precisely
@@ -176,6 +215,25 @@ gates: H4 pass · q3 remains the only miss (correct answer, cites README + ARCHI
 ```
 
 Offline checks re-run for the consolidated record: budget 16/16, compaction 11/11, PoC structural 25/25.
+
+Integrity checks added after the live runs (all $0, re-runnable):
+
+```
+spend guard (one attempt per run id)            21/21
+determinism (scripted replay, digest equality)  15/15
+budget                                          16/16
+compaction                                      11/11
+support checks                                  15/15
+PoC structural                                  25/25
+token calibration: scan −13.2% · QA −4.5% · mean 3.64 chars/token
+support on the run-2 snapshot: 18/21 observations · 1/1 contradiction · 13/15 conclusions
+```
+
+Two readings that matter. `ceil(chars/4)` **understates** a code-heavy prompt by about 13%, so budgets
+were optimistic; the spend pre-flight now uses 3.5 chars/token, and the benchmark reports pack size both
+as estimated and calibrated. And the support check finds two findings whose numbers are true but appear
+in *other* quotes than the one cited — under-citation, not error. It is reported as a metric and does not
+demote them, because demoting would restate a published result.
 
 ## 8. Known limitations
 

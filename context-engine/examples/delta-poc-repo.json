@@ -1,7 +1,7 @@
 {
   "schema": "context-engine/delta/v1",
-  "from_snapshot": "snap-b8abd648e1897855",
-  "to_snapshot": "snap-fb4b03d8f045c37c",
+  "from_snapshot": "snap-876f213a8e1c2255",
+  "to_snapshot": "snap-cee109ba4d34956f",
   "source_digest_before": "sha256:fcdf85a62401ba8460bb128f974301ab8eb5a8aa3d150f36f765726efa03ec60",
   "source_digest_after": "sha256:8d47e530fed9ae07ac22b2933635326524b9fc002c5a0d9a4fd99e18dc4e0875",
   "sources": {
@@ -275,5 +275,5 @@
       "a rescan never writes to the source tree"
     ]
   },
-  "digest": "sha256:b5be347beab49c80b252025ef6876c21891cd18260f2900f2496e910370cdafc"
+  "digest": "sha256:1db23b868052764885c922a6b17e55bcd0923859c1f6edf10673e700e459e14a"
 }

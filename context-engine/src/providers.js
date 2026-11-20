@@ -18,7 +18,20 @@
 
 import { readFile } from 'node:fs/promises';
 
+import { SpendRefusal } from './guard.js';
+
 const MODELS_URL = new URL('../models.json', import.meta.url);
+
+/**
+ * Chars per token used by the *spend gate* only.
+ *
+ * Measured against provider-reported usage on 2026-11-20 (`poc/calibrate.js`): these prompts billed at
+ * 3.47 and 3.82 chars/token, so `ceil(chars/4)` understated the input of the scan prompt by 13.2%.
+ * Understating input is the unsafe direction for a pre-flight check, so the gate uses the pessimistic
+ * figure. Artifact estimates keep using 4 until the estimator is versioned, because changing them
+ * would restate pack sizes that are already published.
+ */
+const PREFLIGHT_CHARS_PER_TOKEN = 3.5;
 
 export async function loadModels() {
   return JSON.parse(await readFile(MODELS_URL, 'utf8'));
@@ -105,7 +118,7 @@ export function stubScan({ sources, references = [], maxFindings = 120 }) {
 
 // ------------------------------------------------------------------ providers
 
-export function createProvider({ kind = 'stub', registry, model, budget, fetchImpl = globalThis.fetch, env = process.env, script = [], endpoint, keyEnv, headers = {} }) {
+export function createProvider({ kind = 'stub', registry, model, budget, guard = null, purpose = null, fetchImpl = globalThis.fetch, env = process.env, script = [], endpoint, keyEnv, headers = {} }) {
   if (kind === 'stub') {
     return Object.freeze({
       kind,
@@ -142,6 +155,11 @@ export function createProvider({ kind = 'stub', registry, model, budget, fetchIm
   if (kind !== 'openai-compatible') throw new Error(`unknown provider kind: ${kind}`);
   if (!model) throw new Error('openai-compatible provider requires a model');
   if (!registry) throw new Error('openai-compatible provider requires the model registry');
+  // Refuse at construction, not at the first call: a paid provider that exists without an
+  // authorisation is one bug away from spending, and the bug would be in a caller.
+  if (!guard) {
+    throw new SpendRefusal('guard_required', 'a paid provider requires a spend guard (src/guard.js): live execution is one authorised attempt per run id');
+  }
 
   const base = endpoint ?? registry.endpoint ?? 'https://openrouter.ai/api/v1';
   const keyName = keyEnv ?? registry.key_env ?? 'OPENROUTER_API_KEY';
@@ -155,12 +173,19 @@ export function createProvider({ kind = 'stub', registry, model, budget, fetchIm
       const key = env[keyName];
       if (!key) throw new Error(`${keyName} is not set; refusing to run a paid provider`);
       if (!budget || !(budget.usd > 0)) throw new Error('a paid scan requires an explicit budget (--budget-usd)');
+      // A budget says how much may be spent. The guard says whether this process is allowed to spend
+      // at all: one authorised attempt per run id, recorded in a ledger that survives the process.
+      if (!guard) {
+        throw new SpendRefusal('guard_required', 'a paid provider requires a spend guard (src/guard.js): live execution is one authorised attempt per run id');
+      }
+      guard.assertOpen();
 
-      const preflightInput = Math.ceil((system.length + user.length) / 4);
+      const preflightInput = Math.ceil((system.length + user.length) / PREFLIGHT_CHARS_PER_TOKEN);
       const preflightCost = (preflightInput * price.input + maxTokens * price.output) / 1e6;
       if (budget.spent + preflightCost > budget.usd) {
         throw new Error(`budget_exceeded: spent $${budget.spent.toFixed(6)} of $${budget.usd.toFixed(2)}; next call ~$${preflightCost.toFixed(6)}`);
       }
+      guard.assertCanAfford(preflightCost);
 
       const started = Date.now();
       const response = await fetchImpl(`${base}/chat/completions`, {
@@ -188,6 +213,10 @@ export function createProvider({ kind = 'stub', registry, model, budget, fetchIm
       const providerCharge = typeof reported.cost === 'number' ? reported.cost : null;
       const cost = providerCharge ?? catalogue;
       if (typeof cost === 'number') budget.spent += cost;
+      const generationId = typeof body?.id === 'string' ? body.id : null;
+      // Recorded before the payload is interpreted: a truncated or unparseable response still cost
+      // money, so the ledger has to show it even when the call is a failure.
+      guard.recordCall({ costUsd: cost, inputTokens: input, outputTokens: output, generationId, purpose, model: model.slug });
 
       const problems = [];
       const finishReason = body?.choices?.[0]?.finish_reason ?? null;
@@ -215,7 +244,7 @@ export function createProvider({ kind = 'stub', registry, model, budget, fetchIm
           // or a moving alias would make two differently-priced runs look identical.
           resolved_model: typeof body?.model === 'string' ? body.model : null,
           upstream: typeof body?.provider === 'string' ? body.provider : null,
-          generation_id: typeof body?.id === 'string' ? body.id : null,
+          generation_id: generationId,
           finish_reason: finishReason,
         },
         latency_ms,
