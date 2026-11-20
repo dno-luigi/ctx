@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Ai-Nspired/gca-experiment/schemas/gca-proposals.v1.json",
+  "title": "GCA expansion proposals v1",
+  "description": "Harness-owned proposals for cards the first pass did not cover. A decision engine cannot emit this format; snapshot/expand.js derives it from native outputs, and the second decision pass decides whether each proposal is supported. Proposals are not cards until validated.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "proposals"],
+  "properties": {
+    "schema": { "const": "gca-proposals/v1" },
+    "proposals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "type", "title", "reason", "question", "priority", "evidence_required", "origin"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "type": { "enum": ["relationship", "claim", "unresolved_question", "investigation"] },
+          "title": { "type": "string", "minLength": 1 },
+          "reason": { "type": "string", "minLength": 1 },
+          "question": { "type": "string", "minLength": 1, "description": "The noul question the second pass will ask. Proposals are only askable if they can be phrased as a decision question." },
+          "priority": { "enum": ["high", "medium", "low"] },
+          "evidence_required": { "type": "boolean" },
+          "evidence_available": { "type": "boolean", "description": "False when the engine has no locate capability; the proposal is then assertion-only and must be reported as such." },
+          "candidates": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["source_id"],
+              "properties": {
+                "source_id": { "type": "string" },
+                "quote": { "type": "string" },
+                "span": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["start", "end"],
+                  "properties": { "start": { "type": "integer", "minimum": 0 }, "end": { "type": "integer", "minimum": 1 } }
+                }
+              }
+            }
+          },
+          "origin": { "type": "string", "minLength": 1, "description": "The rule that produced the proposal. Proposals from a second pass are not evaluable." }
+        }
+      }
+    }
+  }
+}

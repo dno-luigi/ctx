@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Ai-Nspired/gca-experiment/schemas/gca-questions.v1.json",
+  "title": "GCA question bank v1",
+  "description": "The questions put to a decision model, authored by the operator from the question being asked. A bank is an instrument: it is published with every run. `grounded_in_answer_key` must be false — a bank derived from the ground truth would make coverage trivial and the measurement worthless.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "bank_version", "fixture", "authored_from", "grounded_in_answer_key", "questions"],
+  "properties": {
+    "schema": { "const": "gca-questions/v1" },
+    "bank_version": { "type": "string", "minLength": 1 },
+    "fixture": { "type": "string", "minLength": 1 },
+    "authored_from": { "type": "string", "minLength": 1 },
+    "grounded_in_answer_key": { "const": false },
+    "abstain_below": { "type": "number", "minimum": 0, "maximum": 1 },
+    "questions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "type", "claim"],
+        "properties": {
+          "name": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+          "type": { "enum": ["noul", "choice", "score", "locate"] },
+          "instructions": { "type": "string", "minLength": 1 },
+          "criteria": { "type": "array", "items": { "type": "string" }, "minItems": 2, "maxItems": 255 },
+          "claim": { "type": "string", "minLength": 1 },
+          "kind": { "enum": ["stated", "derived", "inferred"] },
+          "source_id": { "type": "string" },
+          "evidence": { "type": "string", "description": "Name of a locate question in the same bank that supplies the citation." },
+          "abstention": { "type": "boolean" },
+          "topic": { "type": "string" },
+          "maps_to": { "enum": ["observation", "gap", "check"] }
+        }
+      }
+    }
+  }
+}
