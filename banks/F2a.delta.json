@@ -1,0 +1,37 @@
+{
+  "schema": "gca-questions/v1",
+  "bank_version": "F2a.delta/1",
+  "fixture": "F2a",
+  "authored_from": "a synthetic change notice written for this test, which amends the A-17 export window and the heartbeat window. The questions ask what the amendment changes, so the answers must come from the notice combined with whatever holds the prior state",
+  "grounded_in_answer_key": false,
+  "abstain_below": 0.5,
+  "questions": [
+    {
+      "name": "d_amended_window",
+      "type": "noul",
+      "claim": "The change notice sets the audit-trail export window to 30 days.",
+      "instructions": "Does the change notice set the audit-trail export window to 30 days?",
+      "kind": "stated",
+      "source_id": "s2",
+      "abstention": true,
+      "topic": "the amended export window"
+    },
+    {
+      "name": "d_conflict",
+      "type": "noul",
+      "claim": "The change notice and the operating notes state different export windows for the audit trail.",
+      "instructions": "Is the export window stated in the change notice different from the export window stated in the prior material?",
+      "kind": "derived",
+      "abstention": true,
+      "topic": "whether the amendment conflicts with the prior state"
+    },
+    {
+      "name": "d_heartbeat",
+      "type": "choice",
+      "criteria": ["45 seconds", "fifteen seconds", "unchanged at fifteen seconds"],
+      "claim": "After the change notice, the heartbeat window is {choice}.",
+      "instructions": "After the change notice, what is the heartbeat window?",
+      "kind": "derived"
+    }
+  ]
+}

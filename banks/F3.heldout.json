@@ -1,0 +1,64 @@
+{
+  "schema": "gca-questions/v1",
+  "bank_version": "F3.heldout/1",
+  "fixture": "F3",
+  "authored_from": "the parts of both F3 documents that the F3 pass-1 bank never asked about: exports on request, automatic deletion, the stated purpose of the longer window, the document revisions, and the scope of the retention statement. Authored to test whether a snapshot retains what it was not built from; no answer key was consulted",
+  "grounded_in_answer_key": false,
+  "abstain_below": 0.5,
+  "questions": [
+    {
+      "name": "h_exports",
+      "type": "noul",
+      "claim": "Exports are available on request within the retention window.",
+      "instructions": "Does the platform handbook state that exports are available on request within the retention window?",
+      "kind": "stated",
+      "source_id": "s1",
+      "abstention": true,
+      "topic": "whether exports are offered"
+    },
+    {
+      "name": "h_auto_delete",
+      "type": "noul",
+      "claim": "The platform handbook states that customer event logs are deleted automatically after the retention period.",
+      "instructions": "Does the platform handbook state that the logs are deleted automatically after their retention period?",
+      "kind": "stated",
+      "source_id": "s1",
+      "abstention": true,
+      "topic": "how deletion happens under the handbook"
+    },
+    {
+      "name": "h_why_90",
+      "type": "choice",
+      "criteria": ["so that delayed escalations can be investigated", "to reduce storage cost", "because of a legal hold"],
+      "claim": "The support playbook gives {choice} as its reason for the longer window.",
+      "instructions": "What reason does the support playbook give for its longer retention window?",
+      "kind": "stated",
+      "source_id": "s2"
+    },
+    {
+      "name": "h_revisions",
+      "type": "choice",
+      "criteria": ["the platform handbook (revision 12)", "the support playbook (revision 4)"],
+      "claim": "The higher revision number belongs to {choice}.",
+      "instructions": "Which document carries the higher revision number?",
+      "kind": "stated"
+    },
+    {
+      "name": "h_scope",
+      "type": "noul",
+      "claim": "Both documents state a retention period for customer event logs specifically.",
+      "instructions": "Do both documents state their retention period for customer event logs specifically, rather than for all data?",
+      "kind": "derived"
+    },
+    {
+      "name": "h_control_owner",
+      "type": "noul",
+      "claim": "The support playbook names the team that owns the retention policy.",
+      "instructions": "Does the support playbook name the team responsible for the retention policy?",
+      "kind": "stated",
+      "source_id": "s2",
+      "abstention": true,
+      "topic": "ownership of the retention policy (a control: the source does not state it)"
+    }
+  ]
+}

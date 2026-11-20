@@ -1,0 +1,87 @@
+{
+  "schema": "gca-questions/v1",
+  "bank_version": "F2a.heldout/1",
+  "fixture": "F2a",
+  "authored_from": "the parts of the F2a operating notes that the F2a pass-1 bank never asked about: rebalance lag, queue-depth interval, backfill overrun, offset ordering, unrecoverable failure, coordinator state, cold-shard scheduling. Authored to test whether a snapshot retains what it was not built from; no answer key was consulted",
+  "grounded_in_answer_key": false,
+  "abstain_below": 0.5,
+  "questions": [
+    {
+      "name": "h_rebalance_lag",
+      "type": "noul",
+      "claim": "A rebalance that stalls longer than the heartbeat window appears as lag rather than as loss.",
+      "instructions": "Does a rebalance that stalls longer than the heartbeat window appear as a lag rather than as a loss?",
+      "kind": "stated",
+      "source_id": "s1",
+      "abstention": true,
+      "topic": "how a stalled rebalance is observed"
+    },
+    {
+      "name": "h_depth_interval",
+      "type": "choice",
+      "criteria": ["every fifteen seconds", "every minute", "every five minutes"],
+      "claim": "Queue depth is reported {choice}.",
+      "instructions": "How often is queue depth reported per partition?",
+      "kind": "stated",
+      "source_id": "s1"
+    },
+    {
+      "name": "h_flat_depth",
+      "type": "noul",
+      "claim": "A rising queue depth with flat throughput usually means a downstream write is retrying without backoff.",
+      "instructions": "Does the document say that a queue depth rising while throughput stays flat usually means a downstream write is retrying without backoff?",
+      "kind": "stated",
+      "source_id": "s1",
+      "abstention": true,
+      "topic": "the meaning of rising depth with flat throughput"
+    },
+    {
+      "name": "h_backfill_overrun",
+      "type": "choice",
+      "criteria": ["cancelled rather than resumed", "resumed in the next window", "extended in place"],
+      "claim": "A backfill that overruns its window is {choice}.",
+      "instructions": "What happens to a backfill that overruns its window?",
+      "kind": "stated",
+      "source_id": "s1"
+    },
+    {
+      "name": "h_offset_order",
+      "type": "noul",
+      "claim": "Each consumer writes its offset before it commits the batch.",
+      "instructions": "Does each consumer write its offset before it commits the batch?",
+      "kind": "stated",
+      "source_id": "s1",
+      "abstention": true,
+      "topic": "the offset and commit ordering"
+    },
+    {
+      "name": "h_unrecoverable",
+      "type": "choice",
+      "criteria": ["a silent gap", "a duplicate delivery", "a stalled rebalance"],
+      "claim": "The document calls {choice} unrecoverable.",
+      "instructions": "Which outcome does the document describe as not recoverable?",
+      "kind": "stated",
+      "source_id": "s1"
+    },
+    {
+      "name": "h_coordinator_state",
+      "type": "noul",
+      "claim": "The coordinator keeps no coordination state of its own.",
+      "instructions": "Does the document state that the coordinator is stateless, with all coordination state living in the queue?",
+      "kind": "stated",
+      "source_id": "s1",
+      "abstention": true,
+      "topic": "where coordination state lives"
+    },
+    {
+      "name": "h_cold_shards",
+      "type": "noul",
+      "claim": "The scheduler prefers to move cold shards first because rebalancing them is cheap.",
+      "instructions": "Does the document say the scheduler prefers to move cold shards first because rebalancing a cold partition is cheap?",
+      "kind": "stated",
+      "source_id": "s1",
+      "abstention": true,
+      "topic": "which shards the scheduler moves first"
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "schema": "gca-questions/v1",
+  "bank_version": "F3/1",
+  "fixture": "F3",
+  "authored_from": "the task question as stated and both handbook revisions as supplied; the ground truth file was not read while authoring",
+  "grounded_in_answer_key": false,
+  "abstain_below": 0.5,
+  "questions": [
+    {
+      "name": "l_handbook_window",
+      "type": "locate",
+      "claim": "The handbook sentence giving a retention period.",
+      "instructions": "The sentence in the platform handbook that states the retention period for customer event logs."
+    },
+    {
+      "name": "l_playbook_window",
+      "type": "locate",
+      "claim": "The playbook sentence giving a retention period.",
+      "instructions": "The sentence in the support playbook that states the retention period for customer event logs."
+    },
+    {
+      "name": "retention_30",
+      "type": "noul",
+      "claim": "The platform handbook retains customer event logs for 30 days.",
+      "instructions": "Does the platform handbook state that customer event logs are retained for 30 days?",
+      "kind": "stated",
+      "source_id": "s1",
+      "evidence": "l_handbook_window"
+    },
+    {
+      "name": "retention_90",
+      "type": "noul",
+      "claim": "The support playbook retains customer event logs for 90 days.",
+      "instructions": "Does the support playbook state that customer event logs are retained for 90 days?",
+      "kind": "stated",
+      "source_id": "s2",
+      "evidence": "l_playbook_window"
+    },
+    {
+      "name": "documents_agree",
+      "type": "choice",
+      "criteria": ["agree", "disagree"],
+      "claim": "The two documents {choice} on the retention period.",
+      "instructions": "Do the two documents state the same retention period for customer event logs?",
+      "kind": "derived"
+    },
+    {
+      "name": "governing_document",
+      "type": "choice",
+      "criteria": ["platform handbook", "support playbook", "neither is identified as governing"],
+      "claim": "For retention disputes, the governing document is {choice}.",
+      "instructions": "Which document is identified as governing when the two state different retention periods?",
+      "kind": "inferred",
+      "abstention": true,
+      "topic": "which document governs when the two disagree"
+    },
+    {
+      "name": "nothing_deleted_early",
+      "type": "noul",
+      "claim": "The support playbook states that nothing is deleted before its window closes.",
+      "instructions": "Does the support playbook state that nothing is deleted before its own retention window closes?",
+      "kind": "stated",
+      "source_id": "s2"
+    }
+  ]
+}

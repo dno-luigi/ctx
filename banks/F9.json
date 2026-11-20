@@ -1,0 +1,60 @@
+{
+  "schema": "gca-questions/v1",
+  "bank_version": "F9/1",
+  "fixture": "F9",
+  "authored_from": "the task question as stated and the source log as supplied; the ground truth file was not read while authoring",
+  "grounded_in_answer_key": false,
+  "abstain_below": 0.5,
+  "questions": [
+    {
+      "name": "l_offset_line",
+      "type": "locate",
+      "claim": "A log line recording a committed offset.",
+      "instructions": "The log line that records the committed offset written at 03:19."
+    },
+    {
+      "name": "l_retry_line",
+      "type": "locate",
+      "claim": "A log line recording the retry completion.",
+      "instructions": "The log line that records how long the retry of batch 512 took."
+    },
+    {
+      "name": "offset_value",
+      "type": "choice",
+      "criteria": ["88113", "512", "4"],
+      "claim": "Consumer group ingest-a committed offset {choice}.",
+      "instructions": "Which offset did consumer group ingest-a commit?",
+      "kind": "stated",
+      "source_id": "s1",
+      "evidence": "l_offset_line"
+    },
+    {
+      "name": "retry_duration",
+      "type": "choice",
+      "criteria": ["7 seconds", "19 seconds", "512 seconds"],
+      "claim": "The retry of batch 512 completed after {choice}.",
+      "instructions": "How long did the retry of batch 512 take?",
+      "kind": "stated",
+      "source_id": "s1",
+      "evidence": "l_retry_line"
+    },
+    {
+      "name": "offset_repeated",
+      "type": "noul",
+      "claim": "The committed offset is identical at 03:12 and 03:19.",
+      "instructions": "Is the offset committed at 03:19 the same value as the offset committed at 03:12?",
+      "kind": "stated",
+      "source_id": "s1",
+      "abstention": true,
+      "topic": "whether the offset advanced between the two timestamps"
+    },
+    {
+      "name": "batch_written_once",
+      "type": "noul",
+      "claim": "The log records exactly one batch write of 512 records.",
+      "instructions": "Does the log record a batch of 512 records written only once, with the later reference being a retry of that same batch?",
+      "kind": "derived",
+      "source_id": "s1"
+    }
+  ]
+}

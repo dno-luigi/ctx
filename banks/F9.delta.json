@@ -1,0 +1,39 @@
+{
+  "schema": "gca-questions/v1",
+  "bank_version": "F9.delta/1",
+  "fixture": "F9",
+  "authored_from": "a synthetic log addendum that changes the retry duration while leaving the offset untouched. The questions ask what the addendum changes, so answers must come from the addendum combined with whatever holds the prior state",
+  "grounded_in_answer_key": false,
+  "abstain_below": 0.5,
+  "questions": [
+    {
+      "name": "d_retry_seconds",
+      "type": "choice",
+      "criteria": ["9 seconds", "7 seconds", "cannot be determined"],
+      "claim": "After the addendum, the retry of batch 512 took {choice}.",
+      "instructions": "After the addendum, how long did the retry of batch 512 take?",
+      "kind": "stated",
+      "source_id": "s2"
+    },
+    {
+      "name": "d_offset_unchanged",
+      "type": "noul",
+      "claim": "The committed offset is still 88113 after the addendum.",
+      "instructions": "Does the addendum leave the committed offset at 88113?",
+      "kind": "stated",
+      "source_id": "s2",
+      "abstention": true,
+      "topic": "whether the offset survived the update"
+    },
+    {
+      "name": "d_second_attempt",
+      "type": "noul",
+      "claim": "The addendum describes a second attempt at the retry.",
+      "instructions": "Does the addendum describe a second attempt at the retry of batch 512?",
+      "kind": "stated",
+      "source_id": "s2",
+      "abstention": true,
+      "topic": "how many attempts occurred"
+    }
+  ]
+}

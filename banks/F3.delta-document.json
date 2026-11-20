@@ -1,0 +1,21 @@
+{
+  "note": "Synthetic directive, written for the snapshot-as-state test. Not organic change: it demonstrates whether a snapshot can detect an amendment, not how well a real change is handled.",
+  "fixture": "F3",
+  "source": {
+    "id": "s3",
+    "kind": "document",
+    "label": "retention directive 2026-11-19 (synthetic, for this test)",
+    "media_type": "text/plain",
+    "status": "ready",
+    "content": {
+      "text": "Data retention directive 2026-11-19\n\nCustomer event logs are retained for 45 days. This period applies to every handbook and playbook, and the longer window in the support playbook is withdrawn.\n",
+      "data_url": null
+    },
+    "origin": {
+      "supplied_by": "operator",
+      "method": "synthetic",
+      "captured_at": "2026-11-19T00:00:00.000Z"
+    },
+    "observation": "observed"
+  }
+}
