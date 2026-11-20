@@ -1,0 +1,54 @@
+{
+  "note": "CONTRACT SAMPLE, NOT MODEL OUTPUT. Response shape follows Perplexity's published Decisions example. State, questions and numbers are synthetic; the locate span is a real code-point offset into this state, and the adapter is expected to verify it. Verified live 2026-11-18: this endpoint accepts noul|choice|score|box and has no `locate` discriminator, and Perplexity refuses `box`. A live engine therefore cannot produce this answer; the sample exercises the span-handling path only.",
+  "adapter": "perplexity/pplx-decider-v1.3:free",
+  "source_id": "s1",
+  "state": "Release notes\n\n0.9.3 fixed the retry budget after a successful handshake.\n0.9.4 fixed the auth bug where refresh tokens were dropped after a 401.\n0.9.5 is a release candidate and is not yet approved for production.\n",
+  "bank": {
+    "schema": "gca-questions/v1",
+    "bank_version": "1",
+    "fixture": "REC-PX-1",
+    "authored_from": "the operator question: which release fixed the auth bug?",
+    "grounded_in_answer_key": false,
+    "abstain_below": 0.5,
+    "questions": [
+      {
+        "name": "auth_fix_present",
+        "type": "noul",
+        "instructions": "Do the notes state that a release fixed the auth bug that dropped refresh tokens after a 401?",
+        "claim": "A release fixed the auth bug that dropped refresh tokens after a 401.",
+        "kind": "stated",
+        "source_id": "s1",
+        "evidence": "auth_fix_where"
+      },
+      {
+        "name": "auth_fix_where",
+        "type": "locate",
+        "instructions": "the sentence stating which release fixed the auth bug"
+      }
+    ]
+  },
+  "response": {
+    "model": "pplx-decider-v1.3",
+    "answers": {
+      "auth_fix_present": {
+        "type": "noul",
+        "noul": 0.9412
+      },
+      "auth_fix_where": {
+        "type": "locate",
+        "spans": [
+          {
+            "start": 74,
+            "end": 145,
+            "text": "0.9.4 fixed the auth bug where refresh tokens were dropped after a 401.",
+            "score": 0.88
+          }
+        ]
+      }
+    },
+    "usage": {
+      "input_tokens": 812,
+      "output_tokens": 3
+    }
+  }
+}

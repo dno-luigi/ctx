@@ -1,0 +1,42 @@
+{
+  "note": "CONTRACT SAMPLE, NOT MODEL OUTPUT. Every defect here is deliberate: an out-of-range probability, options outside the criteria, probabilities that do not sum to 1, a span whose text does not match the state, a missing answer, and no usage block. The adapter must report all of them and repair none.",
+  "adapter": "scaledown/classify-1",
+  "source_id": "s1",
+  "state": "Approval record\nstatus: pending\nsubmitted by: R. Okonjo\n",
+  "bank": {
+    "schema": "gca-questions/v1",
+    "bank_version": "1",
+    "fixture": "REC-BAD-1",
+    "authored_from": "the operator question: is this record approved?",
+    "grounded_in_answer_key": false,
+    "abstain_below": 0.5,
+    "questions": [
+      { "name": "approved", "type": "noul", "instructions": "Is the record approved?", "claim": "The record is approved." },
+      {
+        "name": "decision",
+        "type": "choice",
+        "instructions": "What is the decision on this record?",
+        "criteria": ["approve", "reject"],
+        "claim": "The record is {choice}."
+      },
+      { "name": "status_where", "type": "locate", "instructions": "the status line" },
+      { "name": "second_approval", "type": "noul", "instructions": "Is there a second approval?", "claim": "A second approval exists." }
+    ]
+  },
+  "response": {
+    "model": "scaledown/classify-1",
+    "answers": {
+      "approved": { "type": "noul", "noul": 1.4 },
+      "decision": {
+        "type": "choice",
+        "choice": "maybe",
+        "confidence": 0.5,
+        "probabilities": { "yes": 0.6, "no": 0.3 }
+      },
+      "status_where": {
+        "type": "locate",
+        "spans": [{ "start": 0, "end": 10, "text": "WRONG TEXT" }]
+      }
+    }
+  }
+}
