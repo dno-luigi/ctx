@@ -1,0 +1,54 @@
+{
+  "schema": "d6-oracle/v1",
+  "declared_at": "2026-11-18",
+  "declared_by": "hand transcription of every static import/export-from statement in the declared corpus, written before the extractor was run",
+  "method": "Each file's import statements were read and transcribed. Only imports_module and reexports_symbol are scored against this oracle. Symbol-reference truth is declared on the synthetic fixture, whose behaviour this investigation authored.",
+  "corpus": [
+    "src/diff.js",
+    "src/evidence.js",
+    "src/validate.js",
+    "src/providers.js",
+    "src/grade.js",
+    "tools/selftest.js",
+    "tools/d3-expanded-probe.js",
+    "tools/plant-coverage.js"
+  ],
+  "edges": [
+    { "from": "src/diff.js", "to": "src/canonical.js", "type": "imports_module", "symbols": ["normalizeClaim"] },
+    { "from": "src/diff.js", "to": "src/spans.js", "type": "imports_module", "symbols": ["occurrencesOf"] },
+    { "from": "src/evidence.js", "to": "src/canonical.js", "type": "imports_module", "symbols": ["normalizeClaim"] },
+    { "from": "src/evidence.js", "to": "src/spans.js", "type": "imports_module", "symbols": ["locate"] },
+    { "from": "src/validate.js", "to": "src/canonical.js", "type": "imports_module", "symbols": ["digest", "hashSource"] },
+    { "from": "src/validate.js", "to": "src/spans.js", "type": "imports_module", "symbols": ["locate"] },
+    { "from": "src/providers.js", "to": "external:node:fs/promises", "type": "imports_module", "symbols": ["readFile"] },
+    { "from": "src/providers.js", "to": "src/evidence.js", "type": "imports_module", "symbols": ["listTraps"] },
+    { "from": "src/grade.js", "to": "src/canonical.js", "type": "imports_module", "symbols": ["normalizeClaim"] },
+    { "from": "src/grade.js", "to": "src/diff.js", "type": "imports_module", "symbols": ["claimKey", "claimStability", "jaccard"] },
+    { "from": "src/grade.js", "to": "src/evidence.js", "type": "imports_module", "symbols": ["assessEvidence"] },
+    { "from": "tools/selftest.js", "to": "external:node:child_process", "type": "imports_module", "symbols": ["spawnSync"] },
+    { "from": "tools/selftest.js", "to": "external:node:fs/promises", "type": "imports_module", "symbols": ["readFile"] },
+    { "from": "tools/selftest.js", "to": "external:node:url", "type": "imports_module", "symbols": ["fileURLToPath"] },
+    { "from": "tools/selftest.js", "to": "src/canonical.js", "type": "imports_module", "symbols": ["hashSource"] },
+    { "from": "tools/selftest.js", "to": "src/diff.js", "type": "imports_module", "symbols": ["EVIDENCE_WINDOW", "diffSnapshots"] },
+    { "from": "tools/selftest.js", "to": "src/spans.js", "type": "imports_module", "symbols": ["locate"] },
+    { "from": "tools/d3-expanded-probe.js", "to": "cards/identity.js", "type": "imports_module", "symbols": ["anchorId"] },
+    { "from": "tools/d3-expanded-probe.js", "to": "src/canonical.js", "type": "imports_module", "symbols": ["digest", "normalizeClaim"] },
+    { "from": "tools/plant-coverage.js", "to": "external:node:fs/promises", "type": "imports_module", "symbols": ["readFile"] },
+    { "from": "tools/plant-coverage.js", "to": "inventory/scan.js", "type": "imports_module", "symbols": ["scanInventory"] },
+    { "from": "tools/plant-coverage.js", "to": "cards/identity.js", "type": "imports_module", "symbols": ["identifySnapshot"] }
+  ],
+  "fixture": {
+    "file": "pilot/d6/fixtures/edge-cases.js",
+    "edges": [
+      { "from": "pilot/d6/fixtures/edge-cases.js", "to": "external:node:fs/promises", "type": "imports_module", "resolution": "external" },
+      { "from": "pilot/d6/fixtures/edge-cases.js", "to": "external:node:path", "type": "imports_module", "resolution": "external" },
+      { "from": "pilot/d6/fixtures/edge-cases.js", "to": "pilot/d6/fixtures/missing-module.js", "type": "imports_module", "resolution": "unresolved" },
+      { "from": "pilot/d6/fixtures/edge-cases.js", "to": "src/canonical.js", "type": "reexports_symbol", "resolution": "resolved" }
+    ],
+    "references": [
+      { "symbol": "join", "used": true },
+      { "symbol": "readFile", "used": false },
+      { "symbol": "locate", "used": false }
+    ]
+  }
+}

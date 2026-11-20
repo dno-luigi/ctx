@@ -1,0 +1,75 @@
+{
+  "schema": "d6-heldout-oracle/v1",
+  "declared_at": "2026-11-18",
+  "why_held_out": "Selected by directory rule (everything under inventory/ and adapters/decision/), not by convenience. None of these files was open while the extractor was written.",
+  "method": "Expected edges transcribed with grep -rn over the same directories — a different instrument from the extractor's parser — then read line by line. Feature fixtures are authored here, so their truth is established by construction, not by the extractor's output.",
+  "heldout_corpus": [
+    "inventory/calibration.js",
+    "inventory/compare.js",
+    "inventory/corpus.js",
+    "inventory/rules-coverage.js",
+    "inventory/scan.js",
+    "adapters/decision/interface.js",
+    "adapters/decision/normalize.js",
+    "adapters/decision/perplexity.js",
+    "adapters/decision/scaledown.js",
+    "adapters/decision/validate.js"
+  ],
+  "heldout_edges": [
+    { "from": "inventory/calibration.js", "to": "src/canonical.js", "type": "imports_module", "symbols": ["hashSource"] },
+    { "from": "inventory/calibration.js", "to": "inventory/scan.js", "type": "imports_module", "symbols": ["scanInventory", "verifySpans"] },
+    { "from": "inventory/scan.js", "to": "inventory/corpus.js", "type": "imports_module", "symbols": ["buildCorpus"] },
+    { "from": "inventory/scan.js", "to": "src/spans.js", "type": "imports_module", "symbols": ["locate"] },
+    { "from": "adapters/decision/normalize.js", "to": "adapters/decision/interface.js", "type": "imports_module", "symbols": ["spanToRef"] },
+    { "from": "adapters/decision/perplexity.js", "to": "adapters/decision/interface.js", "type": "imports_module", "symbols": ["createAdapter"] },
+    { "from": "adapters/decision/scaledown.js", "to": "adapters/decision/interface.js", "type": "imports_module", "symbols": ["createAdapter"] },
+    { "from": "adapters/decision/validate.js", "to": "adapters/decision/interface.js", "type": "imports_module", "symbols": ["buildState", "estimateTokens"] }
+  ],
+  "fixtures": {
+    "aliased": {
+      "files": ["pilot/d6/heldout/aliased.js"],
+      "imports": [{ "from": "pilot/d6/heldout/aliased.js", "to": "external:node:path" }],
+      "references": [{ "symbol": "join", "used": true, "local": "pathJoin" }],
+      "note": "identity carries the imported name, evidence carries the local alias"
+    },
+    "shadowed": {
+      "files": ["pilot/d6/heldout/shadowed.js"],
+      "imports": [{ "from": "pilot/d6/heldout/shadowed.js", "to": "external:node:path" }],
+      "references": [],
+      "gaps": [{ "symbol": "join", "reason": "shadowed_binding" }],
+      "note": "the only use of `join` in the file is a parameter; a lexical count would claim a reference that does not exist"
+    },
+    "multiline": {
+      "files": ["pilot/d6/heldout/multiline.js"],
+      "imports": [{ "from": "pilot/d6/heldout/multiline.js", "to": "external:node:fs/promises" }],
+      "references": [{ "symbol": "readFile" }, { "symbol": "writeFile" }],
+      "note": "a line-start parser sees no import and would report no_edges"
+    },
+    "chain": {
+      "files": ["pilot/d6/heldout/chain-a.js", "pilot/d6/heldout/chain-b.js", "pilot/d6/heldout/chain-c.js"],
+      "reexports": [
+        { "from": "pilot/d6/heldout/chain-a.js", "to": "pilot/d6/heldout/chain-b.js" },
+        { "from": "pilot/d6/heldout/chain-b.js", "to": "pilot/d6/heldout/chain-c.js" }
+      ],
+      "forbidden": [{ "from": "pilot/d6/heldout/chain-a.js", "to": "pilot/d6/heldout/chain-c.js" }],
+      "note": "chains are not flattened: A->C is a transitive claim with no direct evidence"
+    },
+    "cyclic": {
+      "files": ["pilot/d6/heldout/cyclic-a.js", "pilot/d6/heldout/cyclic-b.js"],
+      "imports": [
+        { "from": "pilot/d6/heldout/cyclic-a.js", "to": "pilot/d6/heldout/cyclic-b.js" },
+        { "from": "pilot/d6/heldout/cyclic-b.js", "to": "pilot/d6/heldout/cyclic-a.js" }
+      ],
+      "note": "two edges, no traversal, no duplication"
+    },
+    "unresolved": {
+      "files": ["pilot/d6/heldout/unresolved.js"],
+      "imports": [{ "from": "pilot/d6/heldout/unresolved.js", "to": "pilot/d6/heldout/nope.js", "resolution": "unresolved" }]
+    },
+    "mixed": {
+      "files": ["pilot/d6/heldout/plain.js", "pilot/d6/heldout/unsupported.ts"],
+      "expect_status": "edges_unknown",
+      "expect_reason": "coverage_incomplete"
+    }
+  }
+}

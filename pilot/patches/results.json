@@ -1,0 +1,102 @@
+{
+  "schema": "gca-patch-check/v1",
+  "generated_at": "2026-11-18T13:57:23.836Z",
+  "applied": true,
+  "patches": [
+    {
+      "id": "C1",
+      "class": "shared_interface_change",
+      "applicable": true,
+      "problems": [],
+      "oracle": {
+        "commands": [
+          {
+            "command": "node tools/contract-test.js",
+            "exit": 1,
+            "tail": "contract test failed: 2 assertion(s) |   - perplexity: choice criteria is a record, not an array: got undefined |   - scaledown: choice criteria is a record, not an array: got undefined"
+          }
+        ],
+        "fails_as_declared": true,
+        "expected_initial": "contract-test fails: choice questions carry no criteria record"
+      },
+      "restored": true
+    },
+    {
+      "id": "C2",
+      "class": "dependency_modification",
+      "applicable": true,
+      "problems": [],
+      "oracle": {
+        "commands": [
+          {
+            "command": "npm run selftest:inventory",
+            "exit": 1,
+            "tail": "    at async node:internal/modules/esm/loader:650:26 |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5) |  | Node.js v26.13.0"
+          },
+          {
+            "command": "node tools/completeness.js --fixtures F3 --model perplexity/pplx-decider-flash-v1.2",
+            "exit": 1,
+            "tail": "TypeError: Cannot read properties of undefined (reading 'filter') |     at file:///workspace/chats/646e47d2d90193a2aba4554e/tools/completeness.js:140:38 |  | Node.js v26.13.0"
+          }
+        ],
+        "fails_as_declared": true,
+        "expected_initial": "at least one caller reads .items and fails"
+      },
+      "restored": true
+    },
+    {
+      "id": "C3",
+      "class": "configuration_change",
+      "applicable": true,
+      "problems": [],
+      "oracle": {
+        "commands": [
+          {
+            "command": "npm run selftest",
+            "exit": 1,
+            "tail": "  - exit status 0 — got 1 |   - every model passes |   - pending adjudication is reported and never gates a pass — pending 30, pass false |   - consistency falls below threshold — consistency 0.3958333333333332"
+          }
+        ],
+        "fails_as_declared": true,
+        "expected_initial": "a reader of consistency_min no longer finds it, and at least one check fails or silently stops enforcing"
+      },
+      "restored": true
+    },
+    {
+      "id": "C4",
+      "class": "widely_used_function",
+      "applicable": true,
+      "problems": [],
+      "oracle": {
+        "commands": [
+          {
+            "command": "npm run selftest",
+            "exit": 1,
+            "tail": "    at async node:internal/modules/esm/loader:650:26 |     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5) |  | Node.js v26.13.0"
+          }
+        ],
+        "fails_as_declared": true,
+        "expected_initial": "selftest fails: src/diff.js still imports the old name"
+      },
+      "restored": true
+    },
+    {
+      "id": "C5",
+      "class": "injected_regression",
+      "applicable": true,
+      "problems": [],
+      "oracle": {
+        "commands": [
+          {
+            "command": "npm run selftest",
+            "exit": 1,
+            "tail": "selftest failed — checks executed: 52 (passed: 49, failed: 3) |   - a declared span that matches one occurrence resolves it |   - exit status 0 — got 1 |   - no rejected snapshots — 3 rejected"
+          }
+        ],
+        "fails_as_declared": true,
+        "expected_initial": "selftest reports failing checks on declared-span resolution"
+      },
+      "restored": true
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "schema": "gca-code-constraints-oracle/v1",
+  "authored_before_rules_ran": true,
+  "note": "Guards, limits, refusals and provenance rules that a reader of these files would call constraints. Listed from the source text before the inventory rules were run on it. One reviewer; procedural independence only.",
+  "matching": "an item counts as finding the constraint when its span overlaps the line containing the listed fragment",
+  "items": [
+    { "id": "K1", "file": "cards/identity.js", "fragment": "if (!quote) return { ok: false, reason: 'no_quote' };", "class": "refusal", "why": "an anchor without a quote is rejected, not resolved" },
+    { "id": "K2", "file": "cards/identity.js", "fragment": "if (!source) return { ok: false, reason: 'source_missing' };", "class": "refusal", "why": "resolving against a missing source fails" },
+    { "id": "K3", "file": "cards/identity.js", "fragment": "if (positions.length === 0) return { ok: false, reason: 'quote_not_found' };", "class": "refusal", "why": "a vanished quote is a failure, not a silent relocation" },
+    { "id": "K4", "file": "cards/identity.js", "fragment": "if (anchors.length >= maxAnchors) break;", "class": "limit", "why": "caps anchors per question at 4" },
+    { "id": "K5", "file": "cards/identity.js", "fragment": "if (sourceId && !(item.spans ?? []).some((span) => span.source_id === sourceId)) continue;", "class": "scope", "why": "anchors must belong to the question's own source" },
+    { "id": "K6", "file": "cards/identity.js", "fragment": "if (!hit) continue;", "class": "filter", "why": "only items the claim actually names become anchors" },
+    { "id": "K7", "file": "cards/identity.js", "fragment": "return found / tokens.size >= 0.6;", "class": "threshold", "why": "60% token match before an item may anchor" },
+    { "id": "K8", "file": "cards/identity.js", "fragment": "token.length >= 4 && !STOPWORDS.has(token)", "class": "filter", "why": "short tokens and stopwords are excluded from matching" },
+    { "id": "K9", "file": "tools/usage-capture.js", "fragment": "const required = field === 'input_tokens' || field === 'output_tokens';", "class": "required_field", "why": "input and output totals are mandatory" },
+    { "id": "K10", "file": "tools/usage-capture.js", "fragment": "if (typeof candidate === 'number' && Number.isFinite(candidate)) {", "class": "validation", "why": "non-finite or non-numeric usage is not accepted" },
+    { "id": "K11", "file": "tools/usage-capture.js", "fragment": "captured.input_tokens !== null && captured.output_tokens !== null", "class": "precondition", "why": "a total exists only when both parts are present" },
+    { "id": "K12", "file": "tools/usage-capture.js", "fragment": "gca_processing_usd: typeof gcaProcessingUsd === 'number' ? gcaProcessingUsd : null,", "class": "separation", "why": "GCA cost is a separate field, never folded into agent tokens" }
+  ]
+}

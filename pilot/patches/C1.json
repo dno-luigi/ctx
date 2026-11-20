@@ -1,0 +1,46 @@
+{
+  "id": "C1",
+  "class": "shared_interface_change",
+  "title": "Choice criteria are emitted under the wrong key",
+  "task_prompt": "The request builder now emits choice criteria as `options` instead of `criteria`, so the decision suite fails and the endpoint would reject the request. Restore the contract in both adapters.",
+  "intent": "a shared request-field name is wrong in both adapters; each implements the same mapping independently",
+  "base": "current working tree",
+  "mutations": [
+    {
+      "file": "adapters/decision/perplexity.js",
+      "find": "criteria: wireCriteria(question) }\n",
+      "replace": "options: wireCriteria(question) }\n",
+      "note": "Perplexity emits the wrong field name"
+    },
+    {
+      "file": "adapters/decision/scaledown.js",
+      "find": "criteria: wireCriteria(question) }\n",
+      "replace": "options: wireCriteria(question) }\n",
+      "note": "ScaleDown has the same defect in a second file"
+    }
+  ],
+  "oracle": {
+    "commands": ["node tools/contract-test.js"],
+    "expected_initial": "contract-test fails: choice questions carry no criteria record",
+    "expected_final": "contract-test passes against both adapters"
+  },
+  "history": [
+    {
+      "when": "2026-11-18",
+      "finding": "with selftest:decisions as the oracle, this mutation passed — the decision suite does not assert the request body shape, so it cannot detect a wire-contract change",
+      "action": "oracle replaced by tools/contract-test.js; the mutation itself was not altered and no claim was weakened",
+      "record": "PILOT-READINESS-01.md §2"
+    }
+  ],
+  "gold": {
+    "impacted_files": ["adapters/decision/perplexity.js", "adapters/decision/scaledown.js"],
+    "impacted_symbols": ["wireCriteria", "mapQuestions"],
+    "dependency_edges": [
+      ["adapters/decision/perplexity.js:wireCriteria", "adapters/decision/perplexity.js:mapQuestions"],
+      ["adapters/decision/scaledown.js:wireCriteria", "adapters/decision/scaledown.js:mapQuestions"]
+    ],
+    "must_not_break": ["npm run selftest", "npm run selftest:inventory"],
+    "known_trap": "fixing one adapter leaves the other failing; banks are frozen and must not be edited"
+  },
+  "validated": false
+}

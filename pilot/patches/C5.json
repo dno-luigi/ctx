@@ -1,0 +1,29 @@
+{
+  "id": "C5",
+  "class": "injected_regression",
+  "title": "Off-by-one in declared-span verification",
+  "task_prompt": "Three self-test checks are failing after a merge. Find the cause and fix it. Do not change any test.",
+  "intent": "a one-character regression in a shared verifier; the agent must locate it from failing-check names, not from a described diff",
+  "base": "current working tree",
+  "mutations": [
+    {
+      "file": "src/spans.js",
+      "find": "    Boolean(declared) && declared.end - declared.start === quote.length && text.slice(declared.start, declared.end) === quote;",
+      "replace": "    Boolean(declared) && declared.end - declared.start === quote.length - 1 && text.slice(declared.start, declared.end) === quote;",
+      "note": "the off-by-one: a correct declared span no longer verifies"
+    }
+  ],
+  "oracle": {
+    "commands": ["npm run selftest"],
+    "expected_initial": "selftest reports failing checks on declared-span resolution",
+    "expected_final": "selftest 52/52 with the operator restored"
+  },
+  "gold": {
+    "impacted_files": ["src/spans.js"],
+    "impacted_symbols": ["locate", "declaredIsReal"],
+    "dependency_edges": [["src/spans.js:locate", "src/validate.js"], ["src/spans.js:locate", "src/grade.js"]],
+    "must_not_break": ["npm run selftest:decisions", "npm run selftest:inventory"],
+    "known_trap": "editing the test to match the bug is the failure mode; the oracle is frozen"
+  },
+  "validated": false
+}
