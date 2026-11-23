@@ -17,7 +17,7 @@ const ROOT = new URL('../', import.meta.url);
 const manifestPath = process.argv[2] ?? 'pilot/freeze/pilot-prep-01.json';
 
 const manifest = JSON.parse(await readFile(new URL(manifestPath, ROOT), 'utf8'));
-const artifacts = manifest.artifacts ?? manifest.files ?? [];
+const artifacts = manifest.artifacts ?? [];
 if (!artifacts.length) {
   console.error(`no artifacts listed in ${manifestPath}`);
   process.exit(1);
@@ -26,7 +26,6 @@ if (!artifacts.length) {
 const manifestDigest = createHash('sha256').update(await readFile(new URL(manifestPath, ROOT))).digest('hex');
 console.log(`manifest: ${manifestPath}`);
 console.log(`schema:   ${manifest.schema}`);
-console.log(`frozen:   ${manifest.frozen_at}`);
 console.log(`digest:   ${manifestDigest}`);
 console.log('');
 

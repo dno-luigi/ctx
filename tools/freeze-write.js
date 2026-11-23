@@ -1,58 +1,39 @@
 #!/usr/bin/env node
 /**
- * Write a freeze manifest over the data a pilot measures with.
+ * Write pilot/freeze/pilot-prep-01.json, the manifest tools/freeze-verify.js checks.
  *
- * `tools/freeze-verify.js` can only check a manifest that exists somewhere the repository can see.
- * Its previous default pointed at runs/frozen/pilot-prep/manifest.json, which was never tracked, so
- * a fresh clone could not verify anything and CI could not run the check at all. This writes the
- * manifest into the tree so the freeze travels with the code.
+ * The manifest has to live in the tree. Its predecessor was an untracked file under runs/, so a
+ * clone had nothing to verify and CI could not run the check at all.
  *
- * Re-freezing is a deliberate act: it records "these are now the pinned inputs". Run it, read the
- * diff, and commit it with a reason.
- *
- *   node tools/freeze-write.js [--out pilot/freeze/pilot-prep-01.json]
+ * Re-freezing is deliberate: run this, read the diff, commit it with a reason. No timestamp is
+ * written, so an unchanged tree produces an unchanged file and the commit records when it was pinned.
  */
 
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { dirname } from 'node:path';
+import { readFileSync, writeFileSync } from 'node:fs';
 
-const args = new Map();
-for (let index = 2; index < process.argv.length; index += 1) {
-  const [key, inline] = process.argv[index].replace(/^--/, '').split('=');
-  if (inline !== undefined) args.set(key, inline);
-  else if (process.argv[index + 1] && !process.argv[index + 1].startsWith('--')) args.set(key, process.argv[++index]);
-}
-const out = String(args.get('out') ?? 'pilot/freeze/pilot-prep-01.json');
+const OUT = 'pilot/freeze/pilot-prep-01.json';
 
-// The inputs whose stability the pilot depends on: the banks it scores against, the pilot's own
-// oracles and gold data, and the fixtures the proof was written over. Code is pinned by commit, not
-// by hash, so it is not in here.
+// The data the pilot measures with: the banks it scores against, its own oracles and gold, and the
+// fixtures the classifier proof was written over. Code is pinned by commit, not by hash.
 const ROOTS = ['banks', 'pilot', 'context-engine/fixtures', 'context-engine/poc/classifier-proof.fixture.json'];
 
-const files = execFileSync('git', ['ls-files', ...ROOTS], { encoding: 'utf8' })
+const artifacts = execFileSync('git', ['ls-files', ...ROOTS], { encoding: 'utf8' })
   .split('\n')
   .map((line) => line.trim())
-  .filter((file) => file && file !== out)
-  .sort();
-
-const artifacts = files.map((file) => {
-  const bytes = readFileSync(file);
-  return { file, bytes: bytes.length, sha256: createHash('sha256').update(bytes).digest('hex') };
-});
+  .filter((file) => file && file !== OUT)
+  .sort()
+  .map((file) => ({ file, sha256: createHash('sha256').update(readFileSync(file)).digest('hex') }));
 
 const manifest = {
   schema: 'gca/freeze-manifest/v1',
-  frozen_at: new Date().toISOString().replace(/\.\d+Z$/, 'Z'),
-  roots: ROOTS,
   note:
-    'Pins the data inputs the pilot measures with. This replaces an earlier freeze that lived at ' +
+    'Pins the data the pilot measures with. This replaces an earlier freeze that lived at ' +
     'runs/frozen/pilot-prep/manifest.json and was never committed, so its hashes cannot be recovered: ' +
-    'the digests below were computed when this file was added. Treat it as a new freeze, not a restoration.',
+    'the digests below were computed when this file was added. New freeze, not a restoration.',
   artifacts,
 };
 
-mkdirSync(dirname(out), { recursive: true });
-writeFileSync(out, `${JSON.stringify(manifest, null, 2)}\n`);
-console.log(`wrote ${out}: ${artifacts.length} artifacts, ${artifacts.reduce((sum, artifact) => sum + artifact.bytes, 0)} bytes`);
+writeFileSync(OUT, `${JSON.stringify(manifest, null, 2)}\n`);
+console.log(`wrote ${OUT}: ${artifacts.length} artifacts`);

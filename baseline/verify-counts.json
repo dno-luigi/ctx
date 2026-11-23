@@ -1,7 +1,7 @@
 {
   "schema": "gca-verify-counts/v1",
-  "commit": "75f4d1f28e125fee89a9bde841e7ba3c5dc0fdea",
-  "recorded_at": "2026-11-23T01:25:50Z",
+  "commit": "44e729410335a7c71de863683b80b29d5a2b6b59",
+  "recorded_at": "2026-11-23T02:05:20Z",
   "counts": {
     "engine selftest": {
       "n": 52,
@@ -62,6 +62,10 @@
     "pilot freeze": {
       "n": 60,
       "of": 60
+    },
+    "benchmark budget": {
+      "n": 1,
+      "of": 1
     }
   }
 }

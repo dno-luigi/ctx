@@ -64,9 +64,3 @@ jobs:
           BENCH_CONFIRM: ${{ inputs.confirm }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         run: node tools/bench-run.js --design "${{ inputs.design }}" --budget-usd "${{ inputs.budget_usd }}" --live
-      - name: Keep the ledger and plan
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: bench-ledger
-          path: runs/bench/

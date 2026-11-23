@@ -139,7 +139,10 @@ one task, that is one task, not a trend.
 | C4 answering (tool turns, several calls per task) | ~100 | ~$0.03 |
 | **Total** | ~215 | **≈ $0.10** |
 
-Rough, and deliberately conservative. Each condition runs under its own `--run-id` through the spend
+Rough, and deliberately conservative. The figure the runner enforces is in
+**[`BENCHMARK-01.budget.json`](BENCHMARK-01.budget.json)** — this table is its derivation, and
+`tools/bench-budget-check.js` fails if the two stop agreeing, so the cap cannot move in prose or in
+code alone. Each condition runs under its own `--run-id` through the spend
 guard; a retry needs a new authorisation and is recorded. Stop conditions, in order:
 
 1. citation failure above 20% in construction → stop, the pack is not fit to test;

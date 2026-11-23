@@ -1,0 +1,8 @@
+{
+  "schema": "context-engine/benchmark-budget/v1",
+  "design": "BENCHMARK-01",
+  "design_doc": "BENCHMARK-01.md",
+  "worst_case_usd": 0.1,
+  "call_estimate": 215,
+  "basis": "BENCHMARK-01.md §8: ~215 calls, ≈$0.10, described there as rough and deliberately conservative. Section 8 is the derivation; this file is the figure tools/bench-run.js enforces before it will authorise a paid run."
+}

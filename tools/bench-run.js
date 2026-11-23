@@ -1,40 +1,21 @@
 #!/usr/bin/env node
 /**
- * BENCHMARK-01 runner.
+ * BENCHMARK-01 runner. Dry by default, and unable to spend money today.
  *
- * Dry by default: it assembles the plan and prices what it can, and sends nothing. A paid run needs
- * four independent things to be true, and three of them are not settable from inside this file:
+ * The budget floor is read from `context-engine/<DESIGN>.budget.json`, the file that sits next to
+ * the design's pre-registration, so the gate and the document are the same number. A design without
+ * such a file has no floor and cannot be authorised at all.
  *
- *   1. BENCH_CONFIRM must be exactly `authorize-spend` (the workflow passes your typed input);
- *   2. --budget-usd must cover the *design's* worst-case figure, which comes from the design's own
- *      pre-registration, not from the estimator (see DESIGNS below);
- *   3. OPENROUTER_API_KEY must be present, which only happens in the `benchmark` environment after
- *      a human approves the deployment;
- *   4. the workflow job only starts when you selected a live run.
- *
- * Live execution is NOT implemented. The pre-registered design in BENCHMARK-01.md still needs a
- * runner, so the authorised path stops at exit 2 rather than reaching a provider. That is
- * deliberate: no code path here can spend money today, and this file should keep saying so until
- * the runner is written and reviewed.
+ * Live execution is not implemented: the pre-registered design has no runner yet, so the fully
+ * authorised path stops at exit 2 instead of reaching a provider. Keep that true until a runner is
+ * written and reviewed.
  *
  *   node tools/bench-run.js --dry [--design BENCHMARK-01]
- *   node tools/bench-run.js --live --budget-usd 0.10    (requires the confirmations above)
+ *   node tools/bench-run.js --live --budget-usd 0.10     (needs BENCH_CONFIRM and a key)
  */
 
 import { spawnSync } from 'node:child_process';
-import { mkdirSync, writeFileSync } from 'node:fs';
-
-/**
- * Each design carries its own floor. `tools/estimate-bench.js` prices DECISIONS-BENCH-02 — a
- * different task set, model mix and repeat count — so its worst case must never be used as the
- * floor for another design. A design without an entry here cannot be authorised at all.
- */
-const DESIGNS = {
-  'BENCHMARK-01': {
-    worst_case_usd: 0.1,
-    basis: 'BENCHMARK-01.md section 8: ~215 calls, ≈$0.10, described there as rough and deliberately conservative',
-  },
-};
+import { readFileSync, writeFileSync } from 'node:fs';
 
 const args = new Map();
 for (let index = 2; index < process.argv.length; index += 1) {
@@ -48,65 +29,80 @@ for (let index = 2; index < process.argv.length; index += 1) {
 
 const live = args.has('live') && !args.has('dry');
 const designId = String(args.get('design') ?? 'BENCHMARK-01');
-const design = DESIGNS[designId] ?? null;
 const budget = Number(args.get('budget-usd') ?? 0);
 const confirm = process.env.BENCH_CONFIRM ?? '';
 
-const estimate = spawnSync(process.execPath, ['tools/estimate-bench.js', '--json'], { encoding: 'utf8' });
-let plan = null;
-if (estimate.status === 0) {
+/** The design's own floor, or the reason it has none. */
+function readFloor(id) {
+  if (!/^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(id)) return { problem: `design id ${JSON.stringify(id)} does not name a budget file` };
+  const path = `context-engine/${id}.budget.json`;
+  let record;
   try {
-    plan = JSON.parse(estimate.stdout);
+    record = JSON.parse(readFileSync(path, 'utf8'));
   } catch {
-    plan = null;
+    return { path, problem: `no budget floor at ${path} — ${id} cannot be authorised` };
   }
+  if (record.design !== id) return { path, problem: `${path} describes ${JSON.stringify(record.design)}, not ${JSON.stringify(id)}` };
+  const floor = Number(record.worst_case_usd);
+  if (!Number.isFinite(floor) || floor <= 0) return { path, problem: `${path} has no positive worst_case_usd` };
+  return { path, record, floor };
 }
 
-const floor = design ? design.worst_case_usd : null;
-const estimated = plan?.maximum_exposure?.total_usd ?? null;
-const nominal = plan?.nominal?.total_usd ?? null;
+const floorInfo = readFloor(designId);
+const floor = floorInfo.floor ?? null;
+
+// Priced by a different estimator over a different plan. Shown so the two figures stay visibly
+// separate, never used as this design's floor.
+const estimate = spawnSync(process.execPath, ['tools/estimate-bench.js', '--json'], { encoding: 'utf8' });
+let plan = null;
+try {
+  plan = estimate.status === 0 ? JSON.parse(estimate.stdout) : null;
+} catch {
+  plan = null;
+}
+
+const reported = plan?.maximum_exposure?.total_usd;
+const nominal = plan?.nominal?.total_usd;
+
+const problems = [];
+if (floorInfo.problem) problems.push(floorInfo.problem);
+if (live) {
+  if (confirm !== 'authorize-spend') problems.push(`confirm input is ${JSON.stringify(confirm)}, not "authorize-spend"`);
+  if (!Number.isFinite(budget) || budget <= 0) problems.push('--budget-usd must be a positive number');
+  else if (floor !== null && budget < floor) problems.push(`budget $${budget.toFixed(2)} is below the ${designId} floor $${floor.toFixed(2)}`);
+  if (!process.env.OPENROUTER_API_KEY) problems.push('OPENROUTER_API_KEY is not present in this environment');
+}
 
 const lines = [
   `## Benchmark ${designId} — ${live ? 'paid run requested' : 'dry run'}`,
   '',
   '| | |',
   '| --- | --- |',
-  `| Design floor (worst case) | ${floor === null ? '**none recorded — this design cannot be authorised**' : `$${floor.toFixed(2)}`} |`,
-  `| Floor basis | ${design ? design.basis : 'unknown design'} |`,
+  `| Floor (worst case) | ${floor === null ? '**none recorded**' : `$${floor.toFixed(2)}`} |`,
+  `| Source | ${floorInfo.path ?? '—'}${floorInfo.record ? ` — ${floorInfo.record.basis}` : ''} |`,
   `| Budget offered | ${budget > 0 ? `$${budget.toFixed(2)}` : 'none'} |`,
-  `| Estimator series (reference only) | ${plan?.series ?? 'unavailable'} — prices its own plan, not this design, and is not used for the floor |`,
-  `| Estimator nominal / worst | ${nominal === null ? 'unavailable' : `$${Number(nominal).toFixed(4)} / $${Number(estimated).toFixed(4)}`} |`,
+  `| Estimator (reference only) | ${plan?.series ?? 'unavailable'}${nominal == null ? '' : `: $${Number(nominal).toFixed(4)} nominal / $${Number(reported).toFixed(4)} worst`} — prices another plan, never the floor |`,
   '',
 ];
 
-if (!live) {
+if (problems.length) {
+  lines.push('**Refused.** No provider was contacted.', '', ...problems.map((problem) => `- ${problem}`), '');
+} else if (!live) {
   lines.push(
-    '**Nothing was sent.** No provider was contacted. The floor above comes from the design\'s own',
-    'pre-registration; the estimator figures are shown only to keep the two numbers visibly separate.',
+    '**Nothing was sent.** No provider was contacted. The floor comes from the design\'s own',
+    'pre-registration file, not from the estimator.',
     '',
     'A paid run needs `dry_run` unticked, the phrase `authorize-spend` typed into `confirm`, a budget at',
-    'or above the design floor, and an approval on the `benchmark` environment.',
+    'or above the floor, and an approval on the `benchmark` environment.',
     '',
   );
-  console.log(lines.join('\n'));
-  mkdirSync('runs/bench', { recursive: true });
-  writeFileSync('runs/bench/plan.json', `${JSON.stringify({ design: designId, floor, at: new Date().toISOString(), nominal, estimated }, null, 2)}\n`);
-  if (process.env.GITHUB_STEP_SUMMARY) writeFileSync(process.env.GITHUB_STEP_SUMMARY, lines.join('\n'), { flag: 'a' });
-  process.exit(0);
 }
 
-const problems = [];
-if (!design) problems.push(`no floor is recorded for design ${JSON.stringify(designId)}`);
-if (confirm !== 'authorize-spend') problems.push(`confirm input is ${JSON.stringify(confirm)}, not "authorize-spend"`);
-if (!Number.isFinite(budget) || budget <= 0) problems.push('--budget-usd must be a positive number');
-else if (floor !== null && budget < floor) problems.push(`budget $${budget.toFixed(2)} is below the ${designId} floor $${floor.toFixed(2)}`);
-if (!process.env.OPENROUTER_API_KEY) problems.push('OPENROUTER_API_KEY is not present in this environment');
-
-lines.push('**Refused.** No provider was contacted.', '', ...problems.map((problem) => `- ${problem}`), '');
 console.log(lines.join('\n'));
 if (process.env.GITHUB_STEP_SUMMARY) writeFileSync(process.env.GITHUB_STEP_SUMMARY, lines.join('\n'), { flag: 'a' });
 
 if (problems.length) process.exit(1);
+if (!live) process.exit(0);
 
 console.error('');
 console.error('Every authorization check passed. Live execution is not implemented: BENCHMARK-01.md is');
