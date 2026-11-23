@@ -36,7 +36,7 @@
           {
             "command": "node tools/completeness.js --fixtures F3 --model perplexity/pplx-decider-flash-v1.2",
             "exit": 1,
-            "tail": "TypeError: Cannot read properties of undefined (reading 'filter') |     at file:///workspace/chats/646e47d2d90193a2aba4554e/tools/completeness.js:140:38 |  | Node.js v26.13.0"
+            "tail": "TypeError: Cannot read properties of undefined (reading 'filter') |     at file://tools/completeness.js:140:38 |  | Node.js v26.13.0"
           }
         ],
         "fails_as_declared": true,

@@ -32,5 +32,6 @@
     "patch-check": "node tools/patch-check.js",
     "score-transcript": "node tools/score-transcript.js",
     "verify": "node tools/verify.js"
-  }
+  },
+  "license": "Apache-2.0"
 }

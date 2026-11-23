@@ -5,7 +5,7 @@
   "model": "~z-ai/glm-flash-latest",
   "qa_mode": "model",
   "subject": {
-    "root": "/workspace/chats/646e47d2d90193a2aba4554e/context-engine/fixtures/poc-repo",
+    "root": "context-engine/fixtures/poc-repo",
     "files": 11,
     "bytes": 3238,
     "partitions": 1

@@ -1,5 +1,12 @@
 # gca-experiment
 
+> **Status: unproven.** This is a research harness, not a working product. The context engine runs and its
+> offline checks pass on every commit, but its central hypothesis was **not supported** on the pilot fixture,
+> and the benchmark that would decide whether it is worth using is designed and pre-registered but **not run**.
+> `context-engine/POC-RESULT.md` holds the gate results, `context-engine/BENCHMARK-01.md` the unrun design.
+> A passing check establishes consistency with authored labels, not that those labels are correct. The engine
+> on its own, without this harness, is on the `engine` branch.
+
 A read-only qualification harness for two hypotheses:
 
 - **GCA — Global Contextual Assessment.** One pass over operator-supplied material produces a structured snapshot: what is stated, where, with what confidence, what is missing, and what check would settle it.
