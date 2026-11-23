@@ -12,6 +12,6 @@
     "proof": "node poc/proof-classifier.js",
     "coverage": "node poc/coverage-baseline.js",
     "poc": "node poc/run-poc.js --out runs/poc",
-    "verify": "node --test tests/ && node poc/proof-classifier.js && node poc/coverage-baseline.js && node poc/run-poc.js --out runs/poc"
+    "verify": "node scripts/verify.js"
   }
 }
