@@ -7,11 +7,16 @@
  * is not run here because it costs money. Keep that sentence in the summary; a passing suite is
  * the thing that is easiest to mistake for evidence.
  *
- * Writes runs/verify-summary.md and, on GitHub Actions, the job summary.
+ * Counts are compared against baseline/verify-counts.json, which records the last run someone
+ * chose to accept as green. The baseline is never updated automatically: rewriting it from a
+ * workflow would let a regression become the new reference by passing once.
+ *
+ *   node tools/verify.js                     report, compare to baseline
+ *   node tools/verify.js --update-baseline   record this run's counts (only if every check passed)
  */
 
 import { spawnSync } from 'node:child_process';
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 
 const CHECKS = [
   ['engine selftest', ['tools/selftest.js']],
@@ -33,7 +38,29 @@ const CHECKS = [
   ['D6 held-out', ['tools/d6-heldout.js']],
 ];
 
+const BASELINE = 'baseline/verify-counts.json';
 const INTERESTING = /passed|PASS|RESULT|checks|intact|verified|%/i;
+const updateBaseline = process.argv.includes('--update-baseline');
+
+/** The number a check reports about itself: a ratio if it has one, else a total, else a percentage. */
+function measure(output) {
+  const ratio = output.match(/(\d+)\s*\/\s*(\d+)/);
+  if (ratio) return { n: Number(ratio[1]), of: Number(ratio[2]) };
+  const executed = output.match(/checks executed:\s*(\d+)/);
+  if (executed) return { n: Number(executed[1]), of: Number(executed[1]) };
+  const percent = output.match(/([\d.]+)\s*%/);
+  if (percent) return { n: Number(percent[1]), of: null };
+  return null;
+}
+
+function readBaseline() {
+  if (!existsSync(BASELINE)) return null;
+  try {
+    return JSON.parse(readFileSync(BASELINE, 'utf8'));
+  } catch {
+    return null;
+  }
+}
 
 const rows = [];
 const failures = [];
@@ -45,23 +72,39 @@ for (const [name, args] of CHECKS) {
   const lines = output.split('\n').map((line) => line.trim()).filter(Boolean);
   const detail = (lines.filter((line) => INTERESTING.test(line)).pop() ?? lines.pop() ?? '').slice(0, 110);
   const ok = run.status === 0;
-  rows.push({ name, ok, detail: ok ? detail : (detail || run.error?.message || 'failed'), seconds });
+  rows.push({
+    name,
+    ok,
+    detail: ok ? detail : (detail || run.error?.message || 'failed'),
+    seconds,
+    count: measure(output),
+  });
   if (!ok) failures.push({ name, output });
 }
 
-const failed = rows.filter((row) => !row.ok);
-const stamp = new Date().toISOString().replace(/\.\d+Z$/, 'Z');
+const base = readBaseline();
 
-const table = [
-  '| Check | Result | Detail | s |',
-  '| --- | --- | --- | --- |',
-  ...rows.map((row) => `| ${row.name} | ${row.ok ? 'pass' : '**FAIL**'} | ${row.detail.replace(/\|/g, '\\|')} | ${row.seconds} |`),
-].join('\n');
+function delta(row) {
+  if (!row.count) return '—';
+  const prior = base?.counts?.[row.name];
+  if (!prior) return base ? 'new' : '—';
+  const change = row.count.n - prior.n;
+  return change === 0 ? '0' : `${change > 0 ? '+' : ''}${change}`;
+}
+
+const stamp = new Date().toISOString().replace(/\.\d+Z$/, 'Z');
+const failed = rows.filter((row) => !row.ok);
 
 const markdown = [
   `## Offline checks — ${failed.length ? `${failed.length} failed` : 'all passed'}`,
   '',
-  table,
+  '| Check | Result | Detail | Δ | s |',
+  '| --- | --- | --- | --- | --- |',
+  ...rows.map((row) => `| ${row.name} | ${row.ok ? 'pass' : '**FAIL**'} | ${row.detail.replace(/\|/g, '\\|')} | ${delta(row)} | ${row.seconds} |`),
+  '',
+  base
+    ? `Δ is against the accepted baseline from \`${(base.commit ?? 'unknown').slice(0, 7)}\` (${base.recorded_at ?? 'undated'}), not against the previous run.`
+    : 'No baseline recorded, so Δ is suppressed. Record one with `npm run verify -- --update-baseline`.',
   '',
   '**What this proves:** each check agrees with the reference data it was written against, on this commit.',
   '',
@@ -85,4 +128,16 @@ if (failed.length) {
   }
   console.error(`verify failed: ${failed.map((row) => row.name).join(', ')}`);
   process.exit(1);
+}
+
+if (updateBaseline) {
+  const counts = Object.fromEntries(rows.filter((row) => row.count).map((row) => [row.name, row.count]));
+  const record = {
+    schema: 'gca-verify-counts/v1',
+    commit: process.env.GITHUB_SHA ?? null,
+    recorded_at: stamp,
+    counts,
+  };
+  writeFileSync(BASELINE, `${JSON.stringify(record, null, 2)}\n`);
+  console.log(`baseline recorded: ${Object.keys(counts).length} counts -> ${BASELINE}`);
 }

@@ -1,0 +1,71 @@
+{
+  "schema": "gca-verify-counts/v1",
+  "commit": null,
+  "recorded_at": "2026-11-23T00:52:07Z",
+  "counts": {
+    "engine selftest": {
+      "n": 52,
+      "of": 52
+    },
+    "decision selftest": {
+      "n": 40,
+      "of": 40
+    },
+    "inventory selftest": {
+      "n": 39,
+      "of": 39
+    },
+    "usage capture": {
+      "n": 19,
+      "of": 19
+    },
+    "blind packet": {
+      "n": 9,
+      "of": 9
+    },
+    "transcript scorer": {
+      "n": 17,
+      "of": 17
+    },
+    "classifier proof": {
+      "n": 1,
+      "of": 7
+    },
+    "coverage baseline": {
+      "n": 5,
+      "of": 5
+    },
+    "ARA freeze": {
+      "n": 12,
+      "of": 12
+    },
+    "AC-6 under A1′": {
+      "n": 93.8,
+      "of": null
+    },
+    "schema acceptance": {
+      "n": 94,
+      "of": 96
+    },
+    "schema acceptance v2": {
+      "n": 94,
+      "of": 101
+    },
+    "storage acceptance": {
+      "n": 58,
+      "of": 58
+    },
+    "D8 acceptance": {
+      "n": 45,
+      "of": 45
+    },
+    "D6 evaluation": {
+      "n": 8,
+      "of": 8
+    },
+    "D6 held-out": {
+      "n": 10,
+      "of": 10
+    }
+  }
+}
