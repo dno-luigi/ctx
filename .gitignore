@@ -1,5 +1,9 @@
 # Generated. Rebuild with `node tools/build-fixtures.js`; the F2 inputs alone are ~186 kB.
 fixtures/
+!context-engine/fixtures/
+!context-engine/fixtures/**
 
 runs/
 node_modules/
+!pilot/d6/fixtures/
+!pilot/d6/fixtures/**

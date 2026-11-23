@@ -22,7 +22,7 @@ As of 2026-11-20, at the commit that added this file.
 - A passing run establishes consistency with authored labels, not that the labels are correct.
 - `fixtures/` is generated and gitignored; frozen proof material lives in `poc/`.
 - The engine and its tooling were committed in eight checkpoints, `d69ed0c..997706f`. The two files previously held back for lack of a home were placed as follow-ups inside their own subsystems: `tools/ac6-refined.js` at `bd8338f` (ARA anchor identity) and `tools/contract-test.js` at `3ecb33d` (decision adapters).
-- The tree is mirrored to the private repository `dno-luigi/ctx` on `main`, so the audit trail no longer depends on a single worktree. `runs/` and `fixtures/` are gitignored and are therefore in neither repository: the run artifacts remain unauditable from the source tree.
+- The tree is mirrored to the private repository `dno-luigi/ctx` on `main`, so the audit trail no longer depends on a single worktree. `runs/` is gitignored and is in neither repository, so run artifacts remain unauditable from the source tree. The POC fixtures under `context-engine/fixtures/` are tracked, so a fresh clone can run the POC that ships with the engine.
 - No Stage 0 record exists in the repository. The Stage 0 row above is a policy statement, not evidence that Stage 0 has run either way.
 - The tree in section 3 is the target layout. The current tree also holds `poc/`, `tools/`, `adapters/`, `banks/`, `baseline/`, `cards/`, `inventory/`, `pilot/`, `recorded/`, `snapshot/` and `examples/live-approved/`.
 

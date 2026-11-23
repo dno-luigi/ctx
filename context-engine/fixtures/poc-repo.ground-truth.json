@@ -1,0 +1,40 @@
+{
+  "schema": "context-engine/ground-truth/v1",
+  "subject": "poc-repo",
+  "note": "Authored before any scan. `facts` are checkable against the source; `questions` require information from more than one file; `model_only` facts are ones a line-rule scanner is not expected to find and are reported separately rather than excluded.",
+  "facts": [
+    { "id": "retention-never-delete", "kind": "invariant", "phrases": ["never delete", "retention window"], "sources": ["README.md"] },
+    { "id": "idempotent-retries", "kind": "invariant", "phrases": ["exactly once", "idempotent"], "sources": ["README.md"] },
+    { "id": "store-unexpired", "kind": "invariant", "phrases": ["unexpired"], "sources": ["src/store.js"] },
+    { "id": "dependency-chain", "kind": "dependency", "phrases": ["depends on"], "sources": ["docs/ARCHITECTURE.md"] },
+    { "id": "fixed-retention-decision", "kind": "decision", "phrases": ["fixed 30-day", "sliding"], "sources": ["docs/DECISIONS.md"] },
+    { "id": "batch-size-decision", "kind": "decision", "phrases": ["batch size of 100"], "sources": ["docs/DECISIONS.md"] },
+    { "id": "backfill-outstanding", "kind": "outstanding", "phrases": ["backfill"], "sources": ["src/ingest.js"] },
+    { "id": "scheduler-lock-risk", "kind": "risk", "phrases": ["drops a batch", "store lock"], "sources": ["docs/RUNBOOK.md"] }
+  ],
+  "model_only": [
+    { "id": "timeout-config", "kind": "state", "phrases": ["timeout_seconds", "5"], "sources": ["config/defaults.json"] },
+    { "id": "timeout-contradiction", "kind": "contradiction", "phrases": ["30 seconds", "5"], "sources": ["docs/ARCHITECTURE.md", "config/defaults.json"] }
+  ],
+  "questions": [
+    { "id": "q1", "question": "How long is the retention window, and what rationale is recorded for it?", "answer_phrases": ["30", "audit"], "sources": ["docs/DECISIONS.md"] },
+    { "id": "q2", "question": "What does ingest depend on, directly and transitively?", "answer_phrases": ["store", "retention"], "sources": ["docs/ARCHITECTURE.md"] },
+    { "id": "q3", "question": "What work remains before backfill can run?", "answer_phrases": ["backfill"], "sources": ["src/ingest.js"] },
+    { "id": "q4", "question": "Which retention alternative was rejected, and why?", "answer_phrases": ["sliding", "audit"], "sources": ["docs/DECISIONS.md"] },
+    { "id": "q5", "question": "What happens during a scheduled drain when the store lock is held?", "answer_phrases": ["drops", "batch"], "sources": ["docs/RUNBOOK.md"] },
+    { "id": "q6", "question": "What is the configured ingest timeout, and does it agree with the architecture note?", "answer_phrases": ["5", "30"], "sources": ["config/defaults.json", "docs/ARCHITECTURE.md"] }
+  ],
+  "relationships": [
+    ["src/ingest.js", "src/store.js"],
+    ["src/store.js", "src/retention.js"],
+    ["src/scheduler.js", "src/ingest.js"]
+  ],
+  "contradictions": [
+    { "between": ["docs/ARCHITECTURE.md", "config/defaults.json"], "values": ["30", "5"], "phrases": ["timeout"] }
+  ],
+  "traps": [
+    "14 days is the current retention window",
+    "the ingest timeout is 30 seconds",
+    "backfill is already implemented"
+  ]
+}
