@@ -1,0 +1,72 @@
+name: benchmark
+
+# Manual only: there is deliberately no push, pull_request, schedule or workflow_call trigger,
+# so this workflow cannot start unless a person starts it.
+on:
+  workflow_dispatch:
+    inputs:
+      design:
+        description: Pre-registered design to run
+        type: choice
+        options: ["BENCHMARK-01"]
+        default: BENCHMARK-01
+      budget_usd:
+        description: Hard ceiling in USD (live runs only)
+        required: true
+        default: "0"
+      confirm:
+        description: Type authorize-spend to permit a paid run
+        required: true
+        default: "no"
+      dry_run:
+        description: Estimate only, send nothing
+        type: boolean
+        default: true
+
+# No two runs may overlap, so a second dispatch cannot start while one is spending.
+concurrency:
+  group: benchmark-spend
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  plan:
+    name: estimate (no provider)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      # This job holds no secret at all, so a dry run structurally cannot reach a provider.
+      - name: Plan and price the design
+        run: node tools/bench-run.js --design "${{ inputs.design }}" --budget-usd "${{ inputs.budget_usd }}" --dry
+
+  live:
+    name: paid run (needs approval)
+    needs: plan
+    if: inputs.dry_run == false && inputs.confirm == 'authorize-spend' && inputs.budget_usd != '0'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    # Secrets are scoped to this environment, and the environment requires a human approval before
+    # the job starts, so an authorisation cannot happen by editing the workflow alone.
+    environment: benchmark
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Run the pre-registered design
+        env:
+          BENCH_CONFIRM: ${{ inputs.confirm }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: node tools/bench-run.js --design "${{ inputs.design }}" --budget-usd "${{ inputs.budget_usd }}" --live
+      - name: Keep the ledger and plan
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bench-ledger
+          path: runs/bench/

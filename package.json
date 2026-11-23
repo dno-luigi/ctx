@@ -31,7 +31,8 @@
     "card-gen": "node tools/card-generation.js",
     "patch-check": "node tools/patch-check.js",
     "score-transcript": "node tools/score-transcript.js",
-    "verify": "node tools/verify.js"
+    "verify": "node tools/verify.js",
+    "bench": "node tools/bench-run.js --dry"
   },
   "license": "Apache-2.0"
 }
