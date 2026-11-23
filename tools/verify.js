@@ -36,6 +36,7 @@ const CHECKS = [
   ['D8 acceptance', ['tools/d8-acceptance.js']],
   ['D6 evaluation', ['tools/d6-eval.js']],
   ['D6 held-out', ['tools/d6-heldout.js']],
+  ['pilot freeze', ['tools/freeze-verify.js']],
 ];
 
 const BASELINE = 'baseline/verify-counts.json';
@@ -48,7 +49,7 @@ const updateBaseline = process.argv.includes('--update-baseline');
  * `39/39`) and would have made the baseline meaningless.
  */
 function measure(output) {
-  const passed = output.match(/(\d+)\s*\/\s*(\d+)\s+(?:checks passed|baseline artifacts)/);
+  const passed = output.match(/(\d+)\s*\/\s*(\d+)\s+(?:checks passed|baseline artifacts|artifacts match)/);
   if (passed) return { n: Number(passed[1]), of: Number(passed[2]) };
   const executed = output.match(/checks executed:\s*(\d+)\s*\(passed:\s*(\d+)/);
   if (executed) return { n: Number(executed[2]), of: Number(executed[1]) };

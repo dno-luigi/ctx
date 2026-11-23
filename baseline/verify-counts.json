@@ -1,7 +1,7 @@
 {
   "schema": "gca-verify-counts/v1",
-  "commit": "fa5d4fc7bacdee2679c5c2072340cddf75c97d4e",
-  "recorded_at": "2026-11-23T00:53:08Z",
+  "commit": "75f4d1f28e125fee89a9bde841e7ba3c5dc0fdea",
+  "recorded_at": "2026-11-23T01:25:50Z",
   "counts": {
     "engine selftest": {
       "n": 52,
@@ -58,6 +58,10 @@
     "D6 held-out": {
       "n": 33,
       "of": 33
+    },
+    "pilot freeze": {
+      "n": 60,
+      "of": 60
     }
   }
 }

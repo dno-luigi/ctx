@@ -1,0 +1,313 @@
+{
+  "schema": "gca/freeze-manifest/v1",
+  "frozen_at": "2026-11-23T01:25:46Z",
+  "roots": [
+    "banks",
+    "pilot",
+    "context-engine/fixtures",
+    "context-engine/poc/classifier-proof.fixture.json"
+  ],
+  "note": "Pins the data inputs the pilot measures with. This replaces an earlier freeze that lived at runs/frozen/pilot-prep/manifest.json and was never committed, so its hashes cannot be recovered: the digests below were computed when this file was added. Treat it as a new freeze, not a restoration.",
+  "artifacts": [
+    {
+      "file": "banks/F2a.delta-document.json",
+      "bytes": 886,
+      "sha256": "744291c25b407ab7935888ae3eee383a252cd23dc253f0e4407ef873d394d438"
+    },
+    {
+      "file": "banks/F2a.delta.json",
+      "bytes": 1562,
+      "sha256": "11359573f1685b6d99e7bbf8165fc1f4465732b684d41d4bfe04d9dde3195a87"
+    },
+    {
+      "file": "banks/F2a.heldout.json",
+      "bytes": 3681,
+      "sha256": "d5169869c9c517064f37fcda70e362cbe0c27c513caa0a683934555cf147ff1c"
+    },
+    {
+      "file": "banks/F2a.json",
+      "bytes": 2387,
+      "sha256": "62cb158503e8d4a941cadc8f56c3456a7a87b3325c32792b3bb82b268a937486"
+    },
+    {
+      "file": "banks/F3.delta-document.json",
+      "bytes": 829,
+      "sha256": "6ee3164ef8aea5f977fbd20d24899b0a86f477a8f5ef19ad3f9791be03d9cb7d"
+    },
+    {
+      "file": "banks/F3.delta.json",
+      "bytes": 1563,
+      "sha256": "6509cd7f5fcd7b48b9ce62300534a3777ee87120cbf86d016a88d9c3d067b277"
+    },
+    {
+      "file": "banks/F3.heldout.json",
+      "bytes": 2845,
+      "sha256": "c96c20e09d8cf7d1a5ccdd6e67eb71c8cddfaa93100ce460fc91b6c8f8fea775"
+    },
+    {
+      "file": "banks/F3.json",
+      "bytes": 2627,
+      "sha256": "2cba0f93e2d7c18c61ffa48d60766b105c7ee277d275d9e4e759970a7a9a9dbe"
+    },
+    {
+      "file": "banks/F9.delta-document.json",
+      "bytes": 835,
+      "sha256": "e7f737a8bacddf31c94cfab0ccaaad5124829ee5edfe18cd0ce6e490b76fd2ea"
+    },
+    {
+      "file": "banks/F9.delta.json",
+      "bytes": 1473,
+      "sha256": "0ff9e0ccb6194a38959811cf8d0bb73bfb50dae3e980d5d4367489c83c19722a"
+    },
+    {
+      "file": "banks/F9.json",
+      "bytes": 2140,
+      "sha256": "6cfd005f481072d33f06b013b4a80d91cd3f3daed1373395620e5e8cdb84476a"
+    },
+    {
+      "file": "context-engine/fixtures/poc-delta/changes.json",
+      "bytes": 1242,
+      "sha256": "0cb412ec0acb7aad4ad1be191f4290cb4c9240e7e0c33de0f2ddb4b1896d9667"
+    },
+    {
+      "file": "context-engine/fixtures/poc-repo.ground-truth.json",
+      "bytes": 3135,
+      "sha256": "9a62485c1d4d369d669c09d6bfc80672b9921794c41f3546bd1a094f7398e4d8"
+    },
+    {
+      "file": "context-engine/fixtures/poc-repo/README.md",
+      "bytes": 445,
+      "sha256": "8c7ddc9508cce384c7c537acab4208a9ee010914a0ebd1ca9a27b9fb8fe6b21c"
+    },
+    {
+      "file": "context-engine/fixtures/poc-repo/config/defaults.json",
+      "bytes": 72,
+      "sha256": "1cc9181b9b0429f50bf18facd665715304b247492499d368d9d3ec9eae4ca5cf"
+    },
+    {
+      "file": "context-engine/fixtures/poc-repo/docs/ARCHITECTURE.md",
+      "bytes": 549,
+      "sha256": "598aa2e55d5140fb1017107edf20bc09b7973790b2b5f14642367df4fb768dd7"
+    },
+    {
+      "file": "context-engine/fixtures/poc-repo/docs/DECISIONS.md",
+      "bytes": 320,
+      "sha256": "529cb5bf10146dec8da88796d1468b36d8fdc2672cdb74b80a1e4a360b088dad"
+    },
+    {
+      "file": "context-engine/fixtures/poc-repo/docs/RUNBOOK.md",
+      "bytes": 287,
+      "sha256": "b4e1f9b1a1dac5cd90b6c607ab445d086a7b7060ad7e0479c92bb9fc55c3cd55"
+    },
+    {
+      "file": "context-engine/fixtures/poc-repo/notes/LEGACY-RETENTION.md",
+      "bytes": 108,
+      "sha256": "c4c24f9148e81b574bdb8b34e4ebf5bf26f873655fe36d88cdbee6f04f0a92f1"
+    },
+    {
+      "file": "context-engine/fixtures/poc-repo/src/ingest.js",
+      "bytes": 340,
+      "sha256": "b636be25735fc1cd7148cd0818a04c042fee5b903a0ef1769737fa786aa38616"
+    },
+    {
+      "file": "context-engine/fixtures/poc-repo/src/retention.js",
+      "bytes": 245,
+      "sha256": "2e43b8b94dd54a582f39f84931bdc4e82b90ddac6082f697d9d69d3069031366"
+    },
+    {
+      "file": "context-engine/fixtures/poc-repo/src/scheduler.js",
+      "bytes": 174,
+      "sha256": "577a4711d7f236b5c6224bb812ee0cb05cbaf4b64fec30c1888589c13c243594"
+    },
+    {
+      "file": "context-engine/fixtures/poc-repo/src/store.js",
+      "bytes": 385,
+      "sha256": "16c8048c2dc635e0554f68025c97940be6e7764dcc5b72216a28a01465267f37"
+    },
+    {
+      "file": "context-engine/fixtures/poc-repo/tests/retention.test.js",
+      "bytes": 313,
+      "sha256": "2a9efc25087357a2f521cca560345cf4504e9a7005026ec482a439999c93b861"
+    },
+    {
+      "file": "context-engine/poc/classifier-proof.fixture.json",
+      "bytes": 8786,
+      "sha256": "e33cc0e252d406df17636d3553d63d470e833c2b1b03567d7f95453f25ceef17"
+    },
+    {
+      "file": "pilot/claims-eligibility.json",
+      "bytes": 4929,
+      "sha256": "36cc6c5031f8b96300d15c7448a9800d7310ee7a5fea636b9616368bcf91c4f4"
+    },
+    {
+      "file": "pilot/code/constraints-oracle.json",
+      "bytes": 2897,
+      "sha256": "3dadb5804edb11281ce16b4842fc8c0590fb3b8c641be7e58ebd5da825df8dc9"
+    },
+    {
+      "file": "pilot/code/corpus.json",
+      "bytes": 992,
+      "sha256": "7f4f2030cc0688b76648449a4039235b3b3633ab9114f231d7659ba5756b14f8"
+    },
+    {
+      "file": "pilot/compaction/checkpoints.json",
+      "bytes": 2427,
+      "sha256": "0d6b02c4a1312f7c7358a51bcc8dc12e1b410f3cbaa9219f6c40824bd86e038a"
+    },
+    {
+      "file": "pilot/compaction/gold-edges.json",
+      "bytes": 1793,
+      "sha256": "53debf4c00b3a4b4b7886a442cc98ade1d4ac01ab090e64321d67cb2d04325c8"
+    },
+    {
+      "file": "pilot/compaction/plants-H2.json",
+      "bytes": 4361,
+      "sha256": "72d240cf71c7fe770a4f7e406540b824334a8c71c1349a4be946f9748df12652"
+    },
+    {
+      "file": "pilot/compaction/plants-probe.json",
+      "bytes": 1880,
+      "sha256": "3deaf85ed0a5d2d91b3307f68fffd15e23230460b6e21c2c7bd0b60eb187d9ef"
+    },
+    {
+      "file": "pilot/coverage/required-items.json",
+      "bytes": 7099,
+      "sha256": "7c7913b1cf933cca7a49b8bce45107c5a434a96f0d2b74101f60a4da892cfa01"
+    },
+    {
+      "file": "pilot/d6/fixtures/edge-cases.js",
+      "bytes": 470,
+      "sha256": "35d2b44af475e22d2ca479b8983b62211795c97e55bf93328f439b5adf630066"
+    },
+    {
+      "file": "pilot/d6/fixtures/no-imports.js",
+      "bytes": 272,
+      "sha256": "f3da6616adc3ee0ebe29ce1ff2f255a1d1ae8a8e0fa801e45619047857d78297"
+    },
+    {
+      "file": "pilot/d6/fixtures/unsupported.ts",
+      "bytes": 198,
+      "sha256": "a50e22179dabe966a084af19c18694585b3bbf2a956b5cadd6ba6798d6572572"
+    },
+    {
+      "file": "pilot/d6/heldout-oracle.json",
+      "bytes": 4356,
+      "sha256": "5d5d6a8392a75a0595052b389570671582292a9e0a510e9c741fddb760d75207"
+    },
+    {
+      "file": "pilot/d6/heldout/aliased.js",
+      "bytes": 160,
+      "sha256": "dc4ac86e94a8b166b9986ca616dc84949f11aa317b9de6b03e1dc22b8efbf80b"
+    },
+    {
+      "file": "pilot/d6/heldout/chain-a.js",
+      "bytes": 34,
+      "sha256": "cf154f0f2d14e9e1f4dfe7d2ed51a01f651d0fc44e83f0ac43b640583bbb0cd0"
+    },
+    {
+      "file": "pilot/d6/heldout/chain-b.js",
+      "bytes": 34,
+      "sha256": "913b81387de842176c5f3f157fcc932fb15a0d36539e75419664f6afd38fe721"
+    },
+    {
+      "file": "pilot/d6/heldout/chain-c.js",
+      "bytes": 20,
+      "sha256": "b40dedde60828bf61d1fadbfc3bb7ea2e0421e9511d22f1b5fb44ae5ba07dbb3"
+    },
+    {
+      "file": "pilot/d6/heldout/cyclic-a.js",
+      "bytes": 60,
+      "sha256": "50f797b06255b5b807e72982592e46e6481e92c3b2ed9592025f5b17b43c8ab1"
+    },
+    {
+      "file": "pilot/d6/heldout/cyclic-b.js",
+      "bytes": 56,
+      "sha256": "289dcfa323fb1f8036a877834f8fb834b4b9e6972a79d93c5dfedcbe70a183b9"
+    },
+    {
+      "file": "pilot/d6/heldout/multiline.js",
+      "bytes": 239,
+      "sha256": "265dd8a87f3896dc9e00fbe28a2165b52a06f4b9aeef7a83054c84715bf7d1e2"
+    },
+    {
+      "file": "pilot/d6/heldout/plain.js",
+      "bytes": 27,
+      "sha256": "03883c45b137c1d89e24bfc5540354613e737c0ea94e01a1fe93735b354d44b7"
+    },
+    {
+      "file": "pilot/d6/heldout/shadowed.js",
+      "bytes": 245,
+      "sha256": "25309a36c2e605968aa764ff25e443c829c35694032a261264aec90bf3e50881"
+    },
+    {
+      "file": "pilot/d6/heldout/unresolved.js",
+      "bytes": 20,
+      "sha256": "df9f11016203159c271aa2a3591fb4479c464ee168b737f90d2dfc2e73c14b56"
+    },
+    {
+      "file": "pilot/d6/heldout/unsupported.ts",
+      "bytes": 191,
+      "sha256": "687766c062a5e63ea20b76ec68b5efca64165eb8c8cf100a9595a7f1f8d930b4"
+    },
+    {
+      "file": "pilot/d6/oracle.json",
+      "bytes": 4144,
+      "sha256": "2f3a3c1dd5da474b5ebc99b5504035f52e43eb26cd3cb5e464d77beeb6141681"
+    },
+    {
+      "file": "pilot/dryrun/expected.json",
+      "bytes": 963,
+      "sha256": "a52ca840e9e91ba688b479fbe1f685232f0fa02dceeccd2585e01c021a89fb91"
+    },
+    {
+      "file": "pilot/dryrun/transcripts/C4.control.json",
+      "bytes": 841,
+      "sha256": "2611499d882b17774c73c40b0f6c87739089d939c571dd848be9e3a293881b4a"
+    },
+    {
+      "file": "pilot/dryrun/transcripts/C4.treatment.json",
+      "bytes": 936,
+      "sha256": "efab72241e5b1bed9f8432ffc00341e514c0d171184e26f98c44d23ddfcb9aff"
+    },
+    {
+      "file": "pilot/instrumentation/adjudication-protocol.md",
+      "bytes": 4159,
+      "sha256": "0fee70690b7aa9603b3fedd617e84b3e250fcb5cb9162296614d18bc05c7b9e0"
+    },
+    {
+      "file": "pilot/instrumentation/manifest.json",
+      "bytes": 1243,
+      "sha256": "898a26d80fe497d7a4504caf27c5cd6896f600e3762071de55d5fe2c4c40eda0"
+    },
+    {
+      "file": "pilot/patches/C1.json",
+      "bytes": 2207,
+      "sha256": "43e3aee2f5ea0123f57f8afa358917647eb96ae39b98536e29f6602de995c64e"
+    },
+    {
+      "file": "pilot/patches/C2.json",
+      "bytes": 1685,
+      "sha256": "d89d9df3b35363a13cc542cd85cec76914b4040911c15789357877f0befe992b"
+    },
+    {
+      "file": "pilot/patches/C3.json",
+      "bytes": 1486,
+      "sha256": "80a6759d67b47c044eb38fc94ce8b34c4a3e0d3e9f70aaf13a4c8b4c46bb706b"
+    },
+    {
+      "file": "pilot/patches/C4.json",
+      "bytes": 1559,
+      "sha256": "c45cf8b79c2626fbb305dfc9c1487aa3027cbff10b1a7e1686029d3b0341c17a"
+    },
+    {
+      "file": "pilot/patches/C5.json",
+      "bytes": 1470,
+      "sha256": "b6a17d0e54aa989b3abdd5c6059e5141cb1fa97a0cc1f31a2f133c7e8a6273c0"
+    },
+    {
+      "file": "pilot/patches/results.json",
+      "bytes": 3600,
+      "sha256": "b64217dddfcfa9fc926d3d1cda900d938b2231a24f5bd54ff224ae7112bc2d7f"
+    }
+  ]
+}

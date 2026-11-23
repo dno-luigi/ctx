@@ -6,7 +6,7 @@
  * in the current phase, not silently re-hashed.
  *
  * Usage: node tools/freeze-verify.js [manifest-path]
- *   default: runs/frozen/pilot-prep/manifest.json
+ *   default: pilot/freeze/pilot-prep-01.json
  * Exit 0 = every artifact matches. Exit 1 = at least one mismatch or missing file.
  */
 
@@ -14,7 +14,7 @@ import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 
 const ROOT = new URL('../', import.meta.url);
-const manifestPath = process.argv[2] ?? 'runs/frozen/pilot-prep/manifest.json';
+const manifestPath = process.argv[2] ?? 'pilot/freeze/pilot-prep-01.json';
 
 const manifest = JSON.parse(await readFile(new URL(manifestPath, ROOT), 'utf8'));
 const artifacts = manifest.artifacts ?? manifest.files ?? [];
