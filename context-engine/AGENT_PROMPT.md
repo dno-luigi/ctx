@@ -15,12 +15,14 @@ As of 2026-11-20, at the commit that added this file.
 | Bank authoring | Gated — requires explicit operator authorization |
 | Estimator regeneration | Gated — requires explicit operator authorization |
 | Stage 0 probes and any paid provider call | Gated — requires explicit operator authorization |
+| Auditability of the hashes above | Mirrored to the private repository `dno-luigi/ctx` on `main`; every hash cited in this table resolves there |
 
 - Operator instruction outranks this file. Where section 4 conflicts with a gate above, the gate wins.
 - Nothing here authorizes spend. No model call, provider request or benchmark run happens without separate, explicit approval.
 - A passing run establishes consistency with authored labels, not that the labels are correct.
 - `fixtures/` is generated and gitignored; frozen proof material lives in `poc/`.
-- The engine and its tooling were committed in eight checkpoints, `d69ed0c..997706f`. `tools/ac6-refined.js` and `tools/contract-test.js` remain uncommitted because their place in the tree is unresolved.
+- The engine and its tooling were committed in eight checkpoints, `d69ed0c..997706f`. The two files previously held back for lack of a home were placed as follow-ups inside their own subsystems: `tools/ac6-refined.js` at `bd8338f` (ARA anchor identity) and `tools/contract-test.js` at `3ecb33d` (decision adapters).
+- The tree is mirrored to the private repository `dno-luigi/ctx` on `main`, so the audit trail no longer depends on a single worktree. `runs/` and `fixtures/` are gitignored and are therefore in neither repository: the run artifacts remain unauditable from the source tree.
 - No Stage 0 record exists in the repository. The Stage 0 row above is a policy statement, not evidence that Stage 0 has run either way.
 - The tree in section 3 is the target layout. The current tree also holds `poc/`, `tools/`, `adapters/`, `banks/`, `baseline/`, `cards/`, `inventory/`, `pilot/`, `recorded/`, `snapshot/` and `examples/live-approved/`.
 
