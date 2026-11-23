@@ -1,0 +1,8 @@
+{
+  "schema": "context-engine/benchmark-budget/v1",
+  "design": "SMOKE-01",
+  "design_doc": "SMOKE-01.md",
+  "worst_case_usd": 0.03,
+  "call_estimate": 6,
+  "basis": "SMOKE-01.md §4: six calls at most (scan, QA from the pack, delta rescan), priced at the catalogue rate for z-ai/glm-5.3-flash. The derived worst case is ≈$0.006; the enforced floor is $0.03 because the pre-flight gate uses a pessimistic 3.5 chars/token and the moving-alias ancestor billed above catalogue in LIVE-SCAN-01."
+}

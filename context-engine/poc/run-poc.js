@@ -56,6 +56,14 @@ const check = (name, condition, detail = '') => {
   console.log(`  ${condition ? 'ok  ' : 'FAIL'} ${name}${condition || !detail ? '' : ` — ${detail}`}`);
 };
 
+// A call that hit the output cap or returned unparseable JSON produced no findings, and an empty
+// snapshot is indistinguishable from "the material says nothing" unless this is checked. The
+// provider records these; before SMOKE-01 run 1 nothing in this harness read them, so a truncated
+// scan scored 25/25 and exited 0.
+const BLOCKING = new Set(['output_truncated', 'payload_unparseable', 'call_failed']);
+const blockingProblems = (calls) =>
+  (calls ?? []).flatMap((call) => call.problems ?? []).filter((problem) => BLOCKING.has(problem.code));
+
 // Live execution needs a run id, because the guard's whole job is to make a second attempt on the
 // same authorisation impossible — not to warn about it.
 const runId = typeof args['run-id'] === 'string' ? args['run-id'] : null;
@@ -114,6 +122,8 @@ check('every source is accounted for (read or skipped)', acquisition.totals.file
 check('source facts are model-free', snapshot.sections.source_facts.every((fact) => fact.authoritative === true));
 check('verified conclusions all carry resolved evidence', snapshot.sections.verified_conclusions.every((entry) => entry.evidence.length > 0 && entry.evidence.every((ref) => ref.sha256)));
 check('failed citations are quarantined, not repaired', snapshot.sections.observations.every((entry) => entry.verification === 'citation_verified' || entry.flags?.length > 0));
+const scanBlocked = blockingProblems(scan.scan.calls);
+check('no scan call was truncated, unparseable or failed', scanBlocked.length === 0, scanBlocked.map((problem) => `${problem.code}@${problem.partition ?? '?'}`).join(', '));
 
 console.log('\n2. STRUCTURED REPRESENTATION');
 console.log(`  conclusions=${snapshot.sections.verified_conclusions.length} inferences=${snapshot.sections.inferences.length} questions=${snapshot.sections.questions.length} contradictions=${snapshot.contradictions.length}`);
@@ -183,6 +193,8 @@ check('stale findings cite a changed source', staleFindings.every((finding) => (
 check('changed sources produce a stale or updated outcome when cited', priorChangedExpected === 0 || delta.counts.findings_stale + delta.counts.findings_updated > 0);
 check('new source is scanned', delta.counts.sources_added > 0 && delta.counts.findings_added > 0);
 check('snapshot advances lineage', after.sections.historical_state?.from_snapshot === snapshot.snapshot_id);
+const deltaBlocked = blockingProblems(deltaResult.calls);
+check('no delta call was truncated, unparseable or failed', deltaBlocked.length === 0, deltaBlocked.map((problem) => `${problem.code}@${problem.partition ?? '?'}`).join(', '));
 
 const afterPack = compact({ snapshot: after, profile: 'medium' });
 const afterInvariantTexts = new Set((afterPack.sections.invariants ?? []).map((entry) => entry.text));

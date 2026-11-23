@@ -1,7 +1,7 @@
 {
   "schema": "gca-verify-counts/v1",
-  "commit": "0dc41e0ff0ca0e6e4519ed42d800881c641b1532",
-  "recorded_at": "2026-11-23T03:11:57Z",
+  "commit": "7783160e992782142d5f97f4feeb6807e3b435a1",
+  "recorded_at": "2026-11-23T03:19:45Z",
   "counts": {
     "engine selftest": {
       "n": 52,
@@ -64,8 +64,8 @@
       "of": 60
     },
     "benchmark budget": {
-      "n": 1,
-      "of": 1
+      "n": 2,
+      "of": 2
     },
     "benchmark gates": {
       "n": 12,
