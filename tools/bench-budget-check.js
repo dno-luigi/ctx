@@ -61,6 +61,19 @@ for (const file of BUDGET_FILES) {
   if (record.call_estimate !== Number(docCalls)) {
     problems.push(`${record.call_estimate} calls in ${budgetPath} but ${record.design_doc} totals ${docCalls}`);
   }
+
+  // The ceiling is optional, but a design that has one in either place must have it in both.
+  const hardStop = doc.match(/^\|\s*\*\*Hard stop\*\*\s*\|\s*—\s*\|\s*\*\*\$([\d.]+)\*\*\s*\|$/m);
+  if (!hardStop && record.ceiling_usd !== undefined) {
+    problems.push(`${budgetPath} sets ceiling_usd but ${record.design_doc} has no "| **Hard stop** | — | **$X** |" row`);
+  } else if (hardStop && typeof record.ceiling_usd !== 'number') {
+    problems.push(`${record.design_doc} states a $${hardStop[1]} hard stop but ${budgetPath} has no ceiling_usd`);
+  } else if (hardStop) {
+    if (Math.round(record.ceiling_usd * 100) !== Math.round(Number(hardStop[1]) * 100)) {
+      problems.push(`ceiling $${record.ceiling_usd.toFixed(2)} in ${budgetPath} but ${record.design_doc} hard stop is $${hardStop[1]}`);
+    }
+    if (record.ceiling_usd < record.worst_case_usd) problems.push(`${budgetPath}: ceiling is below the floor`);
+  }
   checked += 1;
 }
 

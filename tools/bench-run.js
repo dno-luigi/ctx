@@ -11,7 +11,7 @@
  * written and reviewed.
  *
  *   node tools/bench-run.js --dry [--design BENCHMARK-01]
- *   node tools/bench-run.js --live --budget-usd 0.10     (needs BENCH_CONFIRM and a key)
+ *   node tools/bench-run.js --live --budget-usd 0.05     (needs BENCH_CONFIRM and a key)
  */
 
 import { spawnSync } from 'node:child_process';
@@ -45,11 +45,16 @@ function readFloor(id) {
   if (record.design !== id) return { path, problem: `${path} describes ${JSON.stringify(record.design)}, not ${JSON.stringify(id)}` };
   const floor = Number(record.worst_case_usd);
   if (!Number.isFinite(floor) || floor <= 0) return { path, problem: `${path} has no positive worst_case_usd` };
-  return { path, record, floor };
+  // Optional: a design may also cap what it will ever authorise. Absent means "floor only".
+  const ceiling = record.ceiling_usd === undefined ? null : Number(record.ceiling_usd);
+  if (ceiling !== null && (!Number.isFinite(ceiling) || ceiling <= 0)) return { path, problem: `${path} has a non-positive ceiling_usd` };
+  if (ceiling !== null && ceiling < floor) return { path, problem: `${path} has a ceiling below its floor` };
+  return { path, record, floor, ceiling };
 }
 
 const floorInfo = readFloor(designId);
 const floor = floorInfo.floor ?? null;
+const ceiling = floorInfo.ceiling ?? null;
 
 // Priced by a different estimator over a different plan. Shown so the two figures stay visibly
 // separate, never used as this design's floor.
@@ -70,6 +75,7 @@ if (live) {
   if (confirm !== 'authorize-spend') problems.push(`confirm input is ${JSON.stringify(confirm)}, not "authorize-spend"`);
   if (!Number.isFinite(budget) || budget <= 0) problems.push('--budget-usd must be a positive number');
   else if (floor !== null && budget < floor) problems.push(`budget $${budget.toFixed(2)} is below the ${designId} floor $${floor.toFixed(2)}`);
+  if (ceiling !== null && Number.isFinite(budget) && budget > ceiling) problems.push(`budget $${budget.toFixed(2)} is above the ${designId} ceiling $${ceiling.toFixed(2)}`);
   if (!process.env.OPENROUTER_API_KEY) problems.push('OPENROUTER_API_KEY is not present in this environment');
 }
 
@@ -79,6 +85,7 @@ const lines = [
   '| | |',
   '| --- | --- |',
   `| Floor (worst case) | ${floor === null ? '**none recorded**' : `$${floor.toFixed(2)}`} |`,
+  `| Ceiling (hard stop) | ${ceiling === null ? 'none recorded' : `$${ceiling.toFixed(2)}`} |`,
   `| Source | ${floorInfo.path ?? '—'}${floorInfo.record ? ` — ${floorInfo.record.basis}` : ''} |`,
   `| Budget offered | ${budget > 0 ? `$${budget.toFixed(2)}` : 'none'} |`,
   `| Estimator (reference only) | ${plan?.series ?? 'unavailable'}${nominal == null ? '' : `: $${Number(nominal).toFixed(4)} nominal / $${Number(reported).toFixed(4)} worst`} — prices another plan, never the floor |`,

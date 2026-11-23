@@ -2,7 +2,8 @@
   "schema": "context-engine/benchmark-budget/v1",
   "design": "BENCHMARK-01",
   "design_doc": "BENCHMARK-01.md",
-  "worst_case_usd": 0.1,
-  "call_estimate": 215,
-  "basis": "BENCHMARK-01.md §8: ~215 calls, ≈$0.10, described there as rough and deliberately conservative. Section 8 is the derivation; this file is the figure tools/bench-run.js enforces before it will authorise a paid run."
+  "worst_case_usd": 0.05,
+  "ceiling_usd": 0.06,
+  "call_estimate": 77,
+  "basis": "BENCHMARK-01.md §8 (Rev 2): 77 calls, ≈$0.05, derived from measured prompt sizes and the $0.0399/M-in, $0.0784/M-out rates implied exactly by SMOKE-01 attempt 2's three provider-reported charges. Section 8 is the derivation; this file is the figure tools/bench-run.js enforces before it will authorise a paid run, and ceiling_usd is the most it will accept."
 }

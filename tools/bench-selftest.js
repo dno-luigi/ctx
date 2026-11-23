@@ -62,10 +62,11 @@ const probe = spawnSync(
 check('the child environment has no OPENROUTER_API_KEY to inherit', probe.stdout === 'absent', `child says ${JSON.stringify(probe.stdout)}`);
 
 const missingKey = 'OPENROUTER_API_KEY is not present in this environment';
-const belowFloor = 'budget $0.05 is below the BENCHMARK-01 floor $0.10';
+const belowFloor = 'budget $0.04 is below the BENCHMARK-01 floor $0.05';
+const aboveCeiling = 'budget $0.08 is above the BENCHMARK-01 ceiling $0.06';
 
 // 1. Everything authorised except the key: the key is the only thing that stops it.
-const noKey = run(['--live', '--budget-usd', '0.10'], { ...withoutKey(), BENCH_CONFIRM: 'authorize-spend' });
+const noKey = run(['--live', '--budget-usd', '0.05'], { ...withoutKey(), BENCH_CONFIRM: 'authorize-spend' });
 check('missing key alone refuses the run', noKey.status === 1, `exit ${noKey.status}`);
 check(
   'missing key is the only problem reported, so the gates are independent',
@@ -75,7 +76,7 @@ check(
 check('the missing-key refusal says no provider was contacted', noKey.out.includes('No provider was contacted'));
 
 // 2. Two gates failing at once are both reported, not the first one only.
-const noKeyCheap = run(['--live', '--budget-usd', '0.05'], { ...withoutKey(), BENCH_CONFIRM: 'authorize-spend' });
+const noKeyCheap = run(['--live', '--budget-usd', '0.04'], { ...withoutKey(), BENCH_CONFIRM: 'authorize-spend' });
 check(
   'a below-floor budget and a missing key are both refused and both named',
   noKeyCheap.status === 1 && same(noKeyCheap.problems, [belowFloor, missingKey]),
@@ -83,8 +84,14 @@ check(
 );
 
 // 3. The floor itself, with a key present.
-const cheap = run(['--live', '--budget-usd', '0.05'], { ...withKey(), BENCH_CONFIRM: 'authorize-spend' });
+const cheap = run(['--live', '--budget-usd', '0.04'], { ...withKey(), BENCH_CONFIRM: 'authorize-spend' });
 check('a budget below the floor is refused', cheap.status === 1 && same(cheap.problems, [belowFloor]), `exit ${cheap.status} ${JSON.stringify(cheap.problems)}`);
+
+// 3b. The ceiling: a floor alone would let any budget above it through.
+const overCeiling = run(['--live', '--budget-usd', '0.08'], { ...withKey(), BENCH_CONFIRM: 'authorize-spend' });
+check('a budget above the ceiling is refused', overCeiling.status === 1 && same(overCeiling.problems, [aboveCeiling]), `exit ${overCeiling.status} ${JSON.stringify(overCeiling.problems)}`);
+const atCeiling = run(['--live', '--budget-usd', '0.06'], { ...withKey(), BENCH_CONFIRM: 'authorize-spend' });
+check('the ceiling itself is allowed and stops at exit 2', atCeiling.status === 2 && atCeiling.problems.length === 0, `exit ${atCeiling.status} ${JSON.stringify(atCeiling.problems)}`);
 
 // 4. A design with no budget file has no floor, so it cannot be authorised at any price.
 const unknown = run(['--live', '--design', 'BENCHMARK-99', '--budget-usd', '5'], { ...withKey(), BENCH_CONFIRM: 'authorize-spend' });
@@ -95,7 +102,7 @@ check(
 );
 
 // 5. The confirmation phrase is its own gate.
-const unconfirmed = run(['--live', '--budget-usd', '0.10'], { ...withKey(), BENCH_CONFIRM: '' });
+const unconfirmed = run(['--live', '--budget-usd', '0.05'], { ...withKey(), BENCH_CONFIRM: '' });
 check(
   'an unconfirmed run is refused at the floor',
   unconfirmed.status === 1 && same(unconfirmed.problems, ['confirm input is "", not "authorize-spend"']),
@@ -103,7 +110,7 @@ check(
 );
 
 // 6. Every gate satisfied lands on the not-implemented exit, never on a provider.
-const authorised = run(['--live', '--budget-usd', '0.10'], { ...withKey(), BENCH_CONFIRM: 'authorize-spend' });
+const authorised = run(['--live', '--budget-usd', '0.05'], { ...withKey(), BENCH_CONFIRM: 'authorize-spend' });
 check('a fully authorised run stops at exit 2', authorised.status === 2, `exit ${authorised.status}`);
 check('the authorised run reports no refusal', authorised.problems.length === 0, JSON.stringify(authorised.problems));
 check(
