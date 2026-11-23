@@ -9,10 +9,17 @@
  */
 
 import { spawnSync } from 'node:child_process';
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readdirSync, writeFileSync } from 'node:fs';
+
+// Enumerate the files rather than passing 'tests/': Node 20 accepts a directory there, Node 22
+// resolves the trailing-slash path as a file and reports zero passing tests.
+const TEST_FILES = readdirSync('tests')
+  .filter((file) => file.endsWith('.test.js'))
+  .sort()
+  .map((file) => `tests/${file}`);
 
 const CHECKS = [
-  ['unit tests', ['--test', 'tests/']],
+  ['unit tests', ['--test', ...TEST_FILES]],
   ['classifier proof', ['poc/proof-classifier.js']],
   ['coverage baseline', ['poc/coverage-baseline.js']],
   ['offline POC (stub)', ['poc/run-poc.js', '--out', 'runs/poc']],
