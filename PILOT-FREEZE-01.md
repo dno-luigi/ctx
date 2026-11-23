@@ -13,6 +13,12 @@ Everything needed to run H1 and H2 *except* a live agent, frozen with digests in
 - the frozen adjudication protocol and the claims-eligibility declaration;
 - the two preparation audits and the synthetic dry-run transcripts with hand-computed expectations.
 
+**Where the manifest lives now:** the digests are committed at
+[`pilot/freeze/pilot-prep-01.json`](pilot/freeze/pilot-prep-01.json), and `node tools/freeze-verify.js`
+recomputes them offline as part of `npm run verify`. The `runs/` path above was never tracked, so a
+clone could not verify it at all; the committed manifest is a new freeze over the same inputs and says
+so in its own `note` rather than presenting itself as the original.
+
 `runs/frozen/card-gen-01/` remains frozen separately and is not touched by this record.
 
 ## Standing rules (in force from here)
