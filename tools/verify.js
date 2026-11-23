@@ -15,7 +15,7 @@
  *   node tools/verify.js --update-baseline   record this run's counts (only if every check passed)
  */
 
-import { spawnSync } from 'node:child_process';
+import { execFileSync, spawnSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 
 const CHECKS = [
@@ -42,15 +42,30 @@ const BASELINE = 'baseline/verify-counts.json';
 const INTERESTING = /passed|PASS|RESULT|checks|intact|verified|%/i;
 const updateBaseline = process.argv.includes('--update-baseline');
 
-/** The number a check reports about itself: a ratio if it has one, else a total, else a percentage. */
+/**
+ * The number a check reports about itself. Anchored to the wording these tools actually use, because
+ * taking the first ratio in the output picked up unrelated figures (`94/96` where the check reports
+ * `39/39`) and would have made the baseline meaningless.
+ */
 function measure(output) {
-  const ratio = output.match(/(\d+)\s*\/\s*(\d+)/);
-  if (ratio) return { n: Number(ratio[1]), of: Number(ratio[2]) };
-  const executed = output.match(/checks executed:\s*(\d+)/);
-  if (executed) return { n: Number(executed[1]), of: Number(executed[1]) };
-  const percent = output.match(/([\d.]+)\s*%/);
+  const passed = output.match(/(\d+)\s*\/\s*(\d+)\s+(?:checks passed|baseline artifacts)/);
+  if (passed) return { n: Number(passed[1]), of: Number(passed[2]) };
+  const executed = output.match(/checks executed:\s*(\d+)\s*\(passed:\s*(\d+)/);
+  if (executed) return { n: Number(executed[2]), of: Number(executed[1]) };
+  // Only AC-6 reports a headline percentage. coverage-baseline prints five condition figures
+  // (100/83/83/67/0); recording the first as "the" number would read as progress that isn't there.
+  const percent = output.match(/distinct quotes \(([\d.]+)%\)/);
   if (percent) return { n: Number(percent[1]), of: null };
   return null;
+}
+
+function localCommit() {
+  if (process.env.GITHUB_SHA) return process.env.GITHUB_SHA;
+  try {
+    return execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
+  } catch {
+    return null;
+  }
 }
 
 function readBaseline() {
@@ -134,7 +149,7 @@ if (updateBaseline) {
   const counts = Object.fromEntries(rows.filter((row) => row.count).map((row) => [row.name, row.count]));
   const record = {
     schema: 'gca-verify-counts/v1',
-    commit: process.env.GITHUB_SHA ?? null,
+    commit: localCommit(),
     recorded_at: stamp,
     counts,
   };
