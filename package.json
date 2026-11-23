@@ -1,35 +1,14 @@
 {
-  "name": "gca-experiment",
+  "name": "context-engine",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Read-only qualification harness for Global Contextual Assessment (GCA) and Recursive Differential Assessment (RDA). No runtime, no writes, no authority.",
-  "engines": {
-    "node": ">=20"
-  },
+  "description": "GCA/RDA context engine: contextual scanning, differential updates, reversible compaction. Offline-verified; read-only default; no runtime authority.",
+  "engines": { "node": ">=20" },
   "scripts": {
-    "fixtures": "node tools/build-fixtures.js",
-    "stub": "node tools/build-fixtures.js && node run.js --provider stub --quality perfect --all --repeats 3 --out runs/stub-perfect",
-    "stub:drifty": "node tools/build-fixtures.js && node run.js --provider stub --quality drifty --all --repeats 3 --out runs/stub-drifty",
-    "stub:sloppy": "node tools/build-fixtures.js && node run.js --provider stub --quality sloppy --all --repeats 2 --out runs/stub-sloppy",
-    "stub:injective": "node tools/build-fixtures.js && node run.js --provider stub --quality injective --all --repeats 3 --out runs/stub-injective",
-    "selftest": "node tools/selftest.js",
-    "selftest:decisions": "node tools/decisions-selftest.js",
-    "selftest:inventory": "node tools/inventory-selftest.js",
-    "inventory:run": "node tools/inventory-run.js",
-    "live": "node tools/live-decisions.js",
-    "live:report": "node tools/live-report.js",
-    "completeness": "node tools/completeness.js",
-    "rda": "node tools/rda-propagation.js",
-    "snapshot-state": "node tools/snapshot-state-test.js",
-    "reuse": "node tools/reuse-report.js",
-    "card-id": "node tools/card-id-experiment.js",
-    "identity-states": "node tools/identity-states.js",
-    "inventory-identity": "node tools/inventory-identity.js",
-    "plant-coverage": "node tools/plant-coverage.js",
-    "inventory-coverage": "node tools/inventory-coverage.js",
-    "card-gen": "node tools/card-generation.js",
-    "patch-check": "node tools/patch-check.js",
-    "score-transcript": "node tools/score-transcript.js"
+    "test": "node --test tests/",
+    "proof": "node poc/proof-classifier.js",
+    "coverage": "node poc/coverage-baseline.js",
+    "poc": "node poc/run-poc.js"
   }
 }

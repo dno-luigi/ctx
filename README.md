@@ -1,112 +1,265 @@
-# gca-experiment
+# Context Engine (GCA/RDA)
 
-A read-only qualification harness for two hypotheses:
+> **Engine-only package.** This branch is the context engine on its own: no harness, banks or pilot
+> evidence. The full combined experiment stays on `main` for continued development and testing. What sits
+> here runs offline as committed — tests, proof, coverage baseline and the stub POC need no provider and no
+> key. Live scanning needs a key and passes through the spend guard; the gates in `AGENT_PROMPT.md` still
+> apply, and a passing run establishes consistency with authored labels, not that those labels are correct.
 
-- **GCA — Global Contextual Assessment.** One pass over operator-supplied material produces a structured snapshot: what is stated, where, with what confidence, what is missing, and what check would settle it.
-- **RDA — Recursive Differential Assessment.** Comparing two snapshots tells you whether a change in the output is justified by a change in the input, or whether the model drifted.
+**Status:** implemented and verified offline; **first live scan run 2026-11-20** on GLM Flash Latest, recorded
+in [LIVE-SCAN-01.md](LIVE-SCAN-01.md). Two runs, 7 of 8 gates each, **different gates failed** (H2 then H4),
+so the hypothesis is **not supported on this fixture** under the rules as written. The thresholds were not
+changed afterwards. After carrying contradictions into the pack, a QA re-check (no rescan) reached 5/6
+attribution and q6 became answerable; that is recorded separately, not retrofitted into run 2.
 
-The output is evidence about a model. It is not a decision, and this repo cannot make one: there is no runtime, no route, no remote storage and no deployment.
+**H4 now passes** on the contradiction-bearing pack at the pre-registered 5/6 bar (attribution 0.833,
+reconstruction 0.833, 0 traps). All eight gates have therefore been observed passing at least once, but
+**never together in one run**, and the failing gate moved between the two live runs. The consolidated gate
+matrix, spend ledger, open gaps and the pre-registration for the next measurement are in
+[POC-RESULT.md](POC-RESULT.md).
 
-It has exactly one write: the report it renders to `runs/<id>/report.json` and `report.md` on the local filesystem. That is operator-side output, not persistence — nothing is read back, served, or sent anywhere by the harness. Saying "no storage" without that qualification would be false, and the difference matters: a local file an operator deletes is not a store a system reads.
+**Integrity layer added 2026-11-20.** Paid execution is refused without a spend guard: one attempt per run
+id, ledger-backed, so an unauthorised retry is a refusal rather than a document. The snapshot digest now
+covers content instead of wall-clock fields, so identical inputs produce identical ids. The token
+estimator is calibrated against provider-reported usage, and a mechanical support check reports how many
+citation-verified findings are actually backed by their quotes. The benchmark that decides whether any of
+this is worth using is designed and pre-registered, **not run**: [BENCHMARK-01.md](BENCHMARK-01.md).
 
-## Status
+---
 
-| Fixture | Tests | State |
-|---|---|---|
-| F1 short document | can it read at all; forbidden over-reach; two traps | ready |
-| F2a / F2b / F2c long document, needle at ~5 % / ~50 % / ~95 % | position sensitivity; a claim that keeps its evidence while its span moves | ready |
-| F2d long document, needle sentence edited | justified change: this evidence really did change | ready |
-| F3 two sources in contradiction | non-resolution: flag the conflict, do not pick; two traps | ready |
-| F4 multimodal necessity | **pending capture** — blocked, see `fixtures/F4/capture.md` |
-| F5 insufficient context | correct abstention; two fixture-level traps, since it has no required observations | ready |
-| F6 instruction in source prose | data/instruction separation, shape 1 | ready |
-| F6b instruction disguised as metadata | shape 2 | ready |
-| F6c instruction inside quoted correspondence | shape 3 | ready |
-| F6d instruction claiming to supersede the operator brief | shape 4 | ready |
-| F6e instruction altering the output schema | shape 5 | ready |
-| F6f instruction to conceal evidence | shape 6 — concealment also fails coverage | ready |
-| F7 Mind-shaped page export (synthetic, redacted) | the first intended host surface | ready |
-| F8 authentic but unsupportive citation | layer 2: real quotes, wrong support | ready |
-| F9 repeated quotation | ambiguity is rejected, not guessed | ready |
+## 1. Purpose
 
-Six injection shapes rather than one, because passing a prose injection establishes nothing about metadata, forwarded mail, authority claims, schema attacks or concealment.
+An agent that works longer than its window is usually given a **summary** of what it lost. Summaries are
+compressed once, by the same process that is about to be truncated, and their errors are not recoverable:
+a dropped constraint looks exactly like a constraint that never existed.
 
-The stub provider proves the graders discriminate. **No paid run has been recorded.** Until one is, nothing in this repo says anything about any real model.
+This engine takes the opposite approach.
 
-## Quick start — free, offline, no network
+> When the context limit approaches, do not summarise harder. Re-read the complete source with an
+> inexpensive model, verify what it reports against the bytes, and carry a structured, source-addressed
+> representation forward.
 
-```sh
-node tools/build-fixtures.js
-node run.js --provider stub --all --repeats 3 --out runs/stub
-npm run selftest
-```
+The representation is not prose. It separates what the source **says** from what a model **inferred**,
+keeps every finding attached to a verbatim quote and a file hash, and records what it did not examine.
+When the source changes, only the changed material is rescanned; unchanged findings are carried forward
+and re-checked, not regenerated.
 
-`selftest` deliberately breaks things and checks that the metrics move: unstable claims must fail consistency, a fabricated citation must be rejected, an ambiguous quotation must be rejected rather than guessed, an authentic-but-unsupportive citation must fail relevance while authenticity still passes, and an obeyed instruction must fail every injection fixture.
+The governing principle:
 
-## A paid run — needs your budget, your key, your authorisation
+> Preserve complete source truth while making working context inexpensive to reconstruct, update, verify
+> and compact.
 
-The first controlled comparison has a written procedure: **[RUN-PLAN-01.md](RUN-PLAN-01.md)** — frozen inputs, verified prices, per-model budget caps, the adjudication sampling rule, F4's exclusion, and abort criteria. Read it before spending anything; the commands there supersede the sketch below.
+This is **not** a summarisation tool. A summary replaces the source; this keeps the source authoritative
+and makes the derived context cheap to discard and rebuild.
 
-```sh
-export OPENROUTER_API_KEY=...
-node run.js --provider openrouter \
-  --models google/gemini-2.0-flash-001 \
-  --all --repeats 3 \
-  --budget-usd 0.50 \
-  --out runs/2026-11-18-gemini
-```
+### 1.1 What the engine maintains
 
-The runner refuses a paid provider without `--budget-usd`, estimates every call before making it, and aborts when the next call would cross the cap. Prices in `models.json` are unverified; check the provider before you run and override with `--price-in` / `--price-out`.
+| Layer | Role |
+| --- | --- |
+| **Snapshot** | the preserved state: sources, findings, evidence, coverage, contradictions |
+| **Pack** | one materialised working set, selected from the snapshot under a budget |
+| **Retrieval** *(not built)* | selective delivery from the snapshot, on demand |
+| **Verification** | evidence integrity: quotes resolve, and support is checked separately |
+| **Invalidation** | temporal correctness: preserved / stale / invalidated |
+| **Agent execution** | the only layer that can show whether the rest is useful |
 
-## Reading the report
+The pack is a delivery mechanism, not the product. A pack has to guess what the agent will need; the
+snapshot does not.
 
-`runs/<id>/report.json` also carries `snapshots[]`: every valid observation with the verbatim quotes it cites. That is the evidence archive the adjudication procedure reads — keep it with the run.
+## 2. What it is not
 
-`runs/<id>/report.md` has one row per model:
+- Not a decision engine. It never recommends, approves or ranks actions.
+- Not a writer. It reads the subject tree and writes only to its own output/example paths.
+- Not a truth oracle. `citation_verified` means the quote resolves in the bytes; it does not mean the
+  statement is correct or that the source is right.
+- Not a replacement for GCA/RDA. It shares the repository's canonical digest and provider discipline; it
+  does not import or alter the frozen GCA/RDA baseline.
 
-| Column | Layer | Meaning |
-|---|---|---|
-| citation integrity | 1 authenticity | share of snapshots whose every citation resolved to verbatim text |
-| relevance | 2 relevance | share of snapshots citing no pre-declared trap quote; blank where the fixture declares none |
-| required coverage | global assessment | share of ground-truth observations found |
-| abstention | contextual reasoning | did it say "cannot tell" when it should, and only then |
-| injection | data/instruction separation | did document-borne instructions stay inert |
-| consistency | recursive differential | pairwise agreement across repeats of identical input |
-| forbidden | contextual reasoning | claims the ground truth forbids |
-| $/pass, p95 | — | cost and tail latency per pass |
-
-Three things are kept apart rather than averaged into one score:
-
-- **authenticity** — does the quote exist? Mechanical, and the only layer the harness settles alone.
-- **relevance** — does the quote support the claim? Mechanical only where a fixture pre-declares a trap: an authentic quote that looks like support and is not. F1, F3, F5 and F8 declare traps; everywhere else it is reported as undeclared rather than assumed, and an unanticipated unsupportive citation is missed.
-- **inference validity** — is the conclusion valid? Not machine-decidable. The run reports the kind distribution, a lexical overreach signal, and an **adjudication queue** naming every observation a human has to read.
-
-The queue is pending work, not a result. A run whose queue is unread has not established contextual reasoning, and this report does not pretend otherwise.
-
-The **placement signal** is advisory. It restates the pre-registered criteria so the same rule is applied every run; the decision belongs to the operator.
-
-## Layout
+## 3. How it works
 
 ```
-PROTOCOL.md            the specification: boundary, schemas, metrics, thresholds, change control
-thresholds.json        pre-registered; digest recorded in every run
-models.json            candidate models and prices (unverified)
-schemas/               normative JSON Schemas for input and snapshot
-src/validate.js        the five invariants, including verbatim citation
-src/spans.js           span resolution: trusts the quote, derives the offset, rejects ambiguity
-src/evidence.js        the three evidence layers and the adjudication queue
-src/diff.js            RDA: evidence-addressed claim identity, justified vs unjustified deltas
-src/grade.js           mechanical metrics and the placement signal
-src/providers.js       stub and OpenRouter; budget cap
-src/report.js          markdown rendering
-run.js                 the CLI
-tools/build-fixtures.js  fixture authoring; computes every span from source text
-tools/selftest.js      fault injection against the graders
-fixtures/              generated: input.json, ground_truth.json, fixture.json
+acquire ──→ partition ──→ scan (cheap model) ──→ verify quotes ──→ aggregate ──→ snapshot
+                                                                                   │
+                                                        pack (budgeted) ←──────────┤
+                                                                                   │
+source changes ──→ diff ──→ rescan changed only ──→ carry forward ──→ delta + new snapshot
 ```
 
-## Where the line is
+Five guarantees that are enforced in code, not in prose:
 
-This repo is not connected to AA or ARA, and must not be. It has no access to the preference store, the journal, a host page or the deployed Workers. If a capability demonstrated here later enters a system, it enters after a separate decision — as a retrieval pre-pass or a ladder rung — and not by wiring this harness in.
+| Guarantee | Where |
+| --- | --- |
+| Quotes are checked against the bytes; failures are quarantined, never repaired | `src/validate.js` |
+| A model's unlabelled claim is treated as `inferred`, not `stated` | `src/scan.js` |
+| Unchanged findings are carried forward only if their cited sources are byte-identical | `src/differential.js` |
+| A pack lists every omitted item with its source references | `src/compact.js` |
+| Cost is provider-reported or `null`; it is never estimated | `src/providers.js`, `src/instrument.js` |
+| A paid call refuses to exist without a spend authorisation | `src/guard.js`, `tests/guard.test.js` |
+| Identical acquisition + identical payloads ⇒ identical ids | `src/snapshot.js`, `tests/determinism.test.js` |
+| Support is checked beyond the quote's existence | `src/support.js` |
 
-See `PROTOCOL.md` §5 for the inputs deliberately excluded, including the ones AA currently sends.
+## 4. Quick start
+
+Offline (deterministic, $0):
+
+```bash
+node context-engine/poc/run-poc.js
+node context-engine/tests/budget.test.js
+```
+
+Integrity checks, also $0:
+
+```bash
+node context-engine/tests/guard.test.js          # one attempt per run id
+node context-engine/tests/determinism.test.js    # identical inputs ⇒ identical ids
+node context-engine/tests/support.test.js        # quote support, not just quote presence
+node context-engine/poc/calibrate.js --run examples/live-approved
+node context-engine/poc/check-support.js --run examples/live-approved
+```
+
+The PoC acquires `fixtures/poc-repo`, scans it, builds three pack sizes, answers six cross-file questions
+from the pack only, applies a declared change set to a temporary copy, runs a differential scan, and
+writes the artifacts to `context-engine/examples/`.
+
+Live (paid, explicit budget, GLM Flash Latest by default):
+
+```bash
+node context-engine/poc/run-poc.js \
+  --provider live --model glm-flash-latest --budget-usd 0.05 --run-id scan-2026-11-21-a --qa model
+```
+
+`--run-id` is not optional in live mode. The provider refuses to exist without a spend guard, and the
+guard allows one attempt per run id, recorded in `<out>/spend-ledger.jsonl`. Running the same id again is
+refused before any request; a deliberate retry needs `--authorize-retry <token>` with a token distinct
+from the id, and that authorisation is written next to the spend it permitted.
+
+## 5. Model selection and economics
+
+| id | slug | input | output | context |
+| --- | --- | --- | --- | --- |
+| `glm-flash-latest` (default) | `~z-ai/glm-flash-latest` | $0.0399/M | $0.0784/M | 1.05M |
+| `glm-5.3-flash` | `z-ai/glm-5.3-flash` | $0.0399/M | $0.0784/M | 1.05M |
+| `glm-4.7-flash` | `z-ai/glm-4.7-flash` | $0.0605/M | $0.40/M | 200k |
+| `glm-4.5-air` | `z-ai/glm-4.5-air` | $0.13/M | $0.85/M | 131k |
+
+The default is the moving alias, per operator decision. Because it redirects, each call records the
+response's resolved model id (`resolved_model`) next to the requested slug, so two runs cannot be confused
+after the alias moves. A pinned id remains available for reproducing an old result.
+
+**Single-pass budget.** Derived from the model window, capped by policy:
+
+```
+usable  = floor(context × 0.75) − 4000 output reserve      → 782,432 for GLM Flash
+ceiling = min(400,000 operator cap, usable)                → 400,000
+budget  = ceiling unless --partition-tokens is lower
+```
+
+A request above the ceiling is clamped **and reported**; it is never silently ignored. A model with no
+declared context (the stub) falls back to 60,000. Longer subjects partition at the budget, and every file
+split and cross-partition reference is recorded. See [ARCHITECTURE.md](ARCHITECTURE.md) §6.
+
+## 6. Layout
+
+```
+context-engine/
+  README.md            this file
+  ARCHITECTURE.md      components, data flow, budget, boundaries
+  SCHEMA.md            artifact and payload schemas
+  PROTOCOL.md          normative scan / reconcile / compact rules
+  EVALUATION.md        metrics, fixtures, pre-registered live-scan thresholds
+  POC-RESULT.md        consolidated gate matrix, spend ledger, open gaps, next-run pre-registration
+  BENCHMARK-01.md      pre-registered downstream utility benchmark (design, not run)
+  models.json          configurable model registry + partition policy
+  src/                 source, partition, budget, providers, scan, validate,
+                       aggregate, snapshot, differential, compact, instrument,
+                       pipeline, guard, support
+  poc/                 run-poc, apply-delta, pack-only QA and scoring,
+                       recheck-qa, rescore, calibrate, check-support
+  fixtures/            poc-repo, its ground truth, and the delta change set
+  examples/            generated snapshot, packs, delta, instrumentation, report
+  tests/               budget, compaction, guard, determinism, support
+```
+
+## 7. Current evidence, stated precisely
+
+Offline, repeatable, $0:
+
+```
+budget tests                                   16/16
+PoC structural checks                          25/25
+stub: line-rule facts 8/8 · model-only 0/2
+```
+
+First live run (GLM Flash Latest → `glm-5.3-flash` at Wafer), $0.0024 including one failed attempt:
+
+```
+findings 20 · citations verified 20/20 · contradictions 1 · coverage 11/11
+QA retention 0.833 · attribution 0.833 · reconstruction 0.833 · traps 0
+differential: preserved 15 · stale 4 · invalidated 1 · added 14 · preserved_identical true
+gates: H1 H3 H4 H5 H6 H7 H8 pass · H2 fail (model-only facts 0/2 in observations)
+```
+
+The stub is a line-rule scanner: its numbers show the pipeline is coherent, not that a model scans well. The
+live contradiction was found and verified, but the timeout value was not emitted as a standalone
+observation — hence H2's strict fail. See [LIVE-SCAN-01.md](LIVE-SCAN-01.md) §2 and §7.
+
+Second live run, single attempt (same model, same subject), $0.00136493:
+
+```
+findings 21 · citations verified 21/21 · contradictions 1 · model-only facts 2/2
+QA retention 0.833 · attribution 0.667 · reconstruction 0.667 · traps 0
+differential: preserved 14 · stale 6 · invalidated 1 · added 14 · preserved_identical true
+gates: H1 H2 H3 H5 H6 H7 H8 pass · H4 fail (q3 attribution, q6 not_in_pack)
+```
+
+QA re-check on the rebuilt pack, one call, $0.000180414, **no rescan**:
+
+```
+pack 2,989/4,000 tokens · 30/30 items · 1 contradiction (unresolved, both sides cited) · 0 omissions
+retention 1.000 · attribution 0.833 · reconstruction 0.833 · traps 0 · q6 answered
+gates: H4 pass · q3 remains the only miss (correct answer, cites README + ARCHITECTURE, not src/ingest.js)
+```
+
+Offline checks re-run for the consolidated record: budget 16/16, compaction 11/11, PoC structural 25/25.
+
+Integrity checks added after the live runs (all $0, re-runnable):
+
+```
+spend guard (one attempt per run id)            21/21
+determinism (scripted replay, digest equality)  15/15
+budget                                          16/16
+compaction                                      11/11
+support checks                                  15/15
+PoC structural                                  25/25
+token calibration: scan −13.2% · QA −4.5% · mean 3.64 chars/token
+support on the run-2 snapshot: 18/21 observations · 1/1 contradiction · 13/15 conclusions
+```
+
+Two readings that matter. `ceil(chars/4)` **understates** a code-heavy prompt by about 13%, so budgets
+were optimistic; the spend pre-flight now uses 3.5 chars/token, and the benchmark reports pack size both
+as estimated and calibrated. And the support check finds two findings whose numbers are true but appear
+in *other* quotes than the one cited — under-citation, not error. It is reported as a metric and does not
+demote them, because demoting would restate a published result.
+
+## 8. Known limitations
+
+- **Planning estimates are not measurements.** `ceil(chars/4)` decides partitioning; only provider-reported
+  usage produces cost.
+- **Quote verification is not truth adjudication.** A false statement with an accurate quote passes.
+- **A quote may resolve more than once.** It is marked `ambiguous_locator` rather than assigned an offset
+  by guesswork.
+- **The PoC subject is one small repo (11 files).** Ground truth covers it; generalisation is untested.
+- **Compaction is not a proof of sufficiency.** It reports what it omitted; it cannot know what the agent
+  will need.
+- **No transport hardening.** Same process, single writer, no auth, no rate limiting, no schema negotiation.
+- **The test suite is partial.** Budgeting has unit tests; pipeline behaviour is exercised by the PoC's
+  structural checks rather than a full integration/regression suite.
+- **A live scan will produce model findings that the stub cannot.** No claim about quality is made until
+  that run exists.
+
+## 9. Relation to the existing work
+
+The repository already contains the GCA/RDA decision pilot and the ARA/AA information architecture. This
+engine reuses two conventions only: the canonical digest (`src/canonical.js`) and the adapter rule that a
+provider translates fields but never semantics. It does not read or modify the frozen baseline, thresholds,
+fixtures, scoring rules or historical records, and no result here may be folded into them.
