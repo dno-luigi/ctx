@@ -36,6 +36,7 @@ const CHECKS = [
 const INTERESTING = /passed|PASS|RESULT|checks|intact|verified|%/i;
 
 const rows = [];
+const failures = [];
 for (const [name, args] of CHECKS) {
   const started = Date.now();
   const run = spawnSync(process.execPath, args, { encoding: 'utf8', timeout: 180000 });
@@ -43,7 +44,9 @@ for (const [name, args] of CHECKS) {
   const output = `${run.stdout ?? ''}${run.stderr ?? ''}`.trim();
   const lines = output.split('\n').map((line) => line.trim()).filter(Boolean);
   const detail = (lines.filter((line) => INTERESTING.test(line)).pop() ?? lines.pop() ?? '').slice(0, 110);
-  rows.push({ name, ok: run.status === 0, detail, seconds });
+  const ok = run.status === 0;
+  rows.push({ name, ok, detail: ok ? detail : (detail || run.error?.message || 'failed'), seconds });
+  if (!ok) failures.push({ name, output });
 }
 
 const failed = rows.filter((row) => !row.ok);
@@ -76,6 +79,10 @@ writeFileSync('runs/verify-summary.md', markdown);
 if (process.env.GITHUB_STEP_SUMMARY) writeFileSync(process.env.GITHUB_STEP_SUMMARY, markdown, { flag: 'a' });
 
 if (failed.length) {
+  for (const failure of failures) {
+    console.error(`\n--- ${failure.name} failed; last output ---`);
+    console.error(failure.output.split('\n').slice(-15).join('\n'));
+  }
   console.error(`verify failed: ${failed.map((row) => row.name).join(', ')}`);
   process.exit(1);
 }

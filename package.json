@@ -5,7 +5,7 @@
   "type": "module",
   "description": "Read-only qualification harness for Global Contextual Assessment (GCA) and Recursive Differential Assessment (RDA). No runtime, no writes, no authority.",
   "engines": {
-    "node": ">=20"
+    "node": ">=22.13.0"
   },
   "scripts": {
     "fixtures": "node tools/build-fixtures.js",
