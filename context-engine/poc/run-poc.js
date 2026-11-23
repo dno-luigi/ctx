@@ -45,6 +45,13 @@ const args = {};
 }
 
 const live = args.provider === 'live' || args.provider === 'openai-compatible';
+// Replays supplied payloads: no key, no budget, no network. Used by tools/poc-truncation-check.js
+// to prove the truncation gate fails when a provider reports a cut-off response.
+const scripted = args.provider === 'scripted';
+if (scripted && typeof args.script !== 'string') {
+  console.error('--provider scripted requires --script <file>');
+  process.exit(2);
+}
 const budgetUsd = Number(args['budget-usd'] ?? 0);
 const outDir = path.resolve(engineRoot, args.out ?? 'examples');
 
@@ -82,6 +89,10 @@ const ensureGuard = () => {
 };
 
 async function makeProvider({ modelId, budget, purpose = 'scan' }) {
+  if (scripted) {
+    const script = JSON.parse(await readFile(path.resolve(args.script), 'utf8'));
+    return createProvider({ kind: 'scripted', script });
+  }
   if (!live) return createProvider({ kind: 'stub' });
   if (!(budgetUsd > 0)) throw new Error('live mode requires --budget-usd greater than zero');
   const registry = await loadModels();

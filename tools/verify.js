@@ -39,6 +39,7 @@ const CHECKS = [
   ['pilot freeze', ['tools/freeze-verify.js']],
   ['benchmark budget', ['tools/bench-budget-check.js']],
   ['benchmark gates', ['tools/bench-selftest.js']],
+  ['poc truncation gate', ['tools/poc-truncation-check.js']],
 ];
 
 const BASELINE = 'baseline/verify-counts.json';

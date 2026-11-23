@@ -147,7 +147,9 @@ export function createProvider({ kind = 'stub', registry, model, budget, guard =
         const entry = script[cursor] ?? { payload: null };
         cursor += 1;
         const usage = entry.usage ?? { input_tokens: null, output_tokens: null, cost_usd: null, cost_source: 'absent' };
-        return { payload: entry.payload, usage, provider: { requested: 'scripted', upstream: 'none', generation_id: null }, latency_ms: 1, problems: [] };
+        // `problems` passes through so a test can inject the failures a live provider reports
+        // (output_truncated, payload_unparseable) and check that the harness refuses them.
+        return { payload: entry.payload, usage, provider: { requested: 'scripted', upstream: 'none', generation_id: null }, latency_ms: 1, problems: entry.problems ?? [] };
       },
     });
   }

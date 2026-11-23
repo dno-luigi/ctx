@@ -1,7 +1,7 @@
 {
   "schema": "gca-verify-counts/v1",
-  "commit": "7783160e992782142d5f97f4feeb6807e3b435a1",
-  "recorded_at": "2026-11-23T03:19:45Z",
+  "commit": "67068d26e228a08b4db9a1503da6195eba393119",
+  "recorded_at": "2026-11-23T03:24:59Z",
   "counts": {
     "engine selftest": {
       "n": 52,
@@ -70,6 +70,10 @@
     "benchmark gates": {
       "n": 12,
       "of": 12
+    },
+    "poc truncation gate": {
+      "n": 4,
+      "of": 4
     }
   }
 }

@@ -112,3 +112,50 @@ this prompt on this model: attempt 2 runs at 12,000, which is the only pre-regis
 What run 1 does establish, and what §8's derivation can now cite: a construction pass on this fixture
 costs **$0.0014** at three calls, below the ~$0.004 line and far below the $0.03 floor. Stopping here
 was correct; the remaining question is whether attempt 2 is worth ~$0.002 to get a non-empty scan.
+
+## 8. Run 2 — attempt 2, 2026-11-23
+
+Run id `smoke-01-2026-11-23-a2`. The only change from run 1 is §7.1's 12,000-token cap.
+
+**Spend: $0.00144816 over 3 calls, all provider-reported.**
+
+| Call | In | Out | Charge | Generation |
+| --- | ---: | ---: | ---: | --- |
+| scan | 2,466 | 9,529 | $0.0008454670 | `gen-1795404105-QZbwXAcwPZPN91BCRBkM` |
+| QA from pack | 1,314 | 1,075 | $0.0001367086 | `gen-1795404176-tO9QJDmzf55wAZVP2Wat` |
+| delta rescan | 1,420 | 5,221 | $0.0004659844 | `gen-1795404188-9nulwXbCbZ4FXAyHhfdk` |
+
+**The amended pass condition holds.** 23 findings, **22 citation-verified, 1 failed (4.3%, inside the
+20% stop condition)**; 16 verified conclusions, 7 inferences, 1 contradiction, 5 questions; medium
+pack 32 of 36 items at ~3,246 tokens; **27/27 checks, exit 0**. Run 1's 8,000-token truncation was the
+cap, not the model: at 9,529 output tokens the same model produced a full scan.
+
+Delta behaved as designed: 1 source added, 3 changed, 1 removed; 16 findings preserved byte-identical,
+6 stale, 1 invalidated, 4 files rescanned.
+
+### 8.1 What run 2 still does not show
+
+Recorded so it cannot be read as a result:
+
+- **Model-only facts 0/2** — the same two facts LIVE-SCAN-01 missed (the configured timeout and its
+  contradiction). The contradiction *is* present; the standalone `state` finding is not.
+- **QA 1/1/1 with 1 factual error** — the known compaction defect: packs drop contradictions, so a
+  question about the timeout/configuration conflict cannot be answered from the pack.
+- Nothing about conditions, tasks or cost per solved task. §2 stands unchanged.
+
+### 8.2 Cumulative spend
+
+$0.00138114 (run 1) + $0.00144816 (run 2) = **$0.00282930 of the $0.03 floor**, across two attempts and
+six calls. Both attempts are in the ledger under distinct run ids; neither was a retry of the other.
+
+### 8.3 The truncation gate is proved, not assumed
+
+The check added after run 1 only matters if it fails on the condition it names. `tools/poc-truncation-check.js`
+drives the runner twice with a scripted provider — no key, no budget, no network — and is in `npm run verify`
+as `poc truncation gate`:
+
+- a call reporting `output_truncated` → the runner exits 1, the gate is the failing check, and the
+  failure names `output_truncated`;
+- a healthy payload → the same gate is green, so it is not red unconditionally.
+
+4/4 checks pass. Before this, the only evidence the gate worked was an argument about the code.
