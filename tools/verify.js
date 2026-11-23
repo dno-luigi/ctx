@@ -38,6 +38,7 @@ const CHECKS = [
   ['D6 held-out', ['tools/d6-heldout.js']],
   ['pilot freeze', ['tools/freeze-verify.js']],
   ['benchmark budget', ['tools/bench-budget-check.js']],
+  ['benchmark gates', ['tools/bench-selftest.js']],
 ];
 
 const BASELINE = 'baseline/verify-counts.json';
