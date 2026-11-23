@@ -1,0 +1,33 @@
+name: verify
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: node ${{ matrix.node }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ["20", "22"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Tests, proof, coverage baseline and the offline POC
+        run: npm run verify
+      - name: No check may rewrite tracked files
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "::error::a check wrote to the working tree; outputs belong in runs/"
+            git status --porcelain
+            exit 1
+          fi

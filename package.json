@@ -4,11 +4,14 @@
   "private": true,
   "type": "module",
   "description": "GCA/RDA context engine: contextual scanning, differential updates, reversible compaction. Offline-verified; read-only default; no runtime authority.",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "test": "node --test tests/",
     "proof": "node poc/proof-classifier.js",
     "coverage": "node poc/coverage-baseline.js",
-    "poc": "node poc/run-poc.js"
+    "poc": "node poc/run-poc.js --out runs/poc",
+    "verify": "node --test tests/ && node poc/proof-classifier.js && node poc/coverage-baseline.js && node poc/run-poc.js --out runs/poc"
   }
 }
