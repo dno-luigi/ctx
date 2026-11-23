@@ -31,6 +31,6 @@
     "card-gen": "node tools/card-generation.js",
     "patch-check": "node tools/patch-check.js",
     "score-transcript": "node tools/score-transcript.js",
-    "verify": "node tools/selftest.js && node tools/decisions-selftest.js && node tools/inventory-selftest.js && node tools/contract-test.js && node tools/usage-capture.js --selftest && node tools/blind-packet.js --selftest && node tools/score-transcript.js --selftest && node context-engine/poc/proof-classifier.js && node context-engine/poc/coverage-baseline.js && node tools/ara-freeze.js --verify && node tools/ac6-refined.js && node tools/schema-acceptance.js && node tools/schema-acceptance-v2.js && node tools/storage-acceptance.js && node tools/d8-acceptance.js && node tools/d6-eval.js && node tools/d6-heldout.js"
+    "verify": "node tools/verify.js"
   }
 }
